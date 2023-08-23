@@ -52,6 +52,6 @@ class SuperAdminController extends Controller
 
     function logout(){
         Auth::guard('super-admin')->logout();
-        return redirect('/');
+        return redirect()->route('super-admin.login');
     }
 }

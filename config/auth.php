@@ -21,6 +21,10 @@ return [
         'driver' => 'eloquent',
         'model' => App\Models\Admin::class,
     ],
+    'super-admin' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Admin::class,
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -45,6 +49,10 @@ return [
             'provider' => 'users',
         ],
         'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+        'super-admin' => [
             'driver' => 'session',
             'provider' => 'admins',
         ],
@@ -81,6 +89,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
+        'super-admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
     ],
 
     /*
@@ -110,6 +122,10 @@ return [
             'throttle' => 60,
         ],
         'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
+        'super-admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],

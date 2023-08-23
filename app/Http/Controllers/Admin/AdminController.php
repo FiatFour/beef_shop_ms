@@ -21,11 +21,16 @@ class AdminController extends Controller
         );
 
         $creds = $request->only('email', 'password');
+
         if(Auth::guard('admin')->attempt($creds)){
             return redirect()->route('admin.home');
-        }else{
+        }
+        else{
             return redirect()->route('admin.login')->with('fail', "Incorrect credentials");
         }
+        // if(auth()->guard('super-admin')->user()->super_admin==1){
+        //     return redirect()->route('admin-super.home');
+        // }
     }
 
     function logout(){

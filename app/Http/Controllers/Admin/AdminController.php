@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
+use App\Models\VerifyAdmin;
+
 
 class AdminController extends Controller
 {
@@ -22,6 +24,10 @@ class AdminController extends Controller
 
         $creds = $request->only('email', 'password');
 
+
+        if(Auth::guard('super-admin')->attempt($creds) && Auth::guard('super-admin')->user()->super_admin==1){
+            return redirect()->route('super-admin.home');
+        }
         if(Auth::guard('admin')->attempt($creds)){
             return redirect()->route('admin.home');
         }
@@ -36,5 +42,22 @@ class AdminController extends Controller
     function logout(){
         Auth::guard('admin')->logout();
         return redirect()->route('admin.login');
+    }
+
+    public function verify(Request $request){
+        $token = $request->token;
+        $verifyAdmin = VerifyAdmin::where('token', $token)->first();
+
+        if(!is_null($verifyAdmin)){
+            $admin = Admin::find($verifyAdmin->admin_id);
+            if(!$admin->email_verified){
+                $admin->email_verified = 1;
+                $admin->save();
+
+                return redirect()->route('admin.login')->with('info','Your email is verified successfully. You can now login')->with('verifiedEmail', $admin->email);
+            }else{
+                 return redirect()->route('admin.login')->with('info','Your email is already verified. You can now login')->with('verifiedEmail', $admin->email);
+            }
+        }
     }
 }

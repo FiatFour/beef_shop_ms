@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class VerifyUser extends Model
 {
     use HasFactory;
+
     public $table = "verify_users";
+    // protected $primaryKey = 'user_id';
+
     protected $fillable = [
         'user_id',
         'token',

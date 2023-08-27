@@ -13,13 +13,6 @@ Route::prefix('super-admin')->name('super-admin.')->group(function(){
     Route::middleware(['auth:super-admin','PreventBackHistory','super_admin'])->group(function(){
         Route::view('/home', 'dashboard.super-admin.home')->name('home');
         Route::post('/logout', [SuperAdminController::class, 'logout'])->name('logout');
-
     });
-    // Route::middleware(['super_admin', 'PreventBackHistory'])->group(function(){
-    //     Route::view('/home', 'dashboard.super-admin.home')->name('home');
-    //     // Route::view('/super/home', 'dashboard.super-admin.home')->name('superhome');
-    // });
-
 });
 
-// Route::get('super-admin/home', [SuperAdminController::class, 'superAdminHome'])->name('super-admin.home')->middleware('super_admin');

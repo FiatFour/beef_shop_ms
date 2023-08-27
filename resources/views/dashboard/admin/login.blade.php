@@ -19,10 +19,16 @@
                         </div>
                     @endif
 
+                    @if(Session::get('info'))
+                        <div class="alert alert-info">
+                            {{ Session::get('info') }}
+                        </div>
+                    @endif
+
                     @csrf
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="text" class="form-control" name="email" placeholder="Enter email address" value="{{ old('email')}}">
+                        <input type="text" class="form-control" name="email" placeholder="Enter email address" value="{{ Session::get('verifiedEmail') ? Session::get('verifiedEmail') : old('email') }}">
                         @error('email') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
 

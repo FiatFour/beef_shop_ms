@@ -14,16 +14,17 @@ return new class extends Migration
         Schema::create('admins', function (Blueprint $table) {
             $table->id('admin_id');
             $table->string('admin_name',50);
-            $table->string('admin_lname',50);
-            $table->string('admin_tel',33);
+            $table->string('admin_lname',50)->nullable();
+            $table->string('admin_tel',33)->nullable();
             $table->string('email',100)->unique();
             $table->string('password');
-            $table->string('admin_img');
-            $table->text('admin_address');
-            $table->tinyInteger('admin_gender');
-            $table->tinyInteger('admin_department');
+            $table->string('admin_img')->nullable();
+            $table->text('admin_address')->nullable();
+            $table->tinyInteger('admin_gender')->nullable();
+            $table->tinyInteger('admin_department')->nullable();
             $table->boolean('super_admin')->nullable();
 
+            $table->integer('email_verified')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

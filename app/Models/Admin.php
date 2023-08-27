@@ -23,6 +23,8 @@ class Admin extends Authenticatable
         'admin_name', 'admin_lname', 'admin_tel', 'email',
         'password', 'admin_img', 'admin_address',
         'admin_gender', 'admin_department', 'super_admin',
+        'email_verified',
+
     ];
 
     /**

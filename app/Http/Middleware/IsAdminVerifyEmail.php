@@ -6,8 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
-
-class IsUserVerify
+class IsAdminVerifyEmail
 {
     /**
      * Handle an incoming request.
@@ -16,9 +15,9 @@ class IsUserVerify
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::guard('web')->user()->email_verified){
-            Auth::guard('web')->logout();
-            return redirect()->route('user.login')->with('fail', "You need to confirm your account. We have sent you an activation link, please check you email")->withInput();
+        if(!Auth::guard('admin')->user()->email_verified){
+            Auth::guard('admin')->logout();
+            return redirect()->route('admin.login')->with('fail', "You need to confirm your account. We have sent you an activation link, please check you email")->withInput();
         }
         return $next($request);
     }

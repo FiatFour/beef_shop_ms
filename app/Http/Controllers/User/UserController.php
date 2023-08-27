@@ -4,7 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\EmailVerification;
+// use App\Models\EmailVerification;
 use App\Models\VerifyUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,13 +37,12 @@ class UserController extends Controller
         $last_id = $user->user_id;
 
         $token = $last_id.hash('sha256', Str::random(120));
-        $verifyURL = route('user.verify', ['token' => $token, 'service' => 'Email_verification']);
+        $verifyURL = route('user.verify',['token'=>$token,'service'=>'Email_verification']);
 
         VerifyUser::create([
             'user_id' => $last_id,
             'token' => $token,
         ]);
-        /*
         $message = "Dear <b>".$request->user_name."</b>";
         $message.= "Thanks for signing up, we just need you to verify your email address to complete setting up your account.";
 
@@ -57,15 +56,15 @@ class UserController extends Controller
         ];
 
 
-        Mail::send('email-template', ['mail_data' => $mail_data], function ($message) use ($mail_data) {
+        Mail::send('email-template', $mail_data, function ($message) use ($mail_data) {
             $message->to($mail_data['recipient'])
                 ->from($mail_data['fromEmail'], $mail_data['fromName'])
                 ->subject($mail_data['subject']);
         });
         return $save ? redirect()->back()->with('success', "You need to verify your account. We have sent you an activation link, please check your email.") : redirect()->back()->with('fail', "Something went wrong, failed to register");
-        */
-        return redirect("/verification/".$user->user_id);
+        // return redirect("/verification/".$user->user_id);
     }
+
 
     function check(Request $request){
         $request->validate([
@@ -74,9 +73,8 @@ class UserController extends Controller
         ]);
 
         $creds = $request->only('email', 'password');
-        /*
         return Auth::guard('web')->attempt($creds) ? redirect()->route('user.home') : redirect()->route('user.login')->with('fail', "Incorrect credentials");
-        */
+        /*
         $userData = User::where('email',$request->email)->first();
         if($userData && $userData->is_verified == 0){
             $this->sendOtp($userData);
@@ -89,6 +87,7 @@ class UserController extends Controller
         else{
             return back()->with('error','Username & Password is incorrect');
         }
+        */
 
     }
 
@@ -100,24 +99,28 @@ class UserController extends Controller
     public function verify(Request $request){
         $token = $request->token;
         $verifyUser = VerifyUser::where('token', $token)->first();
-        if(! is_null($verifyUser)){
-            $user = $verifyUser->user;
 
-            if(! $user->email_verified){
-                $verifyUser->user->email_verified = 1;
-                $verifyUser->user->save();
+        if(!is_null($verifyUser)){
+            $user = User::find($verifyUser->user_id);
+            if(!$user->email_verified){
+                $user->email_verified = 1;
+                $user->save();
 
-                return redirect()->route('user.login')
-                        ->with('info', "Your email is verified successfully. You can now login")
-                        ->with('verifiedEmail', $user->email);
+                return redirect()->route('user.login')->with('info','Your email is verified successfully. You can now login')->with('verifiedEmail', $user->email);
             }else{
-                return redirect()->route('user.login')
-                        ->with('info', "Your email is already verified. You can not login")
-                        ->with('verifiedEmail', $user->email);
+                 return redirect()->route('user.login')->with('info','Your email is already verified. You can now login')->with('verifiedEmail', $user->email);
             }
         }
     }
 
+
+
+
+
+
+
+
+    /*
     public function sendOtp($user)
     {
         $otp = rand(100000,999999);
@@ -198,6 +201,7 @@ class UserController extends Controller
         }
 
     }
+    */
 
 
 }

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Admin extends Authenticatable
+class Employee extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -16,12 +16,12 @@ class Admin extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $primaryKey = 'admin_id';
+    protected $primaryKey = 'emp_id';
 
     protected $fillable = [
-        'admin_name', 'admin_lname', 'admin_tel', 'email',
-        'password', 'admin_img', 'admin_address',
-        'admin_gender', 'admin_department', 'super_admin',
+        'emp_name', 'emp_lname', 'emp_tel', 'email',
+        'password', 'emp_img', 'emp_address',
+        'emp_gender', 'emp_department', 'is_admin',
         'email_verified',
 
     ];
@@ -33,7 +33,7 @@ class Admin extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'super_admin',
+        'is_admin',
         'remember_token',
     ];
 
@@ -45,6 +45,6 @@ class Admin extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'super_admin' => 'boolean',
+        'is_admin' => 'boolean',
     ];
 }

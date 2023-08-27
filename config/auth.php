@@ -29,6 +29,10 @@ return [
         'driver' => 'eloquent',
         'model' => App\Models\Customer::class,
     ],
+    'employee' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Employee::class,
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -63,6 +67,10 @@ return [
         'customer' => [
             'driver' => 'session',
             'provider' => 'customers',
+        ],
+        'employee' => [
+            'driver' => 'session',
+            'provider' => 'employees',
         ],
     ],
 
@@ -105,6 +113,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Customer::class,
         ],
+        'employees' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Employee::class,
+        ],
     ],
 
     /*
@@ -144,6 +156,10 @@ return [
         'customers' => [
             'driver' => 'eloquent',
             'model' => App\Models\Customer::class,
+        ],
+        'employees' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Employee::class,
         ],
     ],
 

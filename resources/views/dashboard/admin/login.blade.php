@@ -37,8 +37,9 @@
                         <input type="password" class="form-control" name="password" placeholder="Enter password" value="{{ old('password')}}">
                         @error('password') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
+                    <a href="{{ route('admin.forgot.password.form')}}">Forgot password</a>
 
-                    <div class="form-group">
+                    <div class="form-group mt-2">
                         <button type="submit" class="btn btn-primary">Login</button>
                     </div>
                     <br>

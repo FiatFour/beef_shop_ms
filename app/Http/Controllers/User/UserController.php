@@ -4,7 +4,6 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-// use App\Models\EmailVerification;
 use App\Models\VerifyUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,12 +12,8 @@ use Laravel\Ui\Presets\React;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-
-// use App\Article;
-// use App\Mail\TestMail;
 use Illuminate\Support\Facades\Mail;
-// use Illuminate\Mail\Mailable;
-// use Illuminate\Mail\Mailables\Content;
+
 class UserController extends Controller
 {
     function create(Request $request){

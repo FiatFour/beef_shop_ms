@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'super_admin' => \App\Http\Middleware\SuperAdmin::class,
         'is_user_verify_email' => \App\Http\Middleware\IsUserVerifyEmail::class,
         'is_admin_verify_email' => \App\Http\Middleware\IsAdminVerifyEmail::class,
+        'is_customer_verify_email' => \App\Http\Middleware\IsCustomerVerifyEmail::class,
     ];
 }

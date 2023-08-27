@@ -32,6 +32,10 @@ class RedirectIfAuthenticated
                     return redirect()->route('user.home');
                 }
 
+                if($guard === 'customer'){
+                    return redirect()->route('customer.home');
+                }
+
                 // return redirect(RouteServiceProvider::HOME);
             }
         }

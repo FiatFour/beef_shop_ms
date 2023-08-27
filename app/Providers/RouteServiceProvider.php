@@ -48,6 +48,10 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/super-admin.php'));
 
+            //* Customer Route File
+            Route::middleware('web')
+            ->group(base_path('routes/customer.php'));
+
         });
     }
 }

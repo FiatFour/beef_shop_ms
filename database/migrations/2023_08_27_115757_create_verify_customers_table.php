@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('verify_customers', function (Blueprint $table) {
-            $table->id();
+            $table->integer('cus_id');
+            $table->string('token');
             $table->timestamps();
         });
     }

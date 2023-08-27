@@ -20,7 +20,7 @@ class CustomerController extends Controller
         //Validate Input
         $request->validate([
             'cus_name' => 'required',
-            'email' => 'required|email|unique:cuss,email',
+            'email' => 'required|email|unique:customers,email',
             'password' => 'required|min:5|max:30',
             'confirm_password' => 'required|min:5|max:30|same:password'
         ]);
@@ -63,7 +63,7 @@ class CustomerController extends Controller
 
     function check(Request $request){
         $request->validate([
-            'email' => 'required|email|exists:users,email',
+            'email' => 'required|email|exists:customers,email',
             'password' => 'required|min:5|max:30',
         ]);
 

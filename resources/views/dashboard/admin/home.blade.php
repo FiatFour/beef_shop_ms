@@ -24,13 +24,13 @@
 
                     <tbody>
                         <tr>
-                            <td scope="row">{{ Auth::guard('admin')->user()->admin_name }}</td>
-                            <td>{{ Auth::guard('admin')->user()->email }}</td>
-                            <td>{{ Auth::guard('admin')->user()->admin_tel }}</td>
+                            <td scope="row">{{ Auth::guard('employee')->user()->emp_name }}</td>
+                            <td>{{ Auth::guard('employee')->user()->email }}</td>
+                            <td>{{ Auth::guard('employee')->user()->emp_tel }}</td>
                             <td>
-                                <a href="{{ route('admin.logout') }}" onclick="event.preventDefault();
+                                <a href="{{ route('employee.logout') }}" onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">Logout</a>
-                                <form action=" {{ route('admin.logout') }}" method="POST" class="d-none" id="logout-form">@csrf</form>
+                                <form action=" {{ route('employee.logout') }}" method="POST" class="d-none" id="logout-form">@csrf</form>
                             </td>
                         </tr>
                     </tbody>

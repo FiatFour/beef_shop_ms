@@ -35,7 +35,7 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
-
+/*
             //* User Route File
             Route::middleware('web')
                 ->group(base_path('routes/user.php'));
@@ -47,7 +47,7 @@ class RouteServiceProvider extends ServiceProvider
             //! Super-Admin Route File
             Route::middleware('web')
                 ->group(base_path('routes/super-admin.php'));
-
+*/
             //* Customer Route File
             Route::middleware('web')
             ->group(base_path('routes/customer.php'));
@@ -55,6 +55,10 @@ class RouteServiceProvider extends ServiceProvider
             //? Employee Route File
             Route::middleware('web')
             ->group(base_path('routes/employee.php'));
+
+            //! Super-Admin Route File
+            Route::middleware('web')
+            ->group(base_path('routes/admin.php'));
 
         });
     }

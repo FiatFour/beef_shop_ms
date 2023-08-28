@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
+
+    /*
     function create(Request $request){
         //Validate Input
         $request->validate([
@@ -83,10 +85,12 @@ class UserController extends Controller
         else{
             return back()->with('error','Username & Password is incorrect');
         }
-        */
+
 
     }
+*/
 
+/*
     function logout(){
         Auth::guard('web')->logout();
         return redirect()->route('user.login');

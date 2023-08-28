@@ -21,15 +21,14 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                if($guard === 'super-admin' && Auth::guard('super-admin')->user()->super_admin == 1){
-                    return redirect()->route('super-admin.home');
-                }
-                if($guard === 'admin'){
+
+
+                if($guard === 'employee' && Auth::guard('employee')->user()->is_admin == 1){
                     return redirect()->route('admin.home');
                 }
 
-                if($guard === 'user'){
-                    return redirect()->route('user.home');
+                if($guard === 'employee'){
+                    return redirect()->route('employee.home');
                 }
 
                 if($guard === 'customer'){

@@ -14,19 +14,23 @@ class Authenticate extends Middleware
     {
         // return $request->expectsJson() ? null : route('user.login');
         if(! $request->expectsJson()){
-            if($request->routeIs('super-admin.*')){
-                return route('super-admin.login');
+            // if($request->routeIs('super-admin.*')){
+            //     return route('super-admin.login');
+            // }
+            // if($request->routeIs('admin.*')){
+            //     return route('admin.login');
+            // }
+            // if($request->routeIs('customer.*')){
+            //     return route('customer.login');
+            // }
+            // if($request->routeIs('employee.*')){
+            //     return route('employee.login');
+            // }
+
+            if($request->routeIs('admin.*') || $request->routeIs('customer.*') || $request->routeIs('employee.*')){
+                return route('login');
             }
-            if($request->routeIs('admin.*')){
-                return route('admin.login');
-            }
-            if($request->routeIs('customer.*')){
-                return route('customer.login');
-            }
-            if($request->routeIs('employee.*')){
-                return route('employee.login');
-            }
-            return route('user.login');
+            return route('login');
         }
     }
 }

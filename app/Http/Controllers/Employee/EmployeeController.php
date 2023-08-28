@@ -16,6 +16,28 @@ use Illuminate\Support\Facades\Hash;
 
 class EmployeeController extends Controller
 {
+    function logout(){
+        Auth::guard('employee')->logout();
+        return redirect()->route('login');
+    }
+
+    public function verify(Request $request){
+        $token = $request->token;
+        $verifyEmployee = VerifyEmployee::where('token', $token)->first();
+
+        if(!is_null($verifyEmployee)){
+            $employee = Employee::find($verifyEmployee->emp_id);
+            if(!$employee->email_verified){
+                $employee->email_verified = 1;
+                $employee->save();
+
+                return redirect()->route('login')->with('info','Your email is verified successfully. You can now login')->with('verifiedEmail', $employee->email);
+            }else{
+                 return redirect()->route('login')->with('info','Your email is already verified. You can now login')->with('verifiedEmail', $employee->email);
+            }
+        }
+    }
+        /*
     function check(Request $request){
         //Validate input
         $request->validate([
@@ -40,29 +62,9 @@ class EmployeeController extends Controller
             return redirect()->route('employee.login')->with('fail', "Incorrect credentials");
         }
     }
+    */
 
-    function logout(){
-        Auth::guard('employee')->logout();
-        return redirect()->route('employee.login');
-    }
-
-    public function verify(Request $request){
-        $token = $request->token;
-        $verifyEmployee = VerifyEmployee::where('token', $token)->first();
-
-        if(!is_null($verifyEmployee)){
-            $employee = Employee::find($verifyEmployee->emp_id);
-            if(!$employee->email_verified){
-                $employee->email_verified = 1;
-                $employee->save();
-
-                return redirect()->route('employee.login')->with('info','Your email is verified successfully. You can now login')->with('verifiedEmail', $employee->email);
-            }else{
-                 return redirect()->route('employee.login')->with('info','Your email is already verified. You can now login')->with('verifiedEmail', $employee->email);
-            }
-        }
-    }
-
+    /*
     public function showForgotForm(){
         return view('dashboard.employee.forgot');
     }
@@ -169,4 +171,5 @@ class EmployeeController extends Controller
         return $save ? redirect()->back()->with('success', "You need to verify your account. We have sent you an activation link, please check your email.") : redirect()->back()->with('fail', "Something went wrong, failed to register");
         // return $save ? redirect()->back()->with('success', "You are now registered successfully as employee") : redirect()->back()->with('fail', "Something went wrong, failed to register");
     }
+    */
 }

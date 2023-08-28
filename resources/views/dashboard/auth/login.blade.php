@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Customer Login</title>
+    <title>Login</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
     <div class="container">
         <div class="row">
             <div class="col-md-4 offset-md-4" style="margin-top: 45px">
-                <h4>Customer Login</h4>
-                <form action="{{ route('customer.check') }}" method="POST" autocomplete="off">
+                <h4>Login</h4>
+                <form action="{{ route('check') }}" method="POST" autocomplete="off">
                     @if(Session::get('fail'))
                         <div class="alert alert-danger">
                             {{ Session::get('fail') }}
@@ -37,7 +37,7 @@
                         <input type="password" class="form-control" name="password" placeholder="Enter password" value="{{ old('password')}}">
                         @error('password') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
-                    <a href="{{ route('customer.forgot.password.form')}}">Forgot password</a>
+                    <a href="{{ route('forgot.password.form')}}">Forgot password</a>
 
                     <div class="form-group mt-2">
                         <button type="submit" class="btn btn-primary">Login</button>

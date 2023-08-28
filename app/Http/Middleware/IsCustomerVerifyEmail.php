@@ -18,7 +18,7 @@ class IsCustomerVerifyEmail
     {
         if(!Auth::guard('customer')->user()->email_verified){
             Auth::guard('customer')->logout();
-            return redirect()->route('customer.login')->with('fail', "You need to confirm your account. We have sent you an activation link, please check you email")->withInput();
+            return redirect()->route('login')->with('fail', "You need to confirm your account. We have sent you an activation link, please check you email")->withInput();
         }
         return $next($request);
     }

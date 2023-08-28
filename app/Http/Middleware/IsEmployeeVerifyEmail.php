@@ -18,7 +18,7 @@ class IsEmployeeVerifyEmail
     {
         if(!Auth::guard('employee')->user()->email_verified){
             Auth::guard('employee')->logout();
-            return redirect()->route('employee.login')->with('fail', "You need to confirm your account. We have sent you an activation link, please check you email")->withInput();
+            return redirect()->route('login')->with('fail', "You need to confirm your account. We have sent you an activation link, please check you email")->withInput();
         }
         return $next($request);
     }

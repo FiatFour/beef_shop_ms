@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>User Register</title>
+    <title>Employee Register</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
     <div class="container">
         <div class="row">
             <div class="col-md-4 offset-md-4" style="margin-top: 45px">
-                <h4>User Register</h4>
-                <form action="{{ route('user.create') }}" method="POST" autocomplete="off">
+                <h4>Employee Register</h4>
+                <form action="{{ route('admin.create') }}" method="POST" autocomplete="off">
                     @if(Session::get('success'))
                         <div class="alert alert-success">
                             {{ Session::get('success') }}
@@ -27,8 +27,20 @@
                     @csrf
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" name="user_name" placeholder="Enter name" value="{{ old('user_name') }}">
-                        @error('user_name') <span class="text-danger">{{ $message }}</span> @enderror
+                        <input type="text" class="form-control" name="name" placeholder="Enter name" value="{{ old('name') }}">
+                        @error('name') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="last name">Last Name</label>
+                        <input type="text" class="form-control" name="lname" placeholder="Enter name" value="{{ old('lname') }}">
+                        @error('lname') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tel">Tel</label>
+                        <input type="tel" class="form-control" name="tel" placeholder="Enter name" value="{{ old('tel') }}">
+                        @error('tel') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="form-group">
@@ -53,7 +65,7 @@
                         <button type="submit" class="btn btn-primary">Login</button>
                     </div>
                     <br>
-                    <a href="{{ route('user.login') }}">I already have an accont</a>
+                    <a href="{{ route('login') }}">I already have an accont</a>
                 </form>
             </div>
         </div>

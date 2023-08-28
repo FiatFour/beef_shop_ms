@@ -60,7 +60,7 @@ class CustomerController extends Controller
         return $save ? redirect()->back()->with('success', "You need to verify your account. We have sent you an activation link, please check your email.") : redirect()->back()->with('fail', "Something went wrong, failed to register");
     }
 
-
+/*
     function check(Request $request){
         $request->validate([
             'email' => 'required|email|exists:customers,email',
@@ -71,10 +71,10 @@ class CustomerController extends Controller
         return Auth::guard('customer')->attempt($creds) ? redirect()->route('customer.home') : redirect()->route('customer.login')->with('fail', "Incorrect credentials");
 
     }
-
+*/
     function logout(){
         Auth::guard('customer')->logout();
-        return redirect()->route('customer.login');
+        return redirect()->route('login');
     }
 
     public function verify(Request $request){
@@ -87,15 +87,15 @@ class CustomerController extends Controller
                 $customer->email_verified = 1;
                 $customer->save();
 
-                return redirect()->route('customer.login')->with('info','Your email is verified successfully. You can now login')->with('verifiedEmail', $customer->email);
+                return redirect()->route('login')->with('info','Your email is verified successfully. You can now login')->with('verifiedEmail', $customer->email);
             }else{
-                 return redirect()->route('customer.login')->with('info','Your email is already verified. You can now login')->with('verifiedEmail', $customer->email);
+                 return redirect()->route('login')->with('info','Your email is already verified. You can now login')->with('verifiedEmail', $customer->email);
             }
         }
     }
 
     public function showForgotForm(){
-        return view('dashboard.customer.forgot');
+        return view('dashboard.auth.password.forgot');
     }
 
     public function sendResetLink(Request $request){
@@ -123,7 +123,7 @@ class CustomerController extends Controller
     }
 
     public function showResetForm(Request $request, $token = null){
-        return view('dashboard.customer.reset')->with(['token' => $token, 'email' => $request->email]);
+        return view('dashboard.auth.password.reset')->with(['token' => $token, 'email' => $request->email]);
     }
 
     public function resetPassword(Request $request){
@@ -149,7 +149,7 @@ class CustomerController extends Controller
                 'email' => $request->email
             ]);
 
-            return redirect()->route('customer.login')->with('info', "Your password has been changed! You can login with new password")
+            return redirect()->route('login')->with('info', "Your password has been changed! You can login with new password")
                              ->with('verifiedEmail', $request->email);
         }
     }

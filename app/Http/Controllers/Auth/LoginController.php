@@ -71,4 +71,18 @@ class LoginController extends Controller
         // return Auth::guard('customer')->attempt($creds) ? redirect()->route('customer.home') : redirect()->route('customer.login')->with('fail', "Incorrect credentials");
 
     }
+    public function index(){
+        if(Auth::guard('employee')->user()){
+            if(Auth::guard('employee')->user()->is_admin==0){
+                return redirect()->route('employee.home');
+            }else{
+                return redirect()->route('admin.home');
+            }
+        }
+        if(Auth::guard('customer')->user()){
+            return redirect()->route('customer.home');
+        }
+
+            return view('dashboard.auth.login');
+    }
 }

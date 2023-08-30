@@ -17,18 +17,17 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ route('admin.home') }}">Home <span class="sr-only">(current)</span></a>
+                </li>
+
                 <li class="nav-item active">
-                  <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                  <a class="nav-link" href="#">Supplier</a>
                 </li>
 
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ route('admin.supplier') }}">Supplier</a>
-                </li>
-
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ route('admin.cow') }}">Cow</a>
-                </li>
-
+                    <a class="nav-link" href="{{ route('admin.cow') }}">Cow</a>
+                  </li>
               </ul>
               <form class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
@@ -40,35 +39,31 @@
           </nav>
     </header>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 offset-md-3" style="margin-top: 45;">
-                <h4>Admin Dashboard</h4>
-                <table class="table table-striped table-inverse table-responsive">
-                    <thead class="thead-inverse">
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
 
-                    <tbody>
-                        <tr>
-                            <td scope="row">{{ Auth::guard('employee')->user()->emp_name }}</td>
-                            <td>{{ Auth::guard('employee')->user()->email }}</td>
-                            <td>{{ Auth::guard('employee')->user()->emp_tel }}</td>
-                            <td>
-                                <a href="{{ route('employee.logout') }}" onclick="event.preventDefault();
-                                document.getElementById('logout-form').submit();">Logout</a>
-                                <form action=" {{ route('employee.logout') }}" method="POST" class="d-none" id="logout-form">@csrf</form>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-
+    <div class="py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">Supplier Edit form</div>
+                        <div class="card-body">
+                            <form action="{{url('admin/supplier/update/'.$supplier->sup_id)}}" method="post">
+                                @csrf
+                                <div class="form-group">
+                                    <label for="supplier_name">Supplier Name</label>
+                                    <input type="text" class="form-control" name="sup_name" value="{{$supplier->sup_name}}">
+                                </div>
+                                @error('sup_name')
+                                    <div class="my-2">
+                                        <span class="text-danger my-2">{{$message}}</span>
+                                    </div>
+                                @enderror
+                                <br>
+                                <button value="submit" class="btn btn-warning">Update</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

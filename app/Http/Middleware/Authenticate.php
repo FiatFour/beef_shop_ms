@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class Authenticate extends Middleware
 {
@@ -27,6 +28,19 @@ class Authenticate extends Middleware
             //     return route('employee.login');
             // }
 
+//! Wait to edit
+            /*
+            if($request->routeIs('login.'))
+            {
+                if(Auth::guard('customer')->user()){
+                    return redirect()->route('customer.home');
+                }else if(Auth::guard('employee')->user()->is_admin == 1){
+                    return redirect()->route('admin.home');
+                }else if(Auth::guard('employee')->user()){
+                    return redirect()->route('employee.home');
+                }
+            }
+            */
             if($request->routeIs('admin.*') || $request->routeIs('customer.*') || $request->routeIs('employee.*')){
                 return route('login');
             }

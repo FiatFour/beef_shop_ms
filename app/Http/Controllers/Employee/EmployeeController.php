@@ -16,27 +16,7 @@ use Illuminate\Support\Facades\Hash;
 
 class EmployeeController extends Controller
 {
-    function logout(){
-        Auth::guard('employee')->logout();
-        return redirect()->route('login');
-    }
 
-    public function verify(Request $request){
-        $token = $request->token;
-        $verifyEmployee = VerifyEmployee::where('token', $token)->first();
-
-        if(!is_null($verifyEmployee)){
-            $employee = Employee::find($verifyEmployee->emp_id);
-            if(!$employee->email_verified){
-                $employee->email_verified = 1;
-                $employee->save();
-
-                return redirect()->route('login')->with('info','Your email is verified successfully. You can now login')->with('verifiedEmail', $employee->email);
-            }else{
-                 return redirect()->route('login')->with('info','Your email is already verified. You can now login')->with('verifiedEmail', $employee->email);
-            }
-        }
-    }
         /*
     function check(Request $request){
         //Validate input

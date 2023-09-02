@@ -9,10 +9,7 @@ class Cow extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'cow_id';
-
     protected $fillable = [
-        'cow_id',
         'cow_gene',
         'cow_img',
         'cow_birth',
@@ -20,6 +17,6 @@ class Cow extends Model
     ];
 
     public function supplier(){
-        return $this->belongsTo(Supplier::class, 'sup_id', 'sup_id');
+        return $this->belongsTo(Supplier::class, 'sup_id', 'id');
     }
 }

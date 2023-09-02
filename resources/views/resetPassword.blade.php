@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>รีเซ็ตรหัสผ่าน</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 offset-md-4" style="margin-top: 45px">
+                <h4>รีเซ็ตรหัสผ่าน</h4>
+                <form action="{{ route('resetPassword') }}" method="POST" autocomplete="off">
+                    @if(Session::get('fail'))
+                        <div class="alert alert-danger">
+                            {{ Session::get('fail') }}
+                        </div>
+                    @endif
+
+                    @if(Session::get('success'))
+                        <div class="alert alert-success">
+                            {{ Session::get('success') }}
+                        </div>
+                    @endif
+
+                    @csrf
+                    <input type="hidden" name="token" value="{{ $token }}">
+                    <div class="form-group">
+                        <label for="email">อีเมลล์</label>
+                        <input type="email" class="form-control" name="email" placeholder="Enter email address" value="{{ $email ?? old('email') }}">
+                        @error('email') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">รหัสผ่าน</label>
+                        <input type="password" class="form-control" name="password" placeholder="Enter password" value="{{ old('password')}}">
+                        @error('password') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm password">ยืนยันรหัสผ่าน</label>
+                        <input type="password" class="form-control" name="confirm_password" placeholder="Confirm password" value="{{ old('confirm_password')}}">
+                        @error('confirm_password') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="form-group mt-2">
+                        <button type="submit" class="btn btn-primary">ยืนยันการรีเช็ตรหัสผ่าน</button>
+                    </div>
+                    <br>
+                    <a href="{{ route('login') }}">ลงชื่อเข้าใช้</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

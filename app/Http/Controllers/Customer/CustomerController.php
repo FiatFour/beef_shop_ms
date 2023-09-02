@@ -16,68 +16,73 @@ use Illuminate\Support\Facades\Mail;
 
 class CustomerController extends Controller
 {
-    function create(Request $request){
+    function createCustomer(Request $request){
         //Validate Input
         $request->validate([
-            'cus_name' => 'required',
-            'email' => 'required|email|unique:customers,email',
-            'password' => 'required|min:5|max:30',
-            'confirm_password' => 'required|min:5|max:30|same:password'
-        ]);
+                'name' => 'required|max:255',
+                'lname' => 'required|max:255',
+                'gender' => 'required',
+                'address' => 'required',
+                'tel' => 'required|min:10|max:10',
+                'email' => 'required|email|unique:customers,email',
+                'password' => 'required|min:5|max:30',
+                'confirm_password' => 'required|min:5|max:30|same:password'
+            ],[
+                'name.required' => "กรุณากรอกชื่อ",
+                'lname.required' => "กรุณากรอกนามสกุล",
+                'gender.required' => "กรุณาเลือกเพศ",
+                'address.required' => "กรุณากรอกที่อยู่",
+                'tel.required' => "กรุณาเบอร์โทร",
+                'email.required' => "กรุณากรอกอีเมล์",
+                'password.required' => "กรุณากรอกรหัสผ่าน",
+                'password.min' => "รหัสผ่านที่กรอกต้องมากกว่า 5 ขึ้นไป",
+                'password.max' => "รหัสผ่านที่กรอกต้องน้อยกว่า 30 ลงไป",
+                'confirm_password.required' => "กรุณากรอกรหัสผ่าน",
+                'confirm_password.min' => "รหัสผ่านที่กรอกต้องมากกว่า 5 ขึ้นไป",
+                'confirm_password.max' => "รหัสผ่านที่กรอกต้องน้อยกว่า 30 ลงไป",
+                'confirm_password.same' => "รหัสผ่านไม่ตรงกัน",
+            ]
+        );
 
         $customer = new Customer();
-        $customer->cus_name = $request->cus_name;
+        $customer->cus_name = $request->name;
+        $customer->cus_lname = $request->lname;
+        $customer->cus_gender = $request->gender;
+        $customer->cus_address = $request->address;
+        $customer->cus_tel = $request->tel;
         $customer->email = $request->email;
         $customer->password = Hash::make($request->password);
         $save = $customer->save();
-        $last_id = $customer->cus_id;
+        $last_id = $customer->id;
 
         $token = $last_id.hash('sha256', Str::random(120));
-        $verifyURL = route('customer.verify',['token'=>$token,'service'=>'Email_verification']);
+        $verifyURL = route('customer.verifyCustomer',['token'=>$token,'service'=>'Email_verification']);
 
         VerifyCustomer::create([
             'cus_id' => $last_id,
             'token' => $token,
         ]);
-        $message = "Dear <b>".$request->cus_name."</b>";
-        $message.= "Thanks for signing up, we just need you to verify your email address to complete setting up your account.";
+        $message = "ถึงคุณ <b>".$request->name. " " .$request->lname. "</b>";
+        $message.= ", คลิ้กลิ้งด้านล่างในการยืนยันอีเมล์เพื่อสำเร็จการสมัครบัญชีนี้";
 
         $mail_data = [
             'recipient' => $request->email,
             'fromEmail' => $request->email,
-            'fromName' => $request->cus_name,
-            'subject' => "Email Verification",
+            'fromName' => "Beef Shop",
+            'subject' => "ยืนยันอีเมลล์",
             'body' => $message,
             'actionLink' => $verifyURL,
         ];
 
 
-        Mail::send('email-template', $mail_data, function ($message) use ($mail_data) {
+        Mail::send('sendLinkEmailForgot', $mail_data, function ($message) use ($mail_data) {
             $message->to($mail_data['recipient'])
                 ->from($mail_data['fromEmail'], $mail_data['fromName'])
                 ->subject($mail_data['subject']);
         });
-        return $save ? redirect()->back()->with('success', "You need to verify your account. We have sent you an activation link, please check your email.") : redirect()->back()->with('fail', "Something went wrong, failed to register");
+        return $save ? redirect()->back()->with('success', "คุณต้องทำการยืนยันบัญชีผู้ใช้. เราได้ส่งลิ้งเพื่อยืนยันบัญชีนี้, โปรดเช็คข้อความทางอีเมล์ของคุณที่ได้ทำการสมัคร.") : redirect()->back()->with('fail', "เกิดความผิดพลาดบางอย่าง, ล้มเหลวในการสมัคร");
     }
-
-/*
-    function check(Request $request){
-        $request->validate([
-            'email' => 'required|email|exists:customers,email',
-            'password' => 'required|min:5|max:30',
-        ]);
-
-        $creds = $request->only('email', 'password');
-        return Auth::guard('customer')->attempt($creds) ? redirect()->route('customer.home') : redirect()->route('customer.login')->with('fail', "Incorrect credentials");
-
-    }
-*/
-    function logout(){
-        Auth::guard('customer')->logout();
-        return redirect()->route('login');
-    }
-
-    public function verify(Request $request){
+    public function verifyCustomer(Request $request){
         $token = $request->token;
         $verifyCustomer = VerifyCustomer::where('token', $token)->first();
 
@@ -87,70 +92,10 @@ class CustomerController extends Controller
                 $customer->email_verified = 1;
                 $customer->save();
 
-                return redirect()->route('login')->with('info','Your email is verified successfully. You can now login')->with('verifiedEmail', $customer->email);
+                return redirect()->route('login')->with('info','การยืนยันบัญชีนี้สำเร็จสิ้น, ยินดีด้วย คุณสามารลงชื่อเข้าใช้ได้แล้ว!')->with('verifiedEmail', $customer->email);
             }else{
-                 return redirect()->route('login')->with('info','Your email is already verified. You can now login')->with('verifiedEmail', $customer->email);
+                 return redirect()->route('login')->with('info','คุณได้ทำการยืนยันบัญชีก่อนหน้านี้แล้ว, ขณะนี้คุณสามารลงชื่อเข้าใช้ได้!')->with('verifiedEmail', $customer->email);
             }
-        }
-    }
-
-    public function showForgotForm(){
-        return view('dashboard.auth.password.forgot');
-    }
-
-    public function sendResetLink(Request $request){
-        $request->validate([
-            'email' => 'required|email|exists:customers,email',
-        ]);
-
-        $token = Str::random(64);
-        DB::table('password_resets')->insert([
-            'email' => $request->email,
-            'token' => $token,
-            'created_at' => Carbon::now(),
-        ]);
-
-        $action_link = route('customer.reset.password.form', ['token' => $token, 'email' => $request->email]);
-        $body = "We are received a request to reset the password for <b>Your app Name </b> account associated with ".$request->email.". You can reset your password by clicking the link below";
-
-        Mail::send('email-forgot', ['action_link' => $action_link, 'body' => $body], function($message) use ($request){
-            $message->from('noreply@example.com', 'Your App Name');
-            $message->to($request->email, 'Your name')
-                    ->subject('Reset password');
-        });
-
-        return back()->with('success', "We have e-mailed your password reset link!");
-    }
-
-    public function showResetForm(Request $request, $token = null){
-        return view('dashboard.auth.password.reset')->with(['token' => $token, 'email' => $request->email]);
-    }
-
-    public function resetPassword(Request $request){
-        $request->validate([
-            'email' => 'required|email|exists:customers,email',
-            'password' => 'required|min:5|max:30',
-            'confirm_password' => 'required|min:5|max:30|same:password'
-        ]);
-
-        $check_token = DB::table('password_resets')->where([
-            'email' => $request->email,
-            'token' => $request->token,
-        ])->first();
-
-        if(!$check_token){
-            return back()->withInput()->with('fail', "Invalid token");
-        }else{
-            Customer::where('email', $request->email)->update([
-                'password' => Hash::make($request->password)
-            ]);
-
-            DB::table('password_resets')->where([
-                'email' => $request->email
-            ]);
-
-            return redirect()->route('login')->with('info', "Your password has been changed! You can login with new password")
-                             ->with('verifiedEmail', $request->email);
         }
     }
 }

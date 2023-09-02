@@ -16,14 +16,18 @@ class Employee extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $primaryKey = 'emp_id';
-
     protected $fillable = [
-        'emp_name', 'emp_lname', 'emp_tel', 'email',
-        'password', 'emp_img', 'emp_address',
-        'emp_gender', 'emp_department', 'is_admin',
-        'email_verified',
+        'emp_name',
+        'emp_lname',
+        'emp_address',
+        'emp_gender',
+        'emp_tel',
+        'emp_img',
+        'emp_department',
 
+        'email',
+        'password',
+        'email_verified',
     ];
 
     /**
@@ -46,5 +50,6 @@ class Employee extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'is_admin' => 'boolean',
+        'email_verified' => 'boolean',
     ];
 }

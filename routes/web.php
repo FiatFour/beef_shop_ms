@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\SuperAdmin\SuperAdminController;
-use App\Http\Middleware\SuperAdmin;
+use App\Http\Controllers\Customer\CustomerController;
+use App\Http\Controllers\SupplierController;
+use App\Models\Supplier;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 /*
@@ -25,16 +25,73 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('login', [LoginController::class, 'index'])->name('login')->middleware('PreventBackHistory');
-Route::post('/check', [LoginController::class, 'check'])->name('check');
+Route::post('/check', [LoginController::class, 'checkLogin'])->name('checkLogin');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-
-Route::controller(App\Http\Controllers\ResetPasswordController::class)->group(function(){
-    Route::get('/password/forgot', 'showForgotForm')->name('forgot.password.form');
-    Route::post('/password/forgot', 'sendResetLink')->name('forgot.password.link');
-    Route::get('/password/reset/{token}', 'showResetForm')->name('reset.password.form');
-    Route::post('/password/reset', 'resetPassword')->name('reset.password');
+Route::controller(App\Http\Controllers\Auth\ResetPasswordController::class)->group(function(){
+    Route::get('/password/forgot', 'showForgotForm')->name('forgotPasswordForm');
+    Route::post('/password/forgot', 'sendResetLink')->name('resetPasswordLink');
+    Route::get('/password/reset/{token}', 'showResetForm')->name('resetPasswordForm');
+    Route::post('/password/reset', 'resetPassword')->name('resetPassword');
 });
 
+Route::prefix('customer')->name('customer.')->group(function(){
+    Route::middleware(['guest:customer', 'PreventBackHistory'])->group(function(){
+        Route::view('/register', 'customer.register')->name('registerCustomer');
+        Route::post('/create', [CustomerController::class, 'createCustomer'])->name('createCustomer');
+        Route::post('/check', [CustomerController::class, 'checkCustomer'])->name('checkCustomer');
+        Route::get('/verify', [CustomerController::class,'verifyCustomer'])->name('verifyCustomer');
+    });
+
+    Route::middleware(['auth:customer', 'is_customer_verify_email', 'PreventBackHistory'])->group(function(){
+        Route::view('/home', 'customer.home')->name('home');
+    });
+});
+
+Route::prefix('admin')->name('admin.')->group(function(){
+    Route::middleware(['guest:employee', 'PreventBackHistory'])->group(function(){
+        // Route::view('/login', 'dashboard.admin.login')->name('login');
+        // Route::post('/check', [AdminController::class, 'check'])->name('check');
+        Route::get('/verify', [AdminController::class, 'verify'])->name('verify');
+
+
+    });
+
+    Route::middleware(['auth:employee', 'is_employee_verify_email', 'PreventBackHistory', 'is_admin'])->group(function(){
+        Route::view('/home', 'admin.home')->name('home');
+
+        Route::controller(App\Http\Controllers\Admin\EmployeeCrudController::class)->group(function(){
+            // Employee
+            Route::get('/employees', 'indexEmployee')->name('employee');
+            Route::get('/employees/create', 'createEmployee')->name('createEmployee');
+            Route::post('/employees/add', 'storeEmployee')->name('addEmployee');
+            Route::get('/employees/verify','verifyEmployee')->name('verifyEmployee');
+            Route::get('/employees/edit/{id}', 'editEmployee');
+            Route::put('/employees/update/{id}', 'updateEmployee');
+        });
+
+        //Supplier
+        Route::controller(App\Http\Controllers\Admin\SupplierController::class)->group(function(){
+            Route::get('/suppliers', 'indexSupplier')->name('supplier');
+            Route::post('/suppliers/add', 'storeSupplier')->name('addSupplier');
+            Route::get('/suppliers/edit/{id}', 'editSupplier');
+            Route::put('/suppliers/update/{id}', 'updateSupplier');
+            Route::get('/suppliers/delete/{id}', 'deleteSupplier');
+        });
+
+        Route::controller(App\Http\Controllers\Admin\CowController::class)->group(function(){
+            Route::get('/cows', 'indexCow')->name('cow');
+            // Route::post('/cow/add', 'create');
+            Route::get('/cows/create', 'createCow')->name('createCow');
+            Route::post('/cows/add', 'storeCow')->name('addCow');
+
+            Route::get('/cows/edit/{cow_id}', 'editCow');
+            Route::post('/cows/update/{cow_id}', 'updateCow');
+            Route::get('/cows/delete/{id}' , 'destroyCow');
+        });
+    });
+
+});
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

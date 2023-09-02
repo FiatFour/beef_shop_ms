@@ -16,10 +16,12 @@ class Customer extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $primaryKey = 'cus_id';
-
     protected $fillable = [
         'cus_name',
+        'cus_lname',
+        'cus_gender',
+        'cus_address',
+        'cus_tel',
         'email',
         'password',
         'email_verified',
@@ -43,6 +45,7 @@ class Customer extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'email_verified' => 'boolean',
     ];
 }
 

@@ -41,7 +41,7 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    function check(Request $request){
+    function checkLogin(Request $request){
         $request->validate([
             'email' => [
                 'required',
@@ -68,7 +68,6 @@ class LoginController extends Controller
         else{
             return redirect()->route('login')->with('fail', "Incorrect credentials");
         }
-        // return Auth::guard('customer')->attempt($creds) ? redirect()->route('customer.home') : redirect()->route('customer.login')->with('fail', "Incorrect credentials");
 
     }
     public function index(){
@@ -83,6 +82,16 @@ class LoginController extends Controller
             return redirect()->route('customer.home');
         }
 
-            return view('dashboard.auth.login');
+        return view('login');
+    }
+
+    public function logout(){
+        if(Auth::guard('customer')){
+            Auth::guard('customer')->logout();
+        }
+        if(Auth::guard('employee')){
+            Auth::guard('employee')->logout();
+        }
+        return redirect()->route('login');
     }
 }

@@ -12,19 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employees', function (Blueprint $table) {
-            $table->id('emp_id');
-            $table->string('emp_name',50);
-            $table->string('emp_lname',50)->nullable();
-            $table->string('emp_tel',33)->nullable();
-            $table->string('email',100)->unique();
-            $table->string('password');
-            $table->string('emp_img')->nullable();
-            $table->text('emp_address')->nullable();
-            $table->tinyInteger('emp_gender')->nullable();
-            $table->tinyInteger('emp_department')->nullable();
-            $table->boolean('is_admin')->nullable();
+            $table->id();
+            $table->string('emp_name');
+            $table->string('emp_lname');
+            $table->text('emp_address');
+            $table->tinyInteger('emp_gender');
+            $table->string('emp_tel');
+            $table->string('emp_img');
+            $table->string('emp_department');
 
-            $table->integer('email_verified')->default(0);
+            $table->string('email',);
+            $table->string('password');
+            $table->boolean('is_admin')->default(false);
+            $table->boolean('email_verified')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

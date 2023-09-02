@@ -38,7 +38,7 @@ class ResetPasswordController extends Controller
     protected $redirectTo = RouteServiceProvider::HOME;
 
     public function showForgotForm(){
-        return view('dashboard.auth.password.forgot');
+        return view('forgotPassword');
     }
     public function sendResetLink(Request $request){
         $request->validate([
@@ -62,20 +62,20 @@ class ResetPasswordController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-        $action_link = route('reset.password.form', ['token' => $token, 'email' => $request->email]);
-        $body = "We are received a request to reset the password for <b>Your app Name </b> account associated with ".$request->email.". You can reset your password by clicking the link below";
+        $actionLink = route('resetPasswordForm', ['token' => $token, 'email' => $request->email]);
+        $body = "รีเซ็ตรหัสผ่าน <b>Beef Shop </b> กับบัญชี ".$request->email.". คุณสามารถรีเซ็ตนหัสผ่านคุณได้คลิ้กลิ้งด้านล่าง";
 
-        Mail::send('email-forgot', ['action_link' => $action_link, 'body' => $body], function($message) use ($request){
-            $message->from('noreply@example.com', 'Your App Name');
-            $message->to($request->email, 'Your name')
+        Mail::send('sendLinkEmailForgot', ['actionLink' => $actionLink, 'body' => $body], function($message) use ($request){
+            $message->from('noreply@example.com', 'Beef Shop');
+            $message->to($request->email, 'Anfat Nilaingan')
                     ->subject('Reset password');
         });
 
-        return back()->with('success', "We have e-mailed your password reset link!");
+        return back()->with('success', "เราได้ส่งลิ้งเพื่อรีเซ็ตรหัสผ่านของคุณทางอีเมล์แล้ว!");
     }
 
     public function showResetForm(Request $request, $token = null){
-        return view('dashboard.auth.password.reset')->with(['token' => $token, 'email' => $request->email]);
+        return view('resetPassword')->with(['token' => $token, 'email' => $request->email]);
     }
 
     public function resetPassword(Request $request){
@@ -118,7 +118,7 @@ class ResetPasswordController extends Controller
                 'email' => $request->email
             ]);
 
-            return redirect()->route('login')->with('info', "Your password has been changed! You can login with new password")
+            return redirect()->route('login')->with('info', "คุณได้ทำการรีเซ็ตรหัสผ่านเรียบร้อยแล้ว! คุณสามารถลงชื่อเข้าใช้ด้วยรหัสผ่านใหม่ของคุณ")
                              ->with('verifiedEmail', $request->email);
         }
     }

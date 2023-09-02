@@ -26,7 +26,7 @@ Auth::routes();
 
 Route::get('login', [LoginController::class, 'index'])->name('login')->middleware('PreventBackHistory');
 Route::post('/check', [LoginController::class, 'checkLogin'])->name('checkLogin');
-Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logoutAll');
 
 Route::controller(App\Http\Controllers\Auth\ResetPasswordController::class)->group(function(){
     Route::get('/password/forgot', 'showForgotForm')->name('forgotPasswordForm');
@@ -60,6 +60,14 @@ Route::prefix('admin')->name('admin.')->group(function(){
     Route::middleware(['auth:employee', 'is_employee_verify_email', 'PreventBackHistory', 'is_admin'])->group(function(){
         Route::view('/dashboard', 'admin.dashboard')->name('home');
 
+        Route::controller(App\Http\Controllers\Admin\CategoryController::class)->group(function(){
+            Route::get('/categories/create', 'create')->name('categories.create');
+            Route::post('/categories', 'store')->name('categories.store');
+            Route::get('/categories', 'index')->name('category');
+            Route::get('/categories/verify','verify')->name('verifyCategory');
+            Route::get('/categories/edit/{id}', 'edit');
+            Route::put('/categories/update/{id}', 'update');
+        });
         Route::controller(App\Http\Controllers\Admin\EmployeeCrudController::class)->group(function(){
             // Employee
             Route::get('/employees', 'indexEmployee')->name('employee');
@@ -79,6 +87,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
             Route::get('/suppliers/delete/{id}', 'deleteSupplier');
         });
 
+        //Cow
         Route::controller(App\Http\Controllers\Admin\CowController::class)->group(function(){
             Route::get('/cows', 'indexCow')->name('cow');
             // Route::post('/cow/add', 'create');

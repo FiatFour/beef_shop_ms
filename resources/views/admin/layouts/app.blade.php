@@ -11,6 +11,7 @@
 		<!-- Theme style -->
 		<link rel="stylesheet" href="{{ asset('admin-assets/css/adminlte.min.css') }}">
 		<link rel="stylesheet" href="{{ asset('admin-assets/css/custom.css') }}">
+        <meta name="csrf-token" content="{{  csrf_token() }}">
 	</head>
 	<body class="hold-transition sidebar-mini">
 		<!-- Site wrapper -->
@@ -51,7 +52,7 @@
 								<i class="fas fa-lock mr-2"></i> Change Password
 							</a>
 							<div class="dropdown-divider"></div>
-							<a href="{{ route('logout') }}" class="dropdown-item text-danger">
+							<a href="{{ route('logoutAll') }}" class="dropdown-item text-danger">
 								<i class="fas fa-sign-out-alt mr-2"></i> Logout
 							</a>
 						</div>
@@ -63,6 +64,7 @@
             @include('admin.layouts.sidebar')
 			<!-- Content Wrapper. Contains page content -->
 			<div class="content-wrapper">
+                <!-- /.content -->
                 @yield('content')
 			</div>
 			<!-- /.content-wrapper -->
@@ -82,6 +84,13 @@
 		<!-- AdminLTE for demo purposes -->
 		<script src="{{ asset('admin-assets/js/demo.js') }}"></script>
 
+        <script type="text/javascript">
+            $.ajaxSetup({
+                headers:{
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        </script>
 
         @yield('customJs')
 	</body>

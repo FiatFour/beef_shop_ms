@@ -20,7 +20,6 @@ Route::prefix('employee')->name('employee.')->group(function(){
 
     Route::middleware(['auth:employee', 'is_employee_verify_email', 'PreventBackHistory'])->group(function(){
         Route::view('/home', 'dashboard.employee.home')->name('home');
-        Route::post('/logout', [EmployeeController::class, 'logout'])->name('logout');
     });
 
 });

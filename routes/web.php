@@ -26,7 +26,7 @@ Auth::routes();
 
 Route::get('login', [LoginController::class, 'index'])->name('login')->middleware('PreventBackHistory');
 Route::post('/check', [LoginController::class, 'checkLogin'])->name('checkLogin');
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::controller(App\Http\Controllers\Auth\ResetPasswordController::class)->group(function(){
     Route::get('/password/forgot', 'showForgotForm')->name('forgotPasswordForm');
@@ -58,7 +58,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
     });
 
     Route::middleware(['auth:employee', 'is_employee_verify_email', 'PreventBackHistory', 'is_admin'])->group(function(){
-        Route::view('/home', 'admin.home')->name('home');
+        Route::view('/dashboard', 'admin.dashboard')->name('home');
 
         Route::controller(App\Http\Controllers\Admin\EmployeeCrudController::class)->group(function(){
             // Employee

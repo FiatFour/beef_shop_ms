@@ -5,8 +5,10 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\SupplierController;
 use App\Models\Supplier;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -61,13 +63,25 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::view('/dashboard', 'admin.dashboard')->name('home');
 
         Route::controller(App\Http\Controllers\Admin\CategoryController::class)->group(function(){
+            Route::get('/categories', 'index')->name('categories.index');
             Route::get('/categories/create', 'create')->name('categories.create');
             Route::post('/categories', 'store')->name('categories.store');
-            Route::get('/categories', 'index')->name('category');
-            Route::get('/categories/verify','verify')->name('verifyCategory');
-            Route::get('/categories/edit/{id}', 'edit');
-            Route::put('/categories/update/{id}', 'update');
+            // Route::get('/categories/verify','verify')->name('verifyCategory');
+            // Route::get('/categories/edit/{id}', 'edit');
+            // Route::put('/categories/update/{id}', 'update');
         });
+
+        Route::get('/getSlug', function(Request $request){
+            $slug = '';
+            if(!empty($request->title)){
+                $slug = Str::slug($request->title);
+            }
+            return response()->json([
+                'status' => true,
+                'slug' => $slug
+            ]);
+        })->name('getSlug');
+
         Route::controller(App\Http\Controllers\Admin\EmployeeCrudController::class)->group(function(){
             // Employee
             Route::get('/employees', 'indexEmployee')->name('employee');

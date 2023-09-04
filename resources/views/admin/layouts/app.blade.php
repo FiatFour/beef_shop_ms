@@ -11,6 +11,7 @@
 		<!-- Theme style -->
 		<link rel="stylesheet" href="{{ asset('admin-assets/css/adminlte.min.css') }}">
 		<link rel="stylesheet" href="{{ asset('admin-assets/css/custom.css') }}">
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <meta name="csrf-token" content="{{  csrf_token() }}">
 	</head>
 	<body class="hold-transition sidebar-mini">

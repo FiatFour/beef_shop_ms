@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\TempImagesController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\SupplierController;
@@ -62,14 +63,20 @@ Route::prefix('admin')->name('admin.')->group(function(){
     Route::middleware(['auth:employee', 'is_employee_verify_email', 'PreventBackHistory', 'is_admin'])->group(function(){
         Route::view('/dashboard', 'admin.dashboard')->name('home');
 
+        // Category Route
         Route::controller(App\Http\Controllers\Admin\CategoryController::class)->group(function(){
             Route::get('/categories', 'index')->name('categories.index');
             Route::get('/categories/create', 'create')->name('categories.create');
             Route::post('/categories', 'store')->name('categories.store');
+            Route::get('/categories/edit/{id}', 'edit')->name('categories.edit');
+            Route::put('/categories/update/{id}', 'update')->name('categories.update');
+            Route::delete('/categories/{id}', 'destroy')->name('categories.delete');
             // Route::get('/categories/verify','verify')->name('verifyCategory');
-            // Route::get('/categories/edit/{id}', 'edit');
-            // Route::put('/categories/update/{id}', 'update');
+
         });
+
+        // temp-images.create
+        Route::post('/upload-temp-image', [TempImagesController::class, 'create'])->name('temp-images.create');
 
         Route::get('/getSlug', function(Request $request){
             $slug = '';
@@ -81,6 +88,11 @@ Route::prefix('admin')->name('admin.')->group(function(){
                 'slug' => $slug
             ]);
         })->name('getSlug');
+
+        // Sub category
+        Route::controller(App\Http\Controllers\Admin\SubCategoryController::class)->group(function(){
+            Route::get('/sub-categories/create', 'create')->name('sub-categories.create');
+        });
 
         Route::controller(App\Http\Controllers\Admin\EmployeeCrudController::class)->group(function(){
             // Employee

@@ -26,7 +26,7 @@
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label>Category</label>
-                                    <select name="category" id="category" class="form-control">
+                                    <select name="category_id" id="category" class="form-control">
                                         <option value="">Select a category</option>
                                         @if ($categories->isNotEmpty())
                                             @foreach ($categories as $category)
@@ -92,8 +92,8 @@ $("#subCategoryForm").submit(function(event) {
             $("button[type=submit]").prop('disabled', false);
 
             if (response['status'] == true) {
-                // Redirect to the index page after a successful category creation
-                window.location.href = "{{ route('admin.categories.index') }}";
+
+                window.location.href = "{{ route('admin.sub-categories.index') }}";
 
                 $("#name").removeClass('is-invalid')
                     .siblings('p')
@@ -102,6 +102,11 @@ $("#subCategoryForm").submit(function(event) {
                 $("#slug").removeClass('is-invalid')
                     .siblings('p')
                     .removeClass('invalid-feedback').html("");
+
+                $("#category").removeClass('is-invalid')
+                    .siblings('p')
+                    .removeClass('invalid-feedback').html("");
+
             } else {
                 var errors = response['errors'];
                 if (errors['name']) {
@@ -124,10 +129,10 @@ $("#subCategoryForm").submit(function(event) {
                         .removeClass('invalid-feedback').html("");
                 }
 
-                if (errors['category']) {
+                if (errors['category_id']) {
                     $("#category").addClass('is-invalid')
                         .siblings('p')
-                        .addClass('invalid-feedback').html(errors['category']);
+                        .addClass('invalid-feedback').html(errors['category_id']);
                 } else {
                     $("#category").removeClass('is-invalid')
                         .siblings('p')

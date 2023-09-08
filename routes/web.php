@@ -80,6 +80,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
 
         // Sub category
         Route::controller(App\Http\Controllers\Admin\SubCategoryController::class)->group(function(){
+            Route::get('/sub-categories', 'index')->name('sub-categories.index');
             Route::get('/sub-categories/create', 'create')->name('sub-categories.create');
             Route::post('/sub-categories', 'store')->name('sub-categories.store');
         });

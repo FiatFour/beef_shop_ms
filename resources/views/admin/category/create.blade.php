@@ -130,7 +130,7 @@ $("#categoryForm").submit(function(event) {
 });
 
 $("#name").change(function(){
-    element = $(this);
+    element = $(this); // $('#categoryForm')
     $("button[type=submit]").prop('disabled', true);
     $.ajax({
         url: "{{ route('admin.getSlug') }}", // Notice the double curly braces for route()

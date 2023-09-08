@@ -78,6 +78,11 @@ Route::prefix('admin')->name('admin.')->group(function(){
         // temp-images.create
         Route::post('/upload-temp-image', [TempImagesController::class, 'create'])->name('temp-images.create');
 
+        // Sub category
+        Route::controller(App\Http\Controllers\Admin\SubCategoryController::class)->group(function(){
+            Route::get('/sub-categories/create', 'create')->name('sub-categories.create');
+            Route::post('/sub-categories', 'store')->name('sub-categories.store');
+        });
         Route::get('/getSlug', function(Request $request){
             $slug = '';
             if(!empty($request->title)){
@@ -89,10 +94,6 @@ Route::prefix('admin')->name('admin.')->group(function(){
             ]);
         })->name('getSlug');
 
-        // Sub category
-        Route::controller(App\Http\Controllers\Admin\SubCategoryController::class)->group(function(){
-            Route::get('/sub-categories/create', 'create')->name('sub-categories.create');
-        });
 
         Route::controller(App\Http\Controllers\Admin\EmployeeCrudController::class)->group(function(){
             // Employee

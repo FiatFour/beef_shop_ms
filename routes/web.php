@@ -83,6 +83,21 @@ Route::prefix('admin')->name('admin.')->group(function(){
             Route::get('/sub-categories', 'index')->name('sub-categories.index');
             Route::get('/sub-categories/create', 'create')->name('sub-categories.create');
             Route::post('/sub-categories', 'store')->name('sub-categories.store');
+            Route::get('/sub-categories/edit/{id}', 'edit')->name('sub-categories.edit');
+            Route::put('/sub-categories/update/{id}', 'update')->name('sub-categories.update');
+            Route::delete('/sub-categories/{id}', 'destroy')->name('sub-categories.delete');
+
+        });
+
+        // Cow gene
+        Route::controller(App\Http\Controllers\Admin\CowGenesController::class)->group(function(){
+            Route::get('/cow-genes', 'index')->name('cow-genes.index');
+            Route::get('/cow-genes/create', 'create')->name('cow-genes.create');
+            Route::post('/cow-genes', 'store')->name('cow-genes.store');
+
+            Route::get('/cow-genes/edit/{id}', 'edit')->name('cow-genes.edit');
+            Route::put('/cow-genes/update/{id}', 'update')->name('cow-genes.update');
+            Route::delete('/cow-genes/{id}', 'destroy')->name('cow-genes.delete');
         });
         Route::get('/getSlug', function(Request $request){
             $slug = '';

@@ -6,7 +6,7 @@
         <div class="container-fluid my-2">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Create Sub Category</h1>
+                    <h1>Edit Sub Category</h1>
                 </div>
                 <div class="col-sm-6 text-right">
                     <a href="{{ route('admin.sub-categories.index') }}" class="btn btn-primary">Back</a>
@@ -30,7 +30,8 @@
                                         <option value="">Select a category</option>
                                         @if ($categories->isNotEmpty())
                                             @foreach ($categories as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                <option {{ ($subCategory->category_id == $category->id) ? 'selected' : '' }}
+                                                    value="{{ $category->id }}">{{ $category->name }}</option>
                                             @endforeach
                                         @endif
                                     </select>
@@ -41,7 +42,7 @@
                                 <div class="mb-3">
                                     <label for="name">Name</label>
                                     <input type="text" name="name" id="name" class="form-control"
-                                        placeholder="Name">
+                                        placeholder="Name" value="{{ $subCategory->name }}">
                                     <p></p>
                                 </div>
                             </div>
@@ -49,7 +50,7 @@
                                 <div class="mb-3">
                                     <label>Slug</label>
                                     <input readonly type="text" name="slug" id="slug" class="form-control"
-                                        placeholder="Slug">
+                                        placeholder="Slug" value="{{ $subCategory->slug }}">
                                     <p></p>
                                 </div>
                             </div>
@@ -57,8 +58,8 @@
                                 <div class="mb-3">
                                     <label>Status</label>
                                     <select name="status" id="status" class="form-control">
-                                        <option value="1">Active</option>
-                                        <option value="0">Block</option>
+                                        <option {{ ($subCategory->status == 1) ? 'selected' : '' }} value="1">Active</option>
+                                        <option {{ ($subCategory->status == 0) ? 'selected' : '' }} value="0">Block</option>
                                     </select>
                                     <p></p>
                                 </div>
@@ -67,7 +68,7 @@
                     </div>
                 </div>
                 <div class="pb-5 pt-3">
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                     <a href="{{ route('admin.sub-categories.index') }}" class="btn btn-outline-dark ml-3">Cancel</a>
                 </div>
             </form>
@@ -84,8 +85,8 @@ $("#subCategoryForm").submit(function(event) {
     var element = $(this);
     $("button[type=submit]").prop('disabled', true);
     $.ajax({
-        url: "{{ route('admin.sub-categories.store') }}",
-        type: 'post',
+        url: "{{ route('admin.sub-categories.update', $subCategory->id) }}",
+        type: 'put',
         data: element.serializeArray(),
         dataType: 'json',
         success: function(response) {
@@ -108,6 +109,11 @@ $("#subCategoryForm").submit(function(event) {
                     .removeClass('invalid-feedback').html("");
 
             } else {
+                if (response['notFound'] == true){
+                    window.location.href = "{{ route('admin.sub-categories.index') }}";
+                    return false;
+                }
+
                 var errors = response['errors'];
                 if (errors['name']) {
                     $("#name").addClass('is-invalid')

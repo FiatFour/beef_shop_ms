@@ -70,6 +70,7 @@ class LoginController extends Controller
         }
 
     }
+
     public function index(){
         if(Auth::guard('employee')->user()){
             if(Auth::guard('employee')->user()->is_admin==0){

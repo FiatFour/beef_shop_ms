@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\ProductSubCategoryController;
 use App\Http\Controllers\Admin\TempImagesController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Customer\CustomerController;
@@ -63,6 +64,17 @@ Route::prefix('admin')->name('admin.')->group(function(){
     Route::middleware(['auth:employee', 'is_employee_verify_email', 'PreventBackHistory', 'is_admin'])->group(function(){
         Route::view('/dashboard', 'admin.dashboard')->name('home');
 
+        Route::get('/getSlug', function(Request $request){
+            $slug = '';
+            if(!empty($request->title)){
+                $slug = Str::slug($request->title);
+            }
+            return response()->json([
+                'status' => true,
+                'slug' => $slug
+            ]);
+        })->name('getSlug');
+
         // Category Route
         Route::controller(App\Http\Controllers\Admin\CategoryController::class)->group(function(){
             Route::get('/categories', 'index')->name('categories.index');
@@ -99,16 +111,31 @@ Route::prefix('admin')->name('admin.')->group(function(){
             Route::put('/cow-genes/update/{id}', 'update')->name('cow-genes.update');
             Route::delete('/cow-genes/{id}', 'destroy')->name('cow-genes.delete');
         });
-        Route::get('/getSlug', function(Request $request){
-            $slug = '';
-            if(!empty($request->title)){
-                $slug = Str::slug($request->title);
-            }
-            return response()->json([
-                'status' => true,
-                'slug' => $slug
-            ]);
-        })->name('getSlug');
+
+        // Product
+        Route::controller(App\Http\Controllers\Admin\ProductController::class)->group(function(){
+            Route::get('/products/create', 'create')->name('products.create');
+            Route::post('/products', 'store')->name('products.store');
+        });
+        Route::get('/product-subcategories',[ProductSubCategoryController::class, 'index'])->name('product-subcategories.index');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         Route::controller(App\Http\Controllers\Admin\EmployeeCrudController::class)->group(function(){

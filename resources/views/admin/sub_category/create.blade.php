@@ -79,74 +79,74 @@
 
 @section('customJs')
     <script>
-$("#subCategoryForm").submit(function(event) {
-    event.preventDefault();
-    var element = $(this);
-    $("button[type=submit]").prop('disabled', true);
-    $.ajax({
-        url: "{{ route('admin.sub-categories.store') }}",
-        type: 'post',
-        data: element.serializeArray(),
-        dataType: 'json',
-        success: function(response) {
-            $("button[type=submit]").prop('disabled', false);
+        $("#subCategoryForm").submit(function(event) {
+            event.preventDefault();
+            var element = $(this);
+            $("button[type=submit]").prop('disabled', true);
+            $.ajax({
+                url: "{{ route('admin.sub-categories.store') }}",
+                type: 'post',
+                data: element.serializeArray(),
+                dataType: 'json',
+                success: function(response) {
+                    $("button[type=submit]").prop('disabled', false);
 
-            if (response['status'] == true) {
+                    if (response['status'] == true) {
 
-                window.location.href = "{{ route('admin.sub-categories.index') }}";
+                        window.location.href = "{{ route('admin.sub-categories.index') }}";
 
-                $("#name").removeClass('is-invalid')
-                    .siblings('p')
-                    .removeClass('invalid-feedback').html("");
+                        $("#name").removeClass('is-invalid')
+                            .siblings('p')
+                            .removeClass('invalid-feedback').html("");
 
-                $("#slug").removeClass('is-invalid')
-                    .siblings('p')
-                    .removeClass('invalid-feedback').html("");
+                        $("#slug").removeClass('is-invalid')
+                            .siblings('p')
+                            .removeClass('invalid-feedback').html("");
 
-                $("#category").removeClass('is-invalid')
-                    .siblings('p')
-                    .removeClass('invalid-feedback').html("");
+                        $("#category").removeClass('is-invalid')
+                            .siblings('p')
+                            .removeClass('invalid-feedback').html("");
 
-            } else {
-                var errors = response['errors'];
-                if (errors['name']) {
-                    $("#name").addClass('is-invalid')
-                        .siblings('p')
-                        .addClass('invalid-feedback').html(errors['name']);
-                } else {
-                    $("#name").removeClass('is-invalid')
-                        .siblings('p')
-                        .removeClass('invalid-feedback').html("");
+                    } else {
+                        var errors = response['errors'];
+                        if (errors['name']) {
+                            $("#name").addClass('is-invalid')
+                                .siblings('p')
+                                .addClass('invalid-feedback').html(errors['name']);
+                        } else {
+                            $("#name").removeClass('is-invalid')
+                                .siblings('p')
+                                .removeClass('invalid-feedback').html("");
+                        }
+
+                        if (errors['slug']) {
+                            $("#slug").addClass('is-invalid')
+                                .siblings('p')
+                                .addClass('invalid-feedback').html(errors['slug']);
+                        } else {
+                            $("#slug").removeClass('is-invalid')
+                                .siblings('p')
+                                .removeClass('invalid-feedback').html("");
+                        }
+
+                        if (errors['category_id']) {
+                            $("#category").addClass('is-invalid')
+                                .siblings('p')
+                                .addClass('invalid-feedback').html(errors['category_id']);
+                        } else {
+                            $("#category").removeClass('is-invalid')
+                                .siblings('p')
+                                .removeClass('invalid-feedback').html("");
+                        }
+                    }
+                },
+                error: function(jqXHR, exception) {
+                    // Handle error here, e.g., display an error message
+                    console.log("Something went wrong");
+                    console.log(jqXHR);
                 }
-
-                if (errors['slug']) {
-                    $("#slug").addClass('is-invalid')
-                        .siblings('p')
-                        .addClass('invalid-feedback').html(errors['slug']);
-                } else {
-                    $("#slug").removeClass('is-invalid')
-                        .siblings('p')
-                        .removeClass('invalid-feedback').html("");
-                }
-
-                if (errors['category_id']) {
-                    $("#category").addClass('is-invalid')
-                        .siblings('p')
-                        .addClass('invalid-feedback').html(errors['category_id']);
-                } else {
-                    $("#category").removeClass('is-invalid')
-                        .siblings('p')
-                        .removeClass('invalid-feedback').html("");
-                }
-            }
-        },
-        error: function(jqXHR, exception) {
-            // Handle error here, e.g., display an error message
-            console.log("Something went wrong");
-            console.log(jqXHR);
-        }
-    });
-});
+            });
+        });
 
         $("#name").change(function() {
             element = $(this);

@@ -114,6 +114,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
 
         // Product
         Route::controller(App\Http\Controllers\Admin\ProductController::class)->group(function(){
+            Route::get('/products', 'index')->name('products.index');
             Route::get('/products/create', 'create')->name('products.create');
             Route::post('/products', 'store')->name('products.store');
         });

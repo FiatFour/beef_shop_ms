@@ -6,12 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\CowGene;
 use App\Models\Product;
+use App\Models\ProductImage;
+use App\Models\TempImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\File;
+// use Image;
 class ProductController extends Controller
 {
+    public function index(){
+
+    }
+
     public function create(){
         $categories = Category::orderBy('name', 'ASC')->get();
         $cow_genes = CowGene::orderBy('name', 'ASC')->get();
@@ -55,6 +62,47 @@ class ProductController extends Controller
             $product->is_featured = $request->is_featured;
             $product->save();
 
+            // Save Gallery Pics
+            if(!empty($request->image_array)){
+                foreach($request->image_array as $temp_image_id){
+
+                    $tempImageInfo = TempImage::find($temp_image_id);
+                    $extArray = explode('.',$tempImageInfo->name); // Get name of pic like 1693947083.jpg
+                    $ext = last($extArray); // File name extension like jpg.gif.png etc
+
+                    $productImage = new ProductImage();
+                    $productImage->product_id = $product->id;
+                    $productImage->image = 'NULL';
+                    $productImage->save();
+
+                    $imageName = $product->id.'-'.$productImage->id.'-'.time().'.'.$ext; // 4-1-12341234.jpg
+                    $sourcePath = public_path().'/temp/'.$tempImageInfo->name;
+                    $destPath = public_path().'/uploads/product/'.$tempImageInfo->name;
+                    File::copy($sourcePath, $destPath);
+                    $productImage->image = $imageName;
+                    $productImage->save();
+
+                    // Generate Product Thumbnails
+
+                    // Large Image
+                    // $sourcePath = public_path().'/temp/'.$tempImageInfo->name;
+                    // $destPath = public_path().'/uploads/product/large/'.$tempImgeInfo->name;
+                    // $image = Image::make($sourcePath);
+                    // $image->resize(1400, null, function ($constraint){
+                    //     $constraint->aspectRation();
+                    // });
+                    // image->save($destPath);
+
+                    // Small Image
+                    // $destPath = public_path().'/uploads/product/large/'.$tempImgeInfo->name;
+                    // $image = Image::make($sourcePath);
+                    // $image->fit(300, 300);
+                    // image->save($destPath);
+
+
+
+                }
+            }
             Session()->flash('success', "Product added successfully");
             return response()->json([
                 'status' => true,

@@ -15,8 +15,15 @@ use Illuminate\Support\Facades\File;
 // use Image;
 class ProductController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
+        $products = Product::latest('id')->with('product_images');
 
+        if($request->get('keyword') != ""){
+            $products = $products->where('title', 'like', '%'.$request->keyword.'%');
+        }
+
+        $products = $products->paginate();
+        return view('admin.products.list', compact('products'));
     }
 
     public function create(){
@@ -77,7 +84,7 @@ class ProductController extends Controller
 
                     $imageName = $product->id.'-'.$productImage->id.'-'.time().'.'.$ext; // 4-1-12341234.jpg
                     $sourcePath = public_path().'/temp/'.$tempImageInfo->name;
-                    $destPath = public_path().'/uploads/product/'.$tempImageInfo->name;
+                    $destPath = public_path().'/uploads/product/'.$imageName;
                     File::copy($sourcePath, $destPath);
                     $productImage->image = $imageName;
                     $productImage->save();
@@ -86,7 +93,7 @@ class ProductController extends Controller
 
                     // Large Image
                     // $sourcePath = public_path().'/temp/'.$tempImageInfo->name;
-                    // $destPath = public_path().'/uploads/product/large/'.$tempImgeInfo->name;
+                    // $destPath = public_path().'/uploads/product/large/'.$imageName;
                     // $image = Image::make($sourcePath);
                     // $image->resize(1400, null, function ($constraint){
                     //     $constraint->aspectRation();
@@ -94,7 +101,7 @@ class ProductController extends Controller
                     // image->save($destPath);
 
                     // Small Image
-                    // $destPath = public_path().'/uploads/product/large/'.$tempImgeInfo->name;
+                    // $destPath = public_path().'/uploads/product/small/'.$imageName;
                     // $image = Image::make($sourcePath);
                     // $image->fit(300, 300);
                     // image->save($destPath);

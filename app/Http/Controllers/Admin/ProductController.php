@@ -16,25 +16,28 @@ use Illuminate\Support\Facades\File;
 // use Image;
 class ProductController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $products = Product::latest('id')->with('product_images');
 
-        if($request->get('keyword') != ""){
-            $products = $products->where('title', 'like', '%'.$request->keyword.'%');
+        if ($request->get('keyword') != "") {
+            $products = $products->where('title', 'like', '%' . $request->keyword . '%');
         }
 
         $products = $products->paginate();
         return view('admin.products.list', compact('products'));
     }
 
-    public function create(){
+    public function create()
+    {
         $categories = Category::orderBy('name', 'ASC')->get();
         $cow_genes = CowGene::orderBy('name', 'ASC')->get();
         // return view('admin.products.create', compact('products'));
         return view('admin.products.create', compact('categories', 'cow_genes'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $rules = [
             'title' => 'required',
             'slug' => 'required|unique:products',
@@ -45,13 +48,13 @@ class ProductController extends Controller
             'is_featured' => 'required|in:Yes,No',
         ];
 
-        if(!empty($request->track_qty) && $request->track_qty == 'Yes'){
+        if (!empty($request->track_qty) && $request->track_qty == 'Yes') {
             $rules['qty'] = 'required|numeric';
         }
 
         $validator = Validator::make($request->all(), $rules);
 
-        if($validator->passes()){
+        if ($validator->passes()) {
 
             $product = new Product;
             $product->title = $request->title;
@@ -71,11 +74,11 @@ class ProductController extends Controller
             $product->save();
 
             // Save Gallery Pics
-            if(!empty($request->image_array)){
-                foreach($request->image_array as $temp_image_id){
+            if (!empty($request->image_array)) {
+                foreach ($request->image_array as $temp_image_id) {
 
                     $tempImageInfo = TempImage::find($temp_image_id);
-                    $extArray = explode('.',$tempImageInfo->name); // Get name of pic like 1693947083.jpg
+                    $extArray = explode('.', $tempImageInfo->name); // Get name of pic like 1693947083.jpg
                     $ext = last($extArray); // File name extension like jpg.gif.png etc
 
                     $productImage = new ProductImage();
@@ -83,9 +86,9 @@ class ProductController extends Controller
                     $productImage->image = 'NULL';
                     $productImage->save();
 
-                    $imageName = $product->id.'-'.$productImage->id.'-'.time().'.'.$ext; // 4-1-12341234.jpg
-                    $sourcePath = public_path().'/temp/'.$tempImageInfo->name;
-                    $destPath = public_path().'/uploads/product/'.$imageName;
+                    $imageName = $product->id . '-' . $productImage->id . '-' . time() . '.' . $ext; // 4-1-12341234.jpg
+                    $sourcePath = public_path() . '/temp/' . $tempImageInfo->name;
+                    $destPath = public_path() . '/uploads/product/' . $imageName;
                     File::copy($sourcePath, $destPath);
                     $productImage->image = $imageName;
                     $productImage->save();
@@ -116,7 +119,7 @@ class ProductController extends Controller
                 'status' => true,
                 'message' => "Product added successfully"
             ]);
-        }else{
+        } else {
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()
@@ -124,16 +127,17 @@ class ProductController extends Controller
         }
     }
 
-    public function edit(Request $request, $id){
+    public function edit(Request $request, $id)
+    {
         $product = Product::find($id);
 
-        if(empty($product)){
+        if (empty($product)) {
             return redirect()->route('admin.products.index')->with('error', "Product not found");
         }
         // Fetch Product Images
         $productImages = ProductImage::where('product_id', $product->id)->get();
 
-        $subCategories = SubCategory::where('category_id',$product->category_id)->get();
+        $subCategories = SubCategory::where('category_id', $product->category_id)->get();
 
         $categories = Category::orderBy('name', 'ASC')->get();
         $cow_genes = CowGene::orderBy('name', 'ASC')->get();
@@ -141,26 +145,27 @@ class ProductController extends Controller
         return view('admin.products.edit', compact('product', 'productImages', 'categories', 'subCategories', 'cow_genes'));
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         $product = Product::find($id);
 
         $rules = [
             'title' => 'required',
-            'slug' => 'required|unique:products,slug,'.$product->id.',id',
+            'slug' => 'required|unique:products,slug,' . $product->id . ',id',
             'price' => 'required|numeric',
-            'sku' => 'required|unique:products,sku,'.$product->id.',id',
+            'sku' => 'required|unique:products,sku,' . $product->id . ',id',
             'track_qty' => 'required|in:Yes,No',
             'category' => 'required|numeric',
             'is_featured' => 'required|in:Yes,No',
         ];
 
-        if(!empty($request->track_qty) && $request->track_qty == 'Yes'){
+        if (!empty($request->track_qty) && $request->track_qty == 'Yes') {
             $rules['qty'] = 'required|numeric';
         }
 
         $validator = Validator::make($request->all(), $rules);
 
-        if($validator->passes()){
+        if ($validator->passes()) {
 
             $product->title = $request->title;
             $product->slug = $request->slug;
@@ -204,11 +209,41 @@ class ProductController extends Controller
                 'status' => true,
                 'message' => "Product updated successfully"
             ]);
-        }else{
+        } else {
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()
             ]);
         }
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $product = Product::find($id);
+
+        if (empty($product)) {
+            Session::flash('error', "Product not found");
+            return response()->json([
+                'status' => false,
+                'notFound' => true
+            ]);
+        }
+
+        $productImages = ProductImage::where('product_id', $id)->get();
+
+        if (!empty($productImages)) {
+            foreach ($productImages as $productImage) {
+                File::delete(public_path('uploads/product/' . $productImage->image));
+            }
+
+            ProductImage::where('product_id', $id)->delete();
+        }
+        $product->delete();
+
+        Session::flash('success', "Product deleted successfully");
+        return response()->json([
+            'status' => true,
+            'message' => "Product deleted successfully"
+        ]);
     }
 }

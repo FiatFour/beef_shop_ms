@@ -98,7 +98,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="{{ route('admin.products.edit',$product->id) }}">
+                                            <a href="{{ route('admin.products.edit', $product->id) }}">
                                                 <svg class="filament-link-icon w-4 h-4 mr-1"
                                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                                     fill="currentColor" aria-hidden="true">
@@ -107,7 +107,8 @@
                                                     </path>
                                                 </svg>
                                             </a>
-                                            <a href="#" class="text-danger w-4 h-4 mr-1">
+                                            <a href="#" onclick="deleteProduct({{ $product->id }})"
+                                                class="text-danger w-4 h-4 mr-1">
                                                 <svg wire:loading.remove.delay="" wire:target=""
                                                     class="filament-link-icon w-4 h-4 mr-1"
                                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -140,4 +141,26 @@
 @endsection
 
 @section('customJs')
+    <script>
+        function deleteProduct(id) {
+            var url = "{{ route('admin.products.delete', 'ID') }}"
+            var newUrl = url.replace('ID', id)
+
+            if (confirm("Are you sure you want to delete?")) {
+                $.ajax({
+                    url: newUrl,
+                    type: 'delete',
+                    data: {},
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response['status'] == true) {
+                            window.location.href = "{{ route('admin.products.index') }}";
+                        } else {
+                            window.location.href = "{{ route('admin.products.index') }}";
+                        }
+                    }
+                });
+            }
+        }
+    </script>
 @endsection

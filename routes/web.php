@@ -116,17 +116,17 @@ Route::prefix('admin')->name('admin.')->group(function(){
         // Product
         Route::controller(App\Http\Controllers\Admin\ProductController::class)->group(function(){
             Route::get('/products', 'index')->name('products.index');
+            Route::get('/product-subcategories',[ProductSubCategoryController::class, 'index'])->name('product-subcategories.index');
             Route::get('/products/create', 'create')->name('products.create');
             Route::post('/products', 'store')->name('products.store');
 
             Route::get('/products/edit/{id}', 'edit')->name('products.edit');
             Route::put('/products/{id}', 'update')->name('products.update');
-            // Route::delete('/products/{id}', 'destroy')->name('products.delete');
+            Route::post('/products-images/update', [ProductImageController::class, 'update'])->name('product-images.update');
+            Route::delete('/products/{id}', 'destroy')->name('products.delete');
+            Route::delete('/products-images', [ProductImageController::class, 'destroy'])->name('product-images.destroy');
         });
 
-        Route::get('/product-subcategories',[ProductSubCategoryController::class, 'index'])->name('product-subcategories.index');
-        Route::post('/products-images/update', [ProductImageController::class, 'update'])->name('product-images.update');
-        Route::delete('/products-images', [ProductImageController::class, 'destroy'])->name('product-images.destroy');
 
 
 

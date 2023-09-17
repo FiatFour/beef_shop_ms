@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\TempImagesController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\FrontController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\SupplierController;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
@@ -31,6 +32,8 @@ use Illuminate\Support\Str;
 Auth::routes();
 
 Route::get('/',[FrontController::class, 'index'])->name('front.home');
+Route::get('/shop',[ShopController::class, 'index'])->name('front.shop');
+
 
 Route::get('login', [LoginController::class, 'index'])->name('login')->middleware('PreventBackHistory');
 Route::post('/check', [LoginController::class, 'checkLogin'])->name('checkLogin');

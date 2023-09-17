@@ -6,7 +6,7 @@
         <div class="container-fluid my-2">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Create Product</h1>
+                    <h1>Edit Product</h1>
                 </div>
                 <div class="col-sm-6 text-right">
                     <a href="{{ route('admin.products.index') }}" class="btn btn-primary">Back</a>
@@ -29,7 +29,7 @@
                                         <div class="mb-3">
                                             <label for="title">Title</label>
                                             <input type="text" name="title" id="title" class="form-control"
-                                                placeholder="Title">
+                                                placeholder="Title" value="{{ $product->title }}">
                                             <p class="error"></p>
                                         </div>
                                     </div>
@@ -37,15 +37,15 @@
                                         <div class="mb-3">
                                             <label for="slug">Slug</label>
                                             <input readonly type="text" name="slug" id="slug"
-                                                class="form-control" placeholder="Slug">
+                                                class="form-control" placeholder="Slug" value="{{ $product->slug }}">
                                             <p class="error"></p>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <label for="description">Description</label>
-                                            <textarea name="description" id="description" cols="30" rows="10" class="summernote"
-                                                placeholder="Description"></textarea>
+                                            <textarea name="description" id="description" cols="30" rows="10" class="summernote" placeholder="Description"
+                                                value="{{ $product->description }}"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -62,7 +62,21 @@
                             </div>
                         </div>
                         <div class="row" id="product-gallery">
-
+                            @if ($productImages->isNotEmpty())
+                                @foreach ($productImages as $productImage)
+                                    <div class="col-md-3" id="image-row-{{ $productImage->id }}">
+                                        <input type="hidden" name="image_array[]" value="{{ $productImage->id }}">
+                                        <div class="card">
+                                            <img src="{{ asset('uploads/product/' . $productImage->image) }}"
+                                                class="card-img-top" alt="" width="200" height="200">
+                                            <div class="card-body">
+                                                <a href="javascript:void(0)" onclick="deleteImage({{ $productImage->id }})"
+                                                    class="btn btn-danger">Delete</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
                         </div>
                         <div class="card mb-3">
                             <div class="card-body">
@@ -72,7 +86,7 @@
                                         <div class="mb-3">
                                             <label for="price">Price</label>
                                             <input type="text" name="price" id="price" class="form-control"
-                                                placeholder="Price">
+                                                placeholder="Price" value="{{ $product->price }}">
                                             <p class="error"></p>
                                         </div>
                                     </div>
@@ -80,7 +94,8 @@
                                         <div class="mb-3">
                                             <label for="compare_price">Compare at Price</label>
                                             <input type="text" name="compare_price" id="compare_price"
-                                                class="form-control" placeholder="Compare Price">
+                                                class="form-control" placeholder="Compare Price"
+                                                value="{{ $product->compare_price }}">
                                             <p class="text-muted mt-3">
                                                 To show a reduced price, move the product’s original price into Compare at
                                                 price. Enter a lower value into Price.
@@ -98,14 +113,14 @@
                                         <div class="mb-3">
                                             <label for="sku">SKU (Stock Keeping Unit)</label>
                                             <input type="text" name="sku" id="sku" class="form-control"
-                                                placeholder="sku">
+                                                placeholder="sku" value="{{ $product->sku }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="barcode">Barcode</label>
                                             <input type="text" name="barcode" id="barcode" class="form-control"
-                                                placeholder="Barcode">
+                                                placeholder="Barcode" value="{{ $product->barcode }}">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -113,14 +128,15 @@
                                             <div class="custom-control custom-checkbox">
                                                 <input type="hidden" name="track_qty" value="No">
                                                 <input class="custom-control-input" type="checkbox" id="track_qty"
-                                                    name="track_qty" value="Yes" checked>
+                                                    name="track_qty" value="Yes"
+                                                    {{ $product->track_qty == 'Yes' ? 'checked' : '' }}>
                                                 <label for="track_qty" class="custom-control-label">Track Quantity</label>
                                                 <p class="error"></p>
                                             </div>
                                         </div>
                                         <div class="mb-3">
                                             <input type="number" min="0" name="qty" id="qty"
-                                                class="form-control" placeholder="Qty">
+                                                class="form-control" placeholder="Qty" value="{{ $product->qty }}">
                                             <p class="error"></p>
                                         </div>
                                     </div>
@@ -134,8 +150,10 @@
                                 <h2 class="h4 mb-3">Product status</h2>
                                 <div class="mb-3">
                                     <select name="status" id="status" class="form-control">
-                                        <option value="1">Active</option>
-                                        <option value="0">Block</option>
+                                        <option {{ $product->status == 1 ? 'selected' : '' }} value="1">Active
+                                        </option>
+                                        <option {{ $product->status == 0 ? 'selected' : '' }} value="0">Block
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -150,7 +168,8 @@
 
                                         @if ($categories->isNotEmpty())
                                             @foreach ($categories as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                <option {{ $product->category_id == $category->id ? 'selected' : '' }}
+                                                    value="{{ $category->id }}">{{ $category->name }}</option>
                                             @endforeach
                                         @endif
                                     </select>
@@ -160,6 +179,13 @@
                                     <label>Sub category</label>
                                     <select name="sub_category" id="sub_category" class="form-control">
                                         <option value="">Select a Sub Category</option>
+                                        @if ($subCategories->isNotEmpty())
+                                            @foreach ($subCategories as $subCategory)
+                                                <option
+                                                    {{ $product->sub_category_id == $subCategory->id ? 'selected' : '' }}
+                                                    value="{{ $subCategory->id }}">{{ $subCategory->name }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
                             </div>
@@ -173,7 +199,8 @@
 
                                         @if ($cow_genes->isNotEmpty())
                                             @foreach ($cow_genes as $cow_gene)
-                                                <option value="{{ $cow_gene->id }}">{{ $cow_gene->name }}</option>
+                                                <option {{ $product->cow_gene_id == $cow_gene->id ? 'selected' : '' }}
+                                                    value="{{ $cow_gene->id }}">{{ $cow_gene->name }}</option>
                                             @endforeach
                                         @endif
                                     </select>
@@ -185,8 +212,10 @@
                                 <h2 class="h4 mb-3">Featured product</h2>
                                 <div class="mb-3">
                                     <select name="is_featured" id="is_featured" class="form-control">
-                                        <option value="No">No</option>
-                                        <option value="Yes">Yes</option>
+                                        <option {{ $product->is_featured == 'No' ? 'selected' : '' }} value="No">No
+                                        </option>
+                                        <option {{ $product->is_featured == 'Yes' ? 'selected' : '' }} value="Yes">
+                                            Yes</option>
                                     </select>
                                     <p class="error"></p>
                                 </div>
@@ -196,7 +225,7 @@
                 </div>
 
                 <div class="pb-5 pt-3">
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                     <a href="{{ route('admin.products.index') }}" class="btn btn-outline-dark ml-3">Cancel</a>
                 </div>
             </div>
@@ -232,8 +261,8 @@
             var formArray = $(this).serializeArray();
             $("button[type='submit']").prop('disabled', true);
             $.ajax({
-                url: '{{ route("admin.products.store") }}',
-                type: 'post',
+                url: '{{ route('admin.products.update', $product->id) }}',
+                type: 'put',
                 data: formArray,
                 dataType: 'json',
                 success: function(response) {
@@ -243,7 +272,7 @@
                         $('.error').removeClass('invalid-feedback').html('');
                         $("input[type='text'], select").removeClass('is-invalid');
 
-                        window.location.href="{{ route('admin.products.index') }}";
+                        window.location.href = "{{ route('admin.products.index') }}";
                     } else {
                         var errors = response['errors'];
 
@@ -290,9 +319,12 @@
         Dropzone.autoDiscover = false;
         const dropzone = $("#image").dropzone({
 
-            url: "{{ route('admin.temp-images.create') }}",
+            url: "{{ route('admin.product-images.update') }}",
             maxFiles: 5,
             paramName: 'image',
+            params: {
+                'product_id': '{{ $product->id }}'
+            },
             addRemoveLinks: true,
             acceptedFiles: "image/jpeg,image/png,image/gif",
             headers: {
@@ -306,7 +338,7 @@
                 var html = `<div class="col-md-3" id="image-row-${response.image_id}">
                                 <input type="hidden" name="image_array[]" value="${response.image_id}">
                                 <div class="card">
-                                    <img src="${response.ImagePath}" class="card-img-top" alt="" width="200" height="200">
+                                    <img src="${response.imagePath}" class="card-img-top" alt="" width="200" height="200">
                                     <div class="card-body">
                                         <a href="javascript:void(0)" onclick="deleteImage(${response.image_id})" class="btn btn-danger">Delete</a>
                                     </div>
@@ -315,13 +347,29 @@
 
                 $('#product-gallery').append(html);
             },
-            complete: function(file){
+            complete: function(file) {
                 this.removeFile(file);
             }
         });
 
-        function deleteImage(id){
+        function deleteImage(id) {
             $('#image-row-'+id).remove();
+            if (confirm("Are you sure you want to delete this image?")) {
+                $.ajax({
+                    url: '{{ route("admin.product-images.destroy") }}',
+                    type: 'delete',
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        if (response.status == true) {
+                            alert(response.message);
+                        } else {
+                            alert(response.message);
+                        }
+                    }
+                });
+            }
         }
-        </script>
+    </script>
 @endsection

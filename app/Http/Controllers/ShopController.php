@@ -58,7 +58,7 @@ class ShopController extends Controller
             $products = $products->orderBy('id', 'DESC'); // or can change to 'id' -> 'created_at
         }
 
-        $products = $products->get();
+        $products = $products->paginate(6);
         $priceMin = intval($request->get('price_min'));
         $priceMax = (intval($request->get('price_max')) == 0) ? 1000 : $request->get('price_max');
         $sort = $request->get('sort');

@@ -35,6 +35,7 @@
 
     <link rel="stylesheet" type="text/css" href="{{ asset('front-assets/css/slick.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('front-assets/css/slick-theme.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('front-assets/css/ion.rangeSlider.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('front-assets/css/style.css') }}" />
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -54,7 +55,7 @@
         <div class="container">
             <div class="row align-items-center py-3 d-none d-lg-flex justify-content-between">
                 <div class="col-lg-4 logo">
-                    <a href="index.php" class="text-decoration-none">
+                    <a href="{{ route('front.home') }}" class="text-decoration-none">
                         <span class="h1 text-uppercase text-primary bg-dark px-2">Beef</span>
                         <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">SHOP</span>
                     </a>
@@ -78,8 +79,8 @@
     <header class="bg-dark">
         <div class="container">
             <nav class="navbar navbar-expand-xl" id="navbar">
-                <a href="index.php" class="text-decoration-none mobile-logo">
-                    <span class="h2 text-uppercase text-primary bg-dark">Online</span>
+                <a href="{{ route('front.home') }}" class="text-decoration-none mobile-logo">
+                    <span class="h2 text-uppercase text-primary bg-dark">Beef</span>
                     <span class="h2 text-uppercase text-white px-2">SHOP</span>
                 </a>
                 <button class="navbar-toggler menu-btn" type="button" data-bs-toggle="collapse"
@@ -183,6 +184,7 @@
     <script src="{{ asset('front-assets/js/instantpages.5.1.0.min.js') }}"></script>
     <script src="{{ asset('front-assets/js/lazyload.17.6.0.min.js') }}"></script>
     <script src="{{ asset('front-assets/js/slick.min.js') }}"></script>
+    <script src="{{ asset('front-assets/js/ion.rangeSlider.min.js') }}"></script>
     <script src="{{ asset('front-assets/js/custom.js') }}"></script>
     <script>
         window.onscroll = function() {
@@ -200,6 +202,8 @@
             }
         }
     </script>
+
+    @yield('customJs')
 </body>
 
 </html>

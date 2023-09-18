@@ -36,18 +36,20 @@
                                                     </button>
                                                 </h2>
                                             @else
-                                                <a href="#" class="nav-item nav-link">{{ $category->name }}</a>
+                                                <a href="{{ route('front.shop', $category->slug) }}"
+                                                    class="nav-item nav-link {{ $categorySelected == $category->id ? 'text-primary' : '' }}">{{ $category->name }}</a>
                                             @endif
 
                                             @if ($category->sub_categories->isNotEmpty())
                                                 <div id="collapseOne-{{ $key }}"
-                                                    class="accordion-collapse collapse" aria-labelledby="headingOne"
-                                                    data-bs-parent="#accordionExample" style="">
+                                                    class="accordion-collapse collapse {{ $categorySelected == $category->id ? 'show' : '' }}"
+                                                    aria-labelledby="headingOne" data-bs-parent="#accordionExample"
+                                                    style="">
                                                     <div class="accordion-body">
                                                         <div class="navbar-nav">
                                                             @foreach ($category->sub_categories as $subCategory)
-                                                                <a href=""
-                                                                    class="nav-item nav-link">{{ $subCategory->name }}</a>
+                                                                <a href="{{ route('front.shop', [$category->slug, $subCategory->slug]) }}"
+                                                                    class="nav-item nav-link {{ $subCategorySelected == $subCategory->id ? 'text-primary' : '' }}">{{ $subCategory->name }}</a>
                                                             @endforeach
                                                         </div>
                                                     </div>
@@ -69,9 +71,10 @@
                             @if ($cowGenes->isNotEmpty())
                                 @foreach ($cowGenes as $cowGene)
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" name="cowGene[]"
+                                        <input {{ in_array($cowGene->id, $cowGenesArray) ? 'checked' : '' }}
+                                            class="form-check-input cowGene-label" type="checkbox" name="cowGene[]"
                                             value="{{ $cowGene->id }}" id="cowGene-{{ $cowGene->id }}">
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <label class="form-check-label" for="cowGene-{{ $cowGene->id }}">
                                             {{ $cowGene->name }}
                                         </label>
                                     </div>
@@ -86,30 +89,8 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    ฿0-฿100
-                                </label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                <label class="form-check-label" for="flexCheckChecked">
-                                    ฿100-฿200
-                                </label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                <label class="form-check-label" for="flexCheckChecked">
-                                    ฿200-฿500
-                                </label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                <label class="form-check-label" for="flexCheckChecked">
-                                    ฿500+
-                                </label>
-                            </div>
+                            <input type="text" class="js-range-slider" name="my_range" value="" />
+
                         </div>
                     </div>
                 </div>
@@ -118,15 +99,12 @@
                         <div class="col-12 pb-1">
                             <div class="d-flex align-items-center justify-content-end mb-4">
                                 <div class="ml-2">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-light dropdown-toggle"
-                                            data-bs-toggle="dropdown">Sorting</button>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="#">Latest</a>
-                                            <a class="dropdown-item" href="#">Price High</a>
-                                            <a class="dropdown-item" href="#">Price Low</a>
-                                        </div>
-                                    </div>
+                                    <select name="sort" id="sort" class="form-control">
+                                        <option {{ $sort == 'latest' ? 'selected' : '' }} value="latest">Latest</option>
+                                        <option {{ $sort == 'price_desc' ? 'selected' : '' }} value="price_desc">Price High</option>
+                                        <option {{ $sort == 'price_asc' ? 'selected' : '' }} value="price_asc">Price Low
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -178,8 +156,7 @@
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination justify-content-end">
                                     <li class="page-item disabled">
-                                        <a class="page-link" href="#" tabindex="-1"
-                                            aria-disabled="true">Previous</a>
+                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
                                     </li>
                                     <li class="page-item"><a class="page-link" href="#">1</a></li>
                                     <li class="page-item"><a class="page-link" href="#">2</a></li>
@@ -195,4 +172,59 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('customJs')
+    <script>
+        rangeSlider = $('.js-range-slider').ionRangeSlider({
+            type: 'double',
+            min: 0, // Price min
+            max: 1000, // Price max
+            from: {{ $priceMin }},
+            step: 10,
+            to: {{ $priceMax }},
+            skin: 'round',
+            max_postfix: '+',
+            prefix: '฿',
+            onFinish: function() {
+                apply_filters()
+            }
+        });
+
+        // Saving it's instance to var
+        var slider = $('.js-range-slider').data('ionRangeSlider');
+
+        $('.cowGene-label').change(function() {
+            apply_filters();
+        });
+
+        $('#sort').change(function() {
+            apply_filters();
+        });
+
+        function apply_filters() {
+            var cowGenes = [];
+
+            $('.cowGene-label').each(function() {
+                if ($(this).is(':checked') == true) {
+                    cowGenes.push($(this).val());
+                }
+            });
+
+            var url = '{{ url()->current() }}?';
+
+            //  CowGene Fileter
+            if (cowGenes.length > 0) {
+                url += '&cow-gene=' + cowGenes.toString();
+            }
+
+            // Price Range filter
+            url += '&price_min=' + slider.result.from + '&price_max=' + slider.result.to;
+
+            // Sorting filter
+            url += '&sort=' + $('#sort').val();
+
+            window.location.href = url;
+        }
+    </script>
 @endsection

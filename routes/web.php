@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ProductImageController;
 use App\Http\Controllers\Admin\ProductSubCategoryController;
 use App\Http\Controllers\Admin\TempImagesController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\ShopController;
@@ -34,6 +35,11 @@ Auth::routes();
 Route::get('/', [FrontController::class, 'index'])->name('front.home');
 Route::get('/shop/{categorySlug?}/{subCategorySlug?}', [ShopController::class, 'index'])->name('front.shop');
 Route::get('/product/{slug}',[ShopController::class, 'product'])->name('front.product');
+
+Route::controller(App\Http\Controllers\CartController::class)->group(function(){
+Route::get('/cart', 'cart')->name('front.cart');
+Route::post('/add-to-cart', 'addToCart')->name('front.addToCart');
+});
 
 Route::get('login', [LoginController::class, 'index'])->name('login')->middleware('PreventBackHistory');
 Route::post('/check', [LoginController::class, 'checkLogin'])->name('checkLogin');

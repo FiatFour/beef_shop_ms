@@ -71,6 +71,8 @@ class ProductController extends Controller
             $product->sub_category_id = $request->sub_category;
             $product->cow_gene_id = $request->cow_gene;
             $product->is_featured = $request->is_featured;
+            $product->shipping_returns = $request->shipping_returns;
+            $product->short_description = $request->short_description;
             $product->save();
 
             // Save Gallery Pics
@@ -181,6 +183,8 @@ class ProductController extends Controller
             $product->sub_category_id = $request->sub_category;
             $product->cow_gene_id = $request->cow_gene;
             $product->is_featured = $request->is_featured;
+            $product->shipping_returns = $request->shipping_returns;
+            $product->short_description = $request->short_description;
             $product->save();
 
             // Save Gallery Pics

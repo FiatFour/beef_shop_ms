@@ -75,4 +75,14 @@ class ShopController extends Controller
             'sort'
         ));
     }
+
+    public function product($slug){
+        // echo $slug;
+        $product = Product::where('slug', $slug)->with('product_images')->first();
+        if($product == null){
+            abort(404);
+        }
+
+        return view('front.product', compact('product'));
+    }
 }

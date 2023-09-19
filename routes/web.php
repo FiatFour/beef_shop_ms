@@ -31,9 +31,9 @@ use Illuminate\Support\Str;
 
 Auth::routes();
 
-Route::get('/',[FrontController::class, 'index'])->name('front.home');
-Route::get('/shop/{categorySlug?}/{subCategorySlug?}',[ShopController::class, 'index'])->name('front.shop');
-
+Route::get('/', [FrontController::class, 'index'])->name('front.home');
+Route::get('/shop/{categorySlug?}/{subCategorySlug?}', [ShopController::class, 'index'])->name('front.shop');
+Route::get('/product/{slug}',[ShopController::class, 'product'])->name('front.product');
 
 Route::get('login', [LoginController::class, 'index'])->name('login')->middleware('PreventBackHistory');
 Route::post('/check', [LoginController::class, 'checkLogin'])->name('checkLogin');

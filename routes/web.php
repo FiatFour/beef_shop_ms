@@ -131,6 +131,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
             Route::post('/products-images/update', [ProductImageController::class, 'update'])->name('product-images.update');
             Route::delete('/products/{id}', 'destroy')->name('products.delete');
             Route::delete('/products-images', [ProductImageController::class, 'destroy'])->name('product-images.destroy');
+            Route::get('/get-products', 'getProducts')->name('products.getProducts');
         });
 
 

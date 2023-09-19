@@ -111,6 +111,7 @@
                                             <label for="sku">SKU (Stock Keeping Unit)</label>
                                             <input type="text" name="sku" id="sku" class="form-control"
                                                 placeholder="sku">
+                                            <p class="error"></p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -118,6 +119,7 @@
                                             <label for="barcode">Barcode</label>
                                             <input type="text" name="barcode" id="barcode" class="form-control"
                                                 placeholder="Barcode">
+                                            <p class="error"></p>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -136,6 +138,16 @@
                                             <p class="error"></p>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h2 class="h4 mb-3">Related Products</h2>
+                                <div class="mb-3">
+                                    <select multiple class="related-product w-100" name="related_products[]" id="related_products">
+                                    </select>
+                                    <p class="error"></p>
                                 </div>
                             </div>
                         </div>
@@ -220,6 +232,21 @@
 
 @section('customJs')
     <script>
+        $('.related-product').select2({
+            ajax: {
+                url: '{{ route('admin.products.getProducts') }}',
+                dataType: 'json',
+                tags: true,
+                multiple: true,
+                minimumInputLength: 3,
+                processResults: function(data) {
+                    return {
+                        results: data.tags
+                    };
+                }
+            }
+        });
+
         $("#title").change(function() {
             element = $(this);
             $("button[type=submit]").prop('disabled', true);

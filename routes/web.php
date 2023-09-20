@@ -39,6 +39,8 @@ Route::get('/product/{slug}',[ShopController::class, 'product'])->name('front.pr
 Route::controller(App\Http\Controllers\CartController::class)->group(function(){
 Route::get('/cart', 'cart')->name('front.cart');
 Route::post('/add-to-cart', 'addToCart')->name('front.addToCart');
+Route::post('/update-cart', 'updateCart')->name('front.updateCart');
+Route::post('/delete-cart', 'deleteItem')->name('front.deleteItem.cart');
 });
 
 Route::get('login', [LoginController::class, 'index'])->name('login')->middleware('PreventBackHistory');

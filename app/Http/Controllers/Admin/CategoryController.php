@@ -9,9 +9,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-// use Intervention\Image\Facades\Image;
+use Intervention\Image\Facades\Image;
 // use Intervention\Image\Image;
 // use Image;
+// use Image;
+
 class CategoryController extends Controller
 {
     public function index(Request $request){
@@ -55,10 +57,10 @@ class CategoryController extends Controller
                 File::copy($sPath, $dPath);
 
                 // Generate Image Thumbnail
-                // $dPathThumb = public_path().'/uploads/category/thumb/'.$newImageName;
-                // $img = Image::make($sPath); // Create an instance of Image
-                // $img->resize(450, 600);
-                // $img->save($dPathThumb);
+                $dPathThumb = public_path().'/uploads/category/thumb/'.$newImageName;
+                $img = Image::make($sPath); // Create an instance of Image
+                $img->resize(450, 600);
+                $img->save($dPathThumb);
 
                 $category->image = $newImageName;
                 $category->save();
@@ -127,6 +129,7 @@ class CategoryController extends Controller
 
                 // Delete Old Images Here
                 File::delete(public_path('/uploads/category/').$oldImage);
+                File::delete(public_path('/uploads/category/thumb/').$oldImage);
             }
 
             Session::flash('success', 'Category updated successfully');
@@ -157,6 +160,7 @@ class CategoryController extends Controller
         }
 
         File::delete(public_path('/uploads/category/').$category->image);
+        File::delete(public_path('/uploads/category/thumb/').$category->image);
         $category->delete();
 
         Session::flash('success', 'Category deleted successfully');

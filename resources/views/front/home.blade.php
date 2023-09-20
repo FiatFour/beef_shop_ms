@@ -108,22 +108,24 @@
                 @if (getCategories()->isNotEmpty())
                     @foreach (getCategories() as $category)
                         <div class="col-lg-3">
+                            <a href="{{ route('front.shop',$category->slug) }}">
                             <div class="cat-card">
                                 <div class="left">
                                     @if ($category->image != '')
-                                        <img src="{{ asset('uploads/category/' . $category->image) }}" alt=""
+                                        <img src="{{ asset('uploads/category/thumb/' . $category->image) }}" alt=""
                                             class="img-fluid">
-                                    @endif
-                                    {{-- <img src="{{ asset('front-assets/images/cat-1.jpg') }}" alt="" class="img-fluid"> --}}
-                                </div>
-                                <div class="right">
-                                    <div class="cat-data">
-                                        <h2>{{ $category->name }}</h2>
-                                        {{-- <p>100 Products</p> --}}
+                                            @endif
+                                            {{-- <img src="{{ asset('front-assets/images/cat-1.jpg') }}" alt="" class="img-fluid"> --}}
+                                        </div>
+                                        <div class="right">
+                                            <div class="cat-data">
+                                                <h2>{{ $category->name }}</h2>
+                                                {{-- <p>100 Products</p> --}}
+                                            </div>
+                                        </div>
                                     </div>
+                                </a>
                                 </div>
-                            </div>
-                        </div>
                     @endforeach
                 @endif
             </div>

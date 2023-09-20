@@ -10,6 +10,7 @@ use App\Models\ProductImage;
 use App\Models\SubCategory;
 use App\Models\TempImage;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
@@ -105,13 +106,13 @@ class ProductController extends Controller
                     // $image->resize(1400, null, function ($constraint){
                     //     $constraint->aspectRation();
                     // });
-                    // image->save($destPath);
+                    // $image->save($destPath);
 
                     // Small Image
                     // $destPath = public_path().'/uploads/product/small/'.$imageName;
                     // $image = Image::make($sourcePath);
                     // $image->fit(300, 300);
-                    // image->save($destPath);
+                    // $image->save($destPath);
 
 
 

@@ -42,6 +42,7 @@ Route::controller(App\Http\Controllers\CartController::class)->group(function ()
     Route::post('/add-to-cart', 'addToCart')->name('front.addToCart');
     Route::post('/update-cart', 'updateCart')->name('front.updateCart');
     Route::post('/delete-cart', 'deleteItem')->name('front.deleteItem.cart');
+    Route::get('/checkout', 'checkout')->name('front.checkout');
 });
 
 // Route::group(['prefix' => 'account'], function () {

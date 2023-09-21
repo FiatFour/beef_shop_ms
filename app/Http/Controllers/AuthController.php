@@ -127,14 +127,16 @@ class AuthController extends Controller
         ]);
 
         if ($validator->passes()) {
-            if (Auth::guard('customer')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))){
-                // return redirect()->route('customer.home');
+            if (Auth::guard('customer')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
+                if (session()->has('url.intended')) {
+                    return redirect(session()->get('url.intended'));
+                }
                 return redirect()->route('account.profile');
-            }else{
-            //    Session::flash('error', 'Either email/password is incorrect');
-               return redirect()->route('account.login')
-                                ->withInput($request->only('email'))
-                                ->with('error', 'Either email/password is incorrect');
+            } else {
+                //    Session::flash('error', 'Either email/password is incorrect');
+                return redirect()->route('account.login')
+                    ->withInput($request->only('email'))
+                    ->with('error', 'Either email/password is incorrect');
             }
         } else {
             return redirect()->route('account.login')
@@ -143,11 +145,13 @@ class AuthController extends Controller
         }
     }
 
-    public function profile(){
+    public function profile()
+    {
         return view('front.account.profile');
     }
 
-    public function logout(){
+    public function logout()
+    {
         Auth::guard('customer')->logout();
         return redirect()->route('account.login')->with('success', "You successfully logged out!");
     }

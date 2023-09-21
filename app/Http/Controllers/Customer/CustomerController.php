@@ -92,9 +92,9 @@ class CustomerController extends Controller
                 $customer->email_verified = 1;
                 $customer->save();
 
-                return redirect()->route('login')->with('info','การยืนยันบัญชีนี้สำเร็จสิ้น, ยินดีด้วย คุณสามารลงชื่อเข้าใช้ได้แล้ว!')->with('verifiedEmail', $customer->email);
+                return redirect()->route('account.login')->with('info', "You're ")->with('verifiedEmail', $customer->email);
             }else{
-                 return redirect()->route('login')->with('info','คุณได้ทำการยืนยันบัญชีก่อนหน้านี้แล้ว, ขณะนี้คุณสามารลงชื่อเข้าใช้ได้!')->with('verifiedEmail', $customer->email);
+                 return redirect()->route('account.login')->with('info','คุณได้ทำการยืนยันบัญชีก่อนหน้านี้แล้ว, ขณะนี้คุณสามารลงชื่อเข้าใช้ได้!')->with('verifiedEmail', $customer->email);
             }
         }
     }

@@ -13,7 +13,7 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
-        // return $request->expectsJson() ? null : route('user.login');
+        // return $request->expectsJson() ? null : route('account.login');
         if(! $request->expectsJson()){
             // if($request->routeIs('super-admin.*')){
             //     return route('super-admin.login');
@@ -41,10 +41,14 @@ class Authenticate extends Middleware
                 }
             }
             */
+
+            // if($request->routeIs('customer.*')){
+            //     return route('account.login');
+            // }
             if($request->routeIs('admin.*') || $request->routeIs('customer.*') || $request->routeIs('employee.*')){
                 return route('login');
             }
-            return route('login');
+            return $request->expectsJson() ? null : route('account.login');
         }
     }
 }

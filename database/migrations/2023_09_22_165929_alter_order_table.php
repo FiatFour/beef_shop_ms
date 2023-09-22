@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('location', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('orders', function (Blueprint $table) {
+
+            $table->foreignId('shipping_charge_id')->constrained()->onDelete('cascade')->after('mobile');
+
         });
     }
 
@@ -22,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('location');
+        Schema::table('orders', function(Blueprint $table){
+            $table->dropForeign('shipping_charge_id');
+        });
     }
 };

@@ -15,7 +15,7 @@ class CustomerAddress extends Model
         'last_name',
         'email',
         'mobile',
-        'district',
+        'shipping_charge_id',
         'address',
         'apartment',
         'state',

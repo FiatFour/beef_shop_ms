@@ -37,23 +37,26 @@
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <input type="text" name="first_name" id="first_name" class="form-control"
-                                                placeholder="First Name" value="{{ (!empty($customerAddress)) ? $customerAddress->first_name : '' }}">
-                                                <p></p>
+                                                placeholder="First Name"
+                                                value="{{ !empty($customerAddress) ? $customerAddress->first_name : '' }}">
+                                            <p></p>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <input type="text" name="last_name" id="last_name" class="form-control"
-                                                placeholder="Last Name" value="{{ (!empty($customerAddress)) ? $customerAddress->last_name : '' }}">
-                                                <p></p>
+                                                placeholder="Last Name"
+                                                value="{{ !empty($customerAddress) ? $customerAddress->last_name : '' }}">
+                                            <p></p>
                                         </div>
                                     </div>
 
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <input type="text" name="email" id="email" class="form-control"
-                                                placeholder="Email" value="{{ (!empty($customerAddress)) ? $customerAddress->email : '' }}">
-                                                <p></p>
+                                                placeholder="Email"
+                                                value="{{ !empty($customerAddress) ? $customerAddress->email : '' }}">
+                                            <p></p>
                                         </div>
                                     </div>
 
@@ -62,9 +65,14 @@
                                             <select name="district" id="district" class="form-control">
 
                                                 <option value="">Select a District</option>
-                                                <option {{ (!empty($customerAddress) && $customerAddress->district == 'Ron Phibun') ? 'selected' : '' }} value="Ron Phibun">Ron Phibun</option>
-                                                <option {{ (!empty($customerAddress) && $customerAddress->district == 'Phra Phrom') ? 'selected' : '' }} value="Phra Phrom">Phra Phrom</option>
-                                                <option {{ (!empty($customerAddress) && $customerAddress->district  === 'Mueang Nakhon Si Thammarat') ? 'selected' : '' }} value="Mueang Nakhon Si Thammarat">Mueang Nakhon Si Thammarat</option>
+                                                @if ($shippingCharges->isNotEmpty())
+                                                    @foreach ($shippingCharges as $shippingCharge)
+                                                        <option
+                                                            {{ !empty($customerAddress) && $customerAddress->shipping_charge_id == $shippingCharge->id ? 'selected' : '' }}
+                                                            value="{{ $shippingCharge->id }}">
+                                                            {{ $shippingCharge->district }}</option>
+                                                    @endforeach
+                                                @endif
                                             </select>
                                             <p></p>
                                         </div>
@@ -72,7 +80,7 @@
 
                                     <div class="col-md-12">
                                         <div class="mb-3">
-                                            <textarea name="address" id="address" cols="30" rows="3" placeholder="Address" class="form-control">{{ (!empty($customerAddress)) ? $customerAddress->address : '' }}</textarea>
+                                            <textarea name="address" id="address" cols="30" rows="3" placeholder="Address" class="form-control">{{ !empty($customerAddress) ? $customerAddress->address : '' }}</textarea>
                                             <p></p>
                                         </div>
                                     </div>
@@ -80,39 +88,43 @@
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <input type="text" name="apartment" id="apartment" class="form-control"
-                                                placeholder="Apartment, suite, unit, etc. (optional)" value="{{ (!empty($customerAddress)) ? $customerAddress->apartment : '' }}">
+                                                placeholder="Apartment, suite, unit, etc. (optional)"
+                                                value="{{ !empty($customerAddress) ? $customerAddress->apartment : '' }}">
                                         </div>
                                     </div>
 
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <input type="text" name="city" id="city" class="form-control"
-                                                placeholder="City" value="{{ (!empty($customerAddress)) ? $customerAddress->city : '' }}">
-                                                <p></p>
+                                                placeholder="City"
+                                                value="{{ !empty($customerAddress) ? $customerAddress->city : '' }}">
+                                            <p></p>
                                         </div>
                                     </div>
 
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <input readonly type="text" name="state" id="state" class="form-control"
-                                                placeholder="State" value="Nakhon Si Thammarat">
-                                                <p></p>
+                                            <input readonly type="text" name="state" id="state"
+                                                class="form-control" placeholder="State" value="Nakhon Si Thammarat">
+                                            <p></p>
                                         </div>
                                     </div>
 
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <input type="text" name="zip" id="zip" class="form-control"
-                                                placeholder="Zip" value="{{ (!empty($customerAddress)) ? $customerAddress->zip : '' }}">
-                                                <p></p>
+                                                placeholder="Zip"
+                                                value="{{ !empty($customerAddress) ? $customerAddress->zip : '' }}">
+                                            <p></p>
                                         </div>
                                     </div>
 
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <input type="text" name="mobile" id="mobile" class="form-control"
-                                                placeholder="Mobile No." value="{{ (!empty($customerAddress)) ? $customerAddress->mobile : '' }}">
-                                                <p></p>
+                                                placeholder="Mobile No."
+                                                value="{{ !empty($customerAddress) ? $customerAddress->mobile : '' }}">
+                                            <p></p>
                                         </div>
                                     </div>
 
@@ -120,7 +132,7 @@
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <textarea name="order_notes" id="order_notes" cols="30" rows="2" placeholder="Order Notes (optional)"
-                                                class="form-control">{{ (!empty($customerAddress)) ? $customerAddress->notes : '' }}</textarea>
+                                                class="form-control">{{ !empty($customerAddress) ? $customerAddress->notes : '' }}</textarea>
                                         </div>
                                     </div>
 
@@ -245,7 +257,7 @@
                         // $('.error').removeClass('invalid-feedback').html('');
                         // $("input[type='text'], select, textarea").removeClass('is-invalid');
 
-                        window.location.href = "{{ url('thanks/') }}/"+response.orderId;
+                        window.location.href = "{{ url('thanks/') }}/" + response.orderId;
                     } else {
                         var errors = response['errors'];
                         $('button[type="submit"]').prop('disabled', false);

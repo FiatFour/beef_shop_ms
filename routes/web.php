@@ -65,8 +65,6 @@ Route::controller(App\Http\Controllers\CartController::class)->group(function ()
     });
 // });
 
-
-
 Route::get('/xlogin', [LoginController::class, 'index'])->name('login')->middleware('PreventBackHistory');
 Route::post('/check', [LoginController::class, 'checkLogin'])->name('checkLogin');
 Route::get('/xlogout', [LoginController::class, 'logout'])->name('logoutAll');
@@ -163,7 +161,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/get-products', 'getProducts')->name('products.getProducts');
         });
 
-
+        // Shipping Routes
+        Route::controller(App\Http\Controllers\Admin\ShippingController::class)->group(function () {
+            Route::get('/shipping/create', 'create')->name('shipping.create');
+            Route::post('/shipping', 'store')->name('shipping.store');
+            Route::get('/shipping/edit/{id}', 'edit')->name('shipping.edit');
+            Route::put('/shipping/{id}', 'update')->name('shipping.update');
+            Route::delete('/shipping/{id}', 'destroy')->name('shipping.delete');
+        });
 
 
 

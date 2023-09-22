@@ -6,6 +6,7 @@ use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\ShippingCharge;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -143,8 +144,10 @@ class CartController extends Controller
         }
 
         $customerAddress = CustomerAddress::where('customer_id', Auth::guard('customer')->user()->id)->first();
+        $shippingCharges = ShippingCharge::orderBy('district','ASC')->get();
+
         session()->forget('url.intended');
-        return view('front.checkout', compact('customerAddress'));
+        return view('front.checkout', compact('customerAddress', 'shippingCharges'));
     }
 
     public function processCheckout(Request $request){
@@ -180,7 +183,7 @@ class CartController extends Controller
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'mobile' => $request->mobile,
-                'district' => $request->district,
+                'shipping_charge_id' => $request->district,
                 'address' => $request->address,
                 'apartment' => $request->apartment,
                 'city' => $request->city,
@@ -212,7 +215,7 @@ class CartController extends Controller
             $order->city = $request->city;
             $order->zip = $request->zip;
             $order->notes = $request->order_notes;
-            $order->district = $request->district;
+            $order->shipping_charge_id = $request->district;
             $order->save();
 
             //* Step -4 store order items in order items table

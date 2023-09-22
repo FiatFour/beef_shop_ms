@@ -19,7 +19,9 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('email');
             $table->string('mobile');
-            $table->string('district');
+            // $table->string('district');
+            // $table->foreignId('shipping_charges_id')->constrained()->onDelete('cascade');
+
             $table->string('address');
             $table->string('apartment')->nullable();
             $table->string('city');
@@ -34,6 +36,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Schema::table('customer_addresses', function (Blueprint $table) {
+        //     $table->dropForeign('customer_id');
+        //     $table->dropForeign('shipping_charges_id');
+        // });
         Schema::dropIfExists('customer_addresses');
     }
 };

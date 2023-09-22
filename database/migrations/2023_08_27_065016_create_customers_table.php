@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->tinyInteger('gender');
-            $table->text('address');
+            // $table->text('address');
             $table->string('phone',10);
             $table->string('email')->unique();
             $table->string('password');

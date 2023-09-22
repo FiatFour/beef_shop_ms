@@ -34,7 +34,6 @@ class AuthController extends Controller
             'password' => 'required|min:5|max:30',
             'confirm_password' => 'required|min:5|max:30|same:password',
             'phone' => 'required|min:10|max:10',
-            'address' => 'required|min:5|max:255',
             'gender' => 'required'
         ], [
             'confirm_password.required' => 'The confirm password field is required.',
@@ -44,7 +43,6 @@ class AuthController extends Controller
             $customer = new Customer;
             $customer->name = $request->name;
             $customer->phone = $request->phone;
-            $customer->address = $request->address;
             $customer->gender = $request->gender;
             $customer->email = $request->email;
             $customer->password = Hash::make($request->password);

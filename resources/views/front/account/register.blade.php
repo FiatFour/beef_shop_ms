@@ -51,11 +51,6 @@
                     </div>
 
                     <div class="form-group">
-                        <input type="text" class="form-control" name="address" placeholder="address" id="address">
-                        <p></p>
-                    </div>
-
-                    <div class="form-group">
                         <label class="form-check-inline">Gender: </label>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="gender" id="gender" value="1">
@@ -72,7 +67,8 @@
                     </div>
                     <button type="submit" class="btn btn-dark btn-block btn-lg" value="Register">Register</button>
                 </form>
-                <div class="text-center small">Already have an account? <a href="{{ route('account.login') }}">Login Now</a></div>
+                <div class="text-center small">Already have an account? <a href="{{ route('account.login') }}">Login Now</a>
+                </div>
             </div>
         </div>
     </section>
@@ -95,8 +91,8 @@
                 success: function(response) {
                     $("button[type='submit']").prop('disabled', false);
                     if (response['status'] == true) {
-                        $('.error').removeClass('invalid-feedback').html('');
-                        $("input[type='text'], select").removeClass('is-invalid');
+                        // $('.error').removeClass('invalid-feedback').html('');
+                        // $("input[type='text'], select").removeClass('is-invalid');
 
                         window.location.href = "{{ route('account.register') }}";
                     } else {

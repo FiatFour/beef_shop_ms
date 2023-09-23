@@ -171,6 +171,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/shipping/{id}', 'destroy')->name('shipping.delete');
         });
 
+        // Coupon Code Routes
+        Route::controller(App\Http\Controllers\Admin\DiscountCodeController::class)->group(function () {
+            Route::get('/coupons', 'index')->name('coupons.index');
+            Route::get('/coupons/create', 'create')->name('coupons.create');
+            Route::post('/coupons', 'store')->name('coupons.store');
+
+        });
+
+
 
 
 

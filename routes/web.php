@@ -145,7 +145,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/cow-genes/edit/{id}', 'edit')->name('cow-genes.edit');
             Route::put('/cow-genes/{id}', 'update')->name('cow-genes.update');
             Route::delete('/cow-genes/{id}', 'destroy')->name('cow-genes.delete');
-        });
+    });
 
         // Product
         Route::controller(App\Http\Controllers\Admin\ProductController::class)->group(function () {

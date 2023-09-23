@@ -45,6 +45,7 @@ Route::controller(App\Http\Controllers\CartController::class)->group(function ()
     Route::get('/checkout', 'checkout')->name('front.checkout');
     Route::post('/process-checkout', 'processCheckout')->name('front.processCheckout');
     Route::get('/thanks/{orderId}', 'thankyou')->name('front.thankyou');
+    Route::post('/get-order-summery', 'getOrderSummer')->name('front.getOrderSummer');
 });
 
 // Route::group(['prefix' => 'account'], function () {

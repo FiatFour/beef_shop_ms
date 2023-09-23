@@ -19,17 +19,18 @@ use Illuminate\Support\Facades\Validator;
 // use Gloudemans\Shoppingcart\Facades\Cart;
 class CartController extends Controller
 {
-    public function addToCart(Request $request){
+    public function addToCart(Request $request)
+    {
         $product = Product::with('product_images')->find($request->id);
 
-        if($product == null){
+        if ($product == null) {
             return response()->json([
                 'status' => false,
                 'message' => 'Product not found'
             ]);
         }
 
-        if(Cart::count() > 0){
+        if (Cart::count() > 0) {
             // echo "Product already in cart";
             // Products found in cart
             // Check if this product already in the cart
@@ -38,27 +39,27 @@ class CartController extends Controller
 
             // $cartContent = Cart::content();
             $productAlreadyExits = false;
-            foreach(Cart::content() as $ProductItem){
-                if($ProductItem->id == $product->id){
+            foreach (Cart::content() as $ProductItem) {
+                if ($ProductItem->id == $product->id) {
                     $productAlreadyExits = true;
                 }
             }
 
-            if($productAlreadyExits == false){
+            if ($productAlreadyExits == false) {
                 Cart::add($product->id, $product->title, 1, $product->price, ['productImage' => (!empty($product->product_images)) ? $product->product_images->first() : '']);
 
                 $status = true;
-                $message = '<b>'.$product->title.'</b> added in your cart successfully.';
+                $message = '<b>' . $product->title . '</b> added in your cart successfully.';
                 Session::flash('success', $message);
-            }else{
+            } else {
                 $status = false;
-                $message = '<b>'.$product->title.'</b> already added in cart';
+                $message = '<b>' . $product->title . '</b> already added in cart';
             }
-        }else{
+        } else {
             // Cart is empty.
             Cart::add($product->id, $product->title, 1, $product->price, ['productImage' => (!empty($product->product_images)) ? $product->product_images->first() : '']);
             $status = true;
-            $message = '<b>'.$product->title.'</b> added in your cart successfully.';
+            $message = '<b>' . $product->title . '</b> added in your cart successfully.';
             Session::flash('success', $message);
         }
 
@@ -68,32 +69,34 @@ class CartController extends Controller
         ]);
     }
 
-    public function cart(){
+    public function cart()
+    {
         $cartContents = Cart::content();
         return view('front.cart', compact('cartContents'));
     }
 
-    public function updateCart(Request $request){
+    public function updateCart(Request $request)
+    {
         $rowId = $request->rowId;
         $qty = $request->qty;
 
         $itemInfo = Cart::get($rowId);
         $product = Product::find($itemInfo->id);
         // Check qty available in stock
-        if($product->track_qty == 'Yes'){
-            if($qty <= $product->qty) {
+        if ($product->track_qty == 'Yes') {
+            if ($qty <= $product->qty) {
                 Cart::update($rowId, $qty);
-                $message = '<b>'.$product->title."</b> updated to Cart successfully";
+                $message = '<b>' . $product->title . "</b> updated to Cart successfully";
                 $status = true;
                 Session::flash('success', $message);
-            }else{
-                $message = '<b>'.$product->title."</b> Request qty('.$qty.') not available in stock.";
+            } else {
+                $message = '<b>' . $product->title . "</b> Request qty('.$qty.') not available in stock.";
                 $status = false;
                 Session::flash('error', $message);
             }
-        }else{
+        } else {
             Cart::update($rowId, $qty);
-            $message = '<b>'.$product->title."</b> updated to Cart  successfully";
+            $message = '<b>' . $product->title . "</b> updated to Cart  successfully";
             $status = true;
             Session::flash('success', $message);
         }
@@ -105,10 +108,11 @@ class CartController extends Controller
         ]);
     }
 
-    public function deleteItem(Request $request){
+    public function deleteItem(Request $request)
+    {
         $itemInfo = Cart::get($request->rowId);
 
-        if($itemInfo == null){
+        if ($itemInfo == null) {
             $errorMessage = 'Item not found in cart';
             Session::flash('error', $errorMessage);
 
@@ -127,32 +131,51 @@ class CartController extends Controller
         ]);
     }
 
-    public function checkout(){
+    public function checkout()
+    {
 
         // If cart is empty redirect to cart page
-        if(Cart::count() == 0){
+        if (Cart::count() == 0) {
             return redirect()->route('front.cart');
         }
 
         // If use is not logged in then redirect to login page
-        if(Auth::guard('customer')->check() == false){
-            if(!session()->has('url.intended')){
-                    session(['url.intended' => url()->current()]);
+        if (Auth::guard('customer')->check() == false) {
+            if (!session()->has('url.intended')) {
+                session(['url.intended' => url()->current()]);
             }
 
             return redirect()->route('account.login');
         }
 
-        $customerAddress = CustomerAddress::where('customer_id', Auth::guard('customer')->user()->id)->first();
-        $shippingCharges = ShippingCharge::orderBy('district','ASC')->get();
-
         session()->forget('url.intended');
-        return view('front.checkout', compact('customerAddress', 'shippingCharges'));
+        $customerAddress = CustomerAddress::where('customer_id', Auth::guard('customer')->user()->id)->first();
+        $shippingCharges = ShippingCharge::orderBy('district', 'ASC')->get();
+        // Calculate shipping here
+        // $customerShipping = $customerAddress->shipping_charge_id;
+        if($customerAddress != ''){
+            $shippingInfo = ShippingCharge::where('id', $customerAddress->shipping_charge_id)->first();
+            // echo $shippingInfo->amount;
+            $totalQty = 0;
+            $totalShippingCharge = 0;
+            $grandTotal = 0;
+            foreach (Cart::content() as $item) {
+                $totalQty += $item->qty;
+            }
+            // $totalShippingCharge = $totalQty * $shippingInfo->amount;
+            $totalShippingCharge = $shippingInfo->amount;
+            $grandTotal = Cart::subtotal(2, '.', '') + $totalShippingCharge;
+        }else{
+            $grandTotal = Cart::subtotal(2, '.', '');
+            $totalShippingCharge = 0;
+        }
+        return view('front.checkout', compact('customerAddress', 'shippingCharges', 'totalShippingCharge', 'grandTotal'));
     }
 
-    public function processCheckout(Request $request){
+    public function processCheckout(Request $request)
+    {
         //* Step -1 Apply Validation
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'first_name' => 'required|min:5',
             'last_name' => 'required',
             'email' => 'required|email',
@@ -164,7 +187,7 @@ class CartController extends Controller
             'mobile' => 'required',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json([
                 'message' => 'Please fix the errors',
                 'status' => false,
@@ -174,8 +197,8 @@ class CartController extends Controller
 
         //? Step -2 Save user address
         //  $customerAddress = CustomerAddress::find();
-         $customer = Auth::guard('customer')->user();
-         CustomerAddress::updateOrCreate(
+        $customer = Auth::guard('customer')->user();
+        CustomerAddress::updateOrCreate(
             ['customer_id' => $customer->id],
             [
                 'customer_id' => $customer->id,
@@ -190,18 +213,38 @@ class CartController extends Controller
                 'state' => $request->state,
                 'zip' => $request->zip,
             ]
-         );
+        );
 
         //! Step -3 store data in orders table
-        if($request->payment_method == 'cod'){
-            $shipping = 0;
+        if ($request->payment_method == 'cod') {
+            // $shipping = 0;
             $discount = 0;
             $subTotal = Cart::subtotal(2, '.', '');
-            $grandTotal = $subTotal + $shipping ;
+            // $grandTotal = $subTotal + $shipping;
+
+            // Calculate Shipping
+
+            $shippingInfo = ShippingCharge::where('id', $request->district)->first();
+            // dd($shippingInfo->district);
+            $totalQty = 0;
+            foreach (Cart::content() as $item) {
+                $totalQty += $item->qty;
+            }
+            if ($shippingInfo != null) {
+                // $shippingCharge = $totalQty*$shippingInfo->amount;
+
+                $shippingCharge = $shippingInfo->amount;
+                $grandTotal = $subTotal + $shippingCharge;
+            } else {
+                // $shippingInfo = ShippingCharge::where('id', $request->shipping_charge_id)->first();
+
+                // $shippingCharge = $totalQty*$shippingInfo->amount;
+                // $grandTotal = $subTotal + $shippingCharge;
+            }
 
             $order = new Order;
             $order->subtotal = $subTotal;
-            $order->shipping = $shipping;
+            $order->shipping = $shippingCharge;
             $order->grand_total = $grandTotal;
             $order->customer_id = $customer->id;
 
@@ -219,14 +262,14 @@ class CartController extends Controller
             $order->save();
 
             //* Step -4 store order items in order items table
-            foreach(Cart::content() as $item){
+            foreach (Cart::content() as $item) {
                 $orderItem = new OrderItem;
                 $orderItem->product_id = $item->id;
                 $orderItem->order_id = $order->id;
                 $orderItem->name = $item->name;
                 $orderItem->qty = $item->qty;
                 $orderItem->price = $item->price;
-                $orderItem->total = $item->price*$item->qty;
+                $orderItem->total = $item->price * $item->qty;
                 $orderItem->save();
             }
 
@@ -238,15 +281,61 @@ class CartController extends Controller
                 'orderId' => $order->id,
                 'status' => true
             ]);
-        }else{
-
+        } else {
         }
     }
 
-    public function thankyou($id){
-        return view('front.thanks',[
+    public function thankyou($id)
+    {
+        return view('front.thanks', [
             'id' => $id
         ]);
     }
 
+    public function getOrderSummer(Request $request)
+    {
+        $subTotal = Cart::subtotal(2, '.', '');
+
+        if ($request->shipping_charge_id > 0) {
+
+            $shippingInfo = ShippingCharge::where('id', $request->shipping_charge_id)->first();
+
+            $totalQty = 0;
+            foreach (Cart::content() as $item) {
+                $totalQty += $item->qty;
+            }
+
+            if ($shippingInfo != null) {
+
+                // $shippingCharge = $totalQty*$shippingInfo->amount;
+                $shippingCharge = $shippingInfo->amount;
+                $grandTotal = $subTotal + $shippingCharge;
+
+                return response()->json([
+                    'status' => true,
+                    'grandTotal' => number_format($grandTotal, 2),
+                    'shippingCharge' => number_format($shippingCharge, 2),
+
+                ]);
+            } else {
+                // $shippingInfo = ShippingCharge::where('id', $request->shipping_charge_id)->first();
+
+                // $shippingCharge = $totalQty*$shippingInfo->amount;
+                // $grandTotal = $subTotal + $shippingCharge;
+
+                // return response()->json([
+                //     'status' => true,
+                //     'grandTotal' => number_format($grandTotal, 2),
+                //     'shippingCharge' => number_format($shippingCharge, 2),
+                // ]);
+            }
+        } else {
+            return response()->json([
+                'status' => true,
+                'grandTotal' => number_format($subTotal, 2),
+                'shippingCharge' => number_format(0, 2),
+
+            ]);
+        }
+    }
 }

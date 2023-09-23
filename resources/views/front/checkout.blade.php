@@ -158,51 +158,52 @@
                             </div>
                             <div class="d-flex justify-content-between mt-2">
                                 <div class="h6"><strong>Shipping</strong></div>
-                                <div class="h6"><strong>฿0</strong></div>
+                                <div class="h6"><strong id="shippingAmount">฿{{ number_format($totalShippingCharge, 2) }}</strong></div>
                             </div>
                             <div class="d-flex justify-content-between mt-2 summery-end">
                                 <div class="h5"><strong>Total</strong></div>
-                                <div class="h5"><strong>฿{{ Cart::subtotal() }}</strong></div>
+                                <div class="h5"><strong id="grandTotal">฿{{ number_format($grandTotal, 2) }}</strong></div>
+                            </div>
+                        </div>
+
+                        <div class="card payment-form ">
+                            <h3 class="card-title h5 mb-3">Payment Method</h3>
+                            <div class="">
+                                <input checked type="radio" name="payment_method" value="cod" id="payment_method_one">
+                                <label for="payment_method_one" class="form-check-label">COD</label>
+                            </div>
+
+                            <div class="">
+                                <input type="radio" name="payment_method" value="cod" id="payment_method_two">
+                                <label for="payment_method_two" class="form-check-label">Stripe</label>
+                            </div>
+
+                            <div class="card-body p-0 d-none" id="card-payment-form">
+                                <div class="mb-3">
+                                    <label for="card_number" class="mb-2">Card Number</label>
+                                    <input type="text" name="card_number" id="card_number"
+                                        placeholder="Valid Card Number" class="form-control">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="expiry_date" class="mb-2">Expiry Date</label>
+                                        <input type="text" name="expiry_date" id="expiry_date" placeholder="MM/YYYY"
+                                            class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="expiry_date" class="mb-2">CVV Code</label>
+                                        <input type="text" name="expiry_date" id="expiry_date" placeholder="123"
+                                            class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pt-4">
+                                {{-- <a href="#" class="btn-dark btn btn-block w-100">Pay Now</a> --}}
+                                <button type="submit" class="btn-dark btn btn-block w-100">Pay Now</button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card payment-form ">
-                        <h3 class="card-title h5 mb-3">Payment Method</h3>
-                        <div class="">
-                            <input checked type="radio" name="payment_method" value="cod" id="payment_method_one">
-                            <label for="payment_method_one" class="form-check-label">COD</label>
-                        </div>
-
-                        <div class="">
-                            <input type="radio" name="payment_method" value="cod" id="payment_method_two">
-                            <label for="payment_method_two" class="form-check-label">Stripe</label>
-                        </div>
-
-                        <div class="card-body p-0 d-none" id="card-payment-form">
-                            <div class="mb-3">
-                                <label for="card_number" class="mb-2">Card Number</label>
-                                <input type="text" name="card_number" id="card_number"
-                                    placeholder="Valid Card Number" class="form-control">
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="expiry_date" class="mb-2">Expiry Date</label>
-                                    <input type="text" name="expiry_date" id="expiry_date" placeholder="MM/YYYY"
-                                        class="form-control">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="expiry_date" class="mb-2">CVV Code</label>
-                                    <input type="text" name="expiry_date" id="expiry_date" placeholder="123"
-                                        class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pt-4">
-                            {{-- <a href="#" class="btn-dark btn btn-block w-100">Pay Now</a> --}}
-                            <button type="submit" class="btn-dark btn btn-block w-100">Pay Now</button>
-                        </div>
-                    </div>
 
 
                     <!-- CREDIT CARD FORM ENDS HERE -->
@@ -275,5 +276,21 @@
                 }
             });
         })
+
+        $('#district').change(function(){
+            $.ajax({
+                url: '{{ route('front.getOrderSummer') }}',
+                type: 'post',
+                data: {shipping_charge_id: $(this).val()},
+                dataType: 'json',
+                success: function(response){
+                    if(response.status == true){
+                        $('#shippingAmount').html('฿' + response.shippingCharge);
+                        $('#grandTotal').html('฿' + response.grandTotal);
+
+                    }
+                }
+            });
+        });
     </script>
 @endsection

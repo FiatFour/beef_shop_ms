@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
             $table->double('subtotal',10,2);
             $table->double('shipping',10,2);
-            $table->double('coupon_code',10,2)->nullable();
+            $table->string('coupon_code')->nullable();
             $table->double('discount',10,2)->nullable();
             $table->double('grand_total',10,2);
 

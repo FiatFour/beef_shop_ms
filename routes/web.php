@@ -176,7 +176,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/coupons', 'index')->name('coupons.index');
             Route::get('/coupons/create', 'create')->name('coupons.create');
             Route::post('/coupons', 'store')->name('coupons.store');
-
+            Route::get('/coupons/edit/{id}', 'edit')->name('coupons.edit');
+            Route::put('/coupons/{id}', 'update')->name('coupons.update');
+            Route::delete('/coupons/{id}', 'destroy')->name('coupons.delete');
         });
 
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -152,5 +154,19 @@ class AuthController extends Controller
     {
         Auth::guard('customer')->logout();
         return redirect()->route('account.login')->with('success', "You successfully logged out!");
+    }
+
+    public function orders(){
+        $customer = Auth::guard('customer')->user();
+        $orders = Order::where('customer_id', $customer->id)->orderBy('created_at', 'DESC')->get();
+
+        return view('front.account.order', compact('orders'));
+    }
+
+    public function orderDetail($id){
+        $customer = Auth::guard('customer')->user();
+        $order = Order::where('customer_id', $customer->id)->where('id', $id)->first();
+        $orderItems = OrderItem::where('order_id', $id)->get();
+        return view('front.account.order-detail', compact('order', 'orderItems'));
     }
 }

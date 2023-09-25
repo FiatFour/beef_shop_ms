@@ -64,6 +64,8 @@ Route::controller(App\Http\Controllers\CartController::class)->group(function ()
         Route::middleware(['auth:customer', 'is_customer_verify_email'])->group(function () {
             Route::get('/profile', 'profile')->name('account.profile');
             Route::get('/logout', 'logout')->name('account.logout');
+            Route::get('/my-orders', 'orders')->name('account.orders');
+            Route::get('/order-detail/{orderId}', 'orderDetail')->name('account.orderDetail');
         });
     });
 // });

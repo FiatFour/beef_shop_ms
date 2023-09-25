@@ -348,10 +348,16 @@ class CartController extends Controller
                                </div>';
         }
 
+        // dd(Session::get('district'));
+        if ($request->shipping_charge_id > 0 || Session::has('districtId')) {
 
-        if ($request->shipping_charge_id > 0) {
-
-            $shippingInfo = ShippingCharge::where('id', $request->shipping_charge_id)->first();
+            if(Session::has('districtId')){
+                $districtId = Session::get('districtId');
+                $shippingInfo = ShippingCharge::where('id', $districtId)->first();
+                Session::forget('districtId');
+            }else{
+                $shippingInfo = ShippingCharge::where('id', $request->shipping_charge_id)->first();
+            }
 
             $totalQty = 0;
             foreach (Cart::content() as $item) {
@@ -471,7 +477,11 @@ class CartController extends Controller
             }
         }
 
+        // dd($request->district);
+        // $district = ShippingCharge::where('id', $request->district)->first();
         Session::put('code', $code);
+        Session::put('districtId', $request->district);
+
         return $this->getOrderSummery($request);
     }
 

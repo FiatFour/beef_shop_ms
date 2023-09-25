@@ -367,7 +367,7 @@ class CartController extends Controller
                 return response()->json([
                     'status' => true,
                     'grandTotal' => number_format($grandTotal, 2),
-                    'discount' => $discount,
+                    'discount' => number_format($discount, 2),
                     'discountString' => $discountString,
                     'shippingCharge' => number_format($shippingCharge, 2)
                 ]);
@@ -379,7 +379,7 @@ class CartController extends Controller
 
                 // return response()->json([
                 //     'status' => true,
-                //     'discount' => $discount,
+                //     'discount' => number_format($discount, 2),
                 //     'discountString' => $discountString,
                 //     'grandTotal' => number_format($grandTotal, 2),
                 //     'shippingCharge' => number_format($shippingCharge, 2),
@@ -389,7 +389,7 @@ class CartController extends Controller
             return response()->json([
                 'status' => true,
                 'grandTotal' => number_format($subTotal - $discount, 2),
-                'discount' => $discount,
+                'discount' => number_format($discount, 2),
                 'discountString' => $discountString,
                 'shippingCharge' => number_format(0, 2),
 
@@ -432,6 +432,41 @@ class CartController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => 'Invalid discount coupon',
+                ]);
+            }
+        }
+
+        // Max Uses Check
+        if($code->max_uses > 0){
+            $couponUsed = Order::where('discount_coupon_id', $code->id)->count();
+
+            if($couponUsed >= $code->max_uses){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Invalid discount coupon',
+                ]);
+            }
+        }
+
+        // Max Uses User Check
+        if($code->max_uses_user > 0){
+            $couponUsedByUser = Order::where(['discount_coupon_id' => $code->id, 'customer_id' => Auth::guard('customer')->user()->id])->count();
+
+            if($couponUsedByUser >= $code->max_uses_user){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'You already used this coupon.',
+                ]);
+            }
+        }
+
+        // Min amount condition Check
+        $subTotal = Cart::subtotal(2, '.', '');
+        if($code->min_amount > 0){
+            if($subTotal < $code->min_amount){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'You min amount must be ฿'.$code->min_amount.'.',
                 ]);
             }
         }

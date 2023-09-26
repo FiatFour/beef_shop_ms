@@ -185,6 +185,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/coupons/{id}', 'destroy')->name('coupons.delete');
         });
 
+        // Order Routes
+        Route::controller(App\Http\Controllers\Admin\OrderController::class)->group(function () {
+            Route::get('/orders', 'index')->name('orders.index');
+            Route::get('/orders/{id}', 'detail')->name('orders.detail');
+        });
+
 
 
 

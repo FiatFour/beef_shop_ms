@@ -39,18 +39,21 @@
                                             @foreach ($orders as $order)
                                                 <tr>
                                                     <td>
-                                                        <a href="{{ route('account.orderDetail', $order->id) }}">{{ $order->id }}</a>
+                                                        <a
+                                                            href="{{ route('account.orderDetail', $order->id) }}">{{ $order->id }}</a>
                                                     </td>
                                                     <td>
                                                         {{ \Carbon\Carbon::parse($order->created_at)->format('d M, Y') }}
                                                     </td>
                                                     <td>
                                                         @if ($order->status == 'Pending')
-                                                            <span class="badge bg-danger">Pending</span>
+                                                            <span class="badge bg-warning">Pending</span>
                                                         @elseif($order->status == 'Shipped')
                                                             <span class="badge bg-info">Shipped</span>
-                                                        @else
+                                                        @elseif($order->status == 'Delivered')
                                                             <span class="badge bg-success">Delivered</span>
+                                                        @else
+                                                            <span class="badge bg-danger">Cancelled</span>
                                                         @endif
                                                     </td>
                                                     <td>฿{{ number_format($order->grand_total, 2) }}</td>

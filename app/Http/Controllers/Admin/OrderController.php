@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
 {
@@ -33,5 +34,19 @@ class OrderController extends Controller
         $orderItems = OrderItem::where('order_id', $id)->get();
 
         return view('admin.orders.detail', compact('order', 'orderItems'));
+    }
+
+    public function changeOrderStatus(Request $request, $id){
+        $order = Order::find($id);
+        $order->status = $request->status;
+        $order->shipped_date = $request->shipped_date;
+        $order->save();
+
+        $message = "Status changed successfully";
+        Session::flash('success' , $message);
+        return response()->json([
+            'status' => true,
+            'message' => $message
+        ]);
     }
 }

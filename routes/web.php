@@ -189,6 +189,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::controller(App\Http\Controllers\Admin\OrderController::class)->group(function () {
             Route::get('/orders', 'index')->name('orders.index');
             Route::get('/orders/{id}', 'detail')->name('orders.detail');
+            Route::post('/order/change-status/{id}', 'changeOrderStatus')->name('orders.changeOrderStatus');
         });
 
 

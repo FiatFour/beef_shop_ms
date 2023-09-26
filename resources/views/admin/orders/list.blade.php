@@ -67,11 +67,13 @@
                                         <td>{{ $order->mobile }}</td>
                                         <td>
                                             @if ($order->status == 'Pending')
-                                                <span class="badge bg-danger">Pending</span>
-                                            @elseif ($order->status == 'Shipped')
+                                                <span class="badge bg-warning">Pending</span>
+                                            @elseif($order->status == 'Shipped')
                                                 <span class="badge bg-info">Shipped</span>
-                                            @else
+                                            @elseif($order->status == 'Delivered')
                                                 <span class="badge bg-success">Delivered</span>
+                                            @else
+                                                <span class="badge bg-danger">Cancelled</span>
                                             @endif
                                         </td>
                                         <td>

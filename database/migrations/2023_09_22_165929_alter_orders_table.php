@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
 
-            // $table->foreignId('shipping_charge_id')->constrained()->onDelete('cascade')->after('mobile');
-            // $table->foreignId('discount_coupon_id')->constrained()->onDelete('cascade')->after('shipping')->nullable();
+            $table->foreignId('shipping_charge_id')->constrained()->onDelete('cascade')->after('mobile');
+            $table->foreignId('discount_coupon_id')->constrained()->onDelete('cascade')->after('shipping')->nullable();
             $table->enum('payment_status', ['Paid', 'Not paid'])->after('grand_total')->default('Not paid');
-            $table->enum('status', ['Pending', 'Shipped', 'Delivered'])->after('payment_status')->default('Pending');
+            $table->enum('status', ['Pending', 'Shipped', 'Delivered', 'Cancelled'])->after('payment_status')->default('Pending');
         });
     }
 
@@ -26,8 +26,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('orders', function(Blueprint $table){
-            // $table->dropForeign('shipping_charge_id');
-            // $table->dropForeign('discount_coupon_id');
+            $table->dropForeign('shipping_charge_id');
+            $table->dropForeign('discount_coupon_id');
             $table->dropColumn('payment_status');
             $table->dropColumn('status');
         });

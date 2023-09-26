@@ -43,7 +43,11 @@
                                             <!-- Text -->
                                             <p class="mb-lg-0 fs-sm fw-bold">
                                                 <time datetime="2019-10-01">
-                                                    01 Oct, 2019
+                                                    @if (!empty($order->shipped_date))
+                                                        {{ \Carbon\Carbon::parse($order->shipped_date)->format('d M, Y') }}
+                                                    @else
+                                                        N/A
+                                                    @endif
                                                 </time>
                                             </p>
                                         </div>
@@ -53,11 +57,13 @@
                                             <!-- Text -->
                                             <p class="mb-0 fs-sm fw-bold">
                                                 @if ($order->status == 'Pending')
-                                                    <span class="badge bg-danger">Pending</span>
+                                                    <span class="badge bg-warning">Pending</span>
                                                 @elseif($order->status == 'Shipped')
                                                     <span class="badge bg-info">Shipped</span>
-                                                @else
+                                                @elseif($order->status == 'Delivered')
                                                     <span class="badge bg-success">Delivered</span>
+                                                @else
+                                                    <span class="badge bg-danger">Cancelled</span>
                                                 @endif
                                             </p>
                                         </div>

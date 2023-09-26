@@ -36,7 +36,9 @@ Auth::routes();
 Route::get('/', [FrontController::class, 'index'])->name('front.home');
 Route::get('/shop/{categorySlug?}/{subCategorySlug?}', [ShopController::class, 'index'])->name('front.shop');
 Route::get('/product/{slug}', [ShopController::class, 'product'])->name('front.product');
-
+// Route::get('/email', function(){
+//     orderEmail(14);
+// });
 Route::controller(App\Http\Controllers\CartController::class)->group(function () {
     Route::get('/cart', 'cart')->name('front.cart');
     Route::post('/add-to-cart', 'addToCart')->name('front.addToCart');

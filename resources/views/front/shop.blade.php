@@ -101,7 +101,8 @@
                                 <div class="ml-2">
                                     <select name="sort" id="sort" class="form-control">
                                         <option {{ $sort == 'latest' ? 'selected' : '' }} value="latest">Latest</option>
-                                        <option {{ $sort == 'price_desc' ? 'selected' : '' }} value="price_desc">Price High</option>
+                                        <option {{ $sort == 'price_desc' ? 'selected' : '' }} value="price_desc">Price High
+                                        </option>
                                         <option {{ $sort == 'price_asc' ? 'selected' : '' }} value="price_asc">Price Low
                                         </option>
                                     </select>
@@ -127,21 +128,24 @@
                                                 @endif
                                             </a>
 
-                                            <a onclick="addToWishList({{ $product->id }})" class="whishlist" href="javascript:void(0);"><i class="far fa-heart"></i></a>
+                                            <a onclick="addToWishList({{ $product->id }})" class="whishlist"
+                                                href="javascript:void(0);"><i class="far fa-heart"></i></a>
 
                                             <div class="product-action">
                                                 @if ($product->track_qty == 'Yes')
                                                     @if ($product->qty > 0)
-                                                    <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }})">
-                                                        <i class="fa fa-shopping-cart"></i> Add To Cart
-                                                    </a>
+                                                        <a class="btn btn-dark" href="javascript:void(0);"
+                                                            onclick="addToCart({{ $product->id }})">
+                                                            <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                        </a>
                                                     @else
-                                                    <a class="btn btn-dark" href="javascript:void(0);">
-                                                        Out Of Stock
-                                                    </a>
+                                                        <a class="btn btn-dark" href="javascript:void(0);">
+                                                            Out Of Stock
+                                                        </a>
                                                     @endif
                                                 @else
-                                                    <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }})">
+                                                    <a class="btn btn-dark" href="javascript:void(0);"
+                                                        onclick="addToCart({{ $product->id }})">
                                                         <i class="fa fa-shopping-cart"></i> Add To Cart
                                                     </a>
                                                 @endif
@@ -149,7 +153,8 @@
 
                                         </div>
                                         <div class="card-body text-center mt-3">
-                                            <a class="h6 link" href="{{ route('front.product', $product->slug) }}">{{ $product->title }}</a>
+                                            <a class="h6 link"
+                                                href="{{ route('front.product', $product->slug) }}">{{ $product->title }}</a>
                                             <div class="price mt-2">
                                                 <span class="h5"><strong>฿{{ $product->price }}</strong></span>
 
@@ -223,8 +228,12 @@
             url += '&price_min=' + slider.result.from + '&price_max=' + slider.result.to;
 
             // Sorting filter
-            url += '&sort=' + $('#sort').val();
+            var keyword = $('#search').val();
+            if (keyword.length > 0) {
+                url += '&search=' + keyword;
+            }
 
+            url += '&sort=' + $('#sort').val();
             window.location.href = url;
         }
     </script>

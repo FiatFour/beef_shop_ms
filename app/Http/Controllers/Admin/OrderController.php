@@ -42,7 +42,18 @@ class OrderController extends Controller
         $order->shipped_date = $request->shipped_date;
         $order->save();
 
-        $message = "Status changed successfully";
+        $message = "Order status updated successfully";
+        Session::flash('success' , $message);
+        return response()->json([
+            'status' => true,
+            'message' => $message
+        ]);
+    }
+
+    public function sendInvoiceEmail(Request $request, $orderId){
+        orderEmail($orderId, $request->userType);
+
+        $message = "Order email sent successfully";
         Session::flash('success' , $message);
         return response()->json([
             'status' => true,

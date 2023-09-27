@@ -11,14 +11,22 @@
 
 
 <body style="font-family: Arial, Helvetica, sans-serif; font-size:16px;">
-    <h1>Thanks for your order!!</h1>
-    <h2>Your Order ID is: #{{ $mailData['order']->id }}</h2>
+
+    @if ($mailData['userType'] == 'customer')
+        <h1>Thanks for your order!!</h1>
+        <h2>Your Order ID is: #{{ $mailData['order']->id }}</h2>
+    @else
+        <h1>You have received an order: </h1>
+        <h2>Order ID: #{{ $mailData['order']->id }}</h2>
+    @endif
+
 
     <h2>Shipping Address</h2>
     <address>
         <strong>{{ $mailData['order']->first_name . ' ' . $mailData['order']->last_name }}</strong><br>
         {{ $mailData['order']->address }}<br>
-        {{ $mailData['order']->city }}, {{ (getDistrictInfo($mailData['order']->shipping_charge_id))->district }}, {{ $mailData['order']->state }}
+        {{ $mailData['order']->city }}, {{ getDistrictInfo($mailData['order']->shipping_charge_id)->district }},
+        {{ $mailData['order']->state }}
         {{ $mailData['order']->zip }} <br>
         Phone: {{ $mailData['order']->mobile }}<br>
         Email: {{ $mailData['order']->email }}

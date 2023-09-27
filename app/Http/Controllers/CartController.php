@@ -312,7 +312,7 @@ class CartController extends Controller
             }
 
             // Send Order Email
-            orderEmail($order->id);
+            orderEmail($order->id, 'customer');
 
             Session::flash('success', "You have successfully placed your order.");
             Session::forget('code');

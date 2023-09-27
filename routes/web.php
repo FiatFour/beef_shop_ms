@@ -50,6 +50,7 @@ Route::controller(App\Http\Controllers\CartController::class)->group(function ()
     Route::post('/get-order-summery', 'getOrderSummery')->name('front.getOrderSummery');
     Route::post('/apply-discount', 'applyDiscount')->name('front.applyDiscount');
     Route::post('/remove-discount', 'removeDiscount')->name('front.removeDiscount');
+    Route::post('/add-to-wishlist', [FrontController::class, 'addToWishlist'])->name('front.addToWishlist');
 });
 
 // Route::group(['prefix' => 'account'], function () {
@@ -65,9 +66,11 @@ Route::controller(App\Http\Controllers\CartController::class)->group(function ()
 
         Route::middleware(['auth:customer', 'is_customer_verify_email'])->group(function () {
             Route::get('/profile', 'profile')->name('account.profile');
-            Route::get('/logout', 'logout')->name('account.logout');
             Route::get('/my-orders', 'orders')->name('account.orders');
+            Route::get('/my-wishlists', 'wishlist')->name('account.wishlist');
+            Route::post('/remove-product-from-wishlist', 'removeProductFromWishList')->name('account.removeProductFromWishList');
             Route::get('/order-detail/{orderId}', 'orderDetail')->name('account.orderDetail');
+            Route::get('/logout', 'logout')->name('account.logout');
         });
     });
 // });

@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use App\Models\VerifyCustomer;
+use App\Models\Wishlist;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -156,18 +157,45 @@ class AuthController extends Controller
         return redirect()->route('account.login')->with('success', "You successfully logged out!");
     }
 
-    public function orders(){
+    public function orders()
+    {
         $customer = Auth::guard('customer')->user();
         $orders = Order::where('customer_id', $customer->id)->orderBy('created_at', 'DESC')->get();
 
         return view('front.account.order', compact('orders'));
     }
 
-    public function orderDetail($id){
+    public function orderDetail($id)
+    {
         $customer = Auth::guard('customer')->user();
         $order = Order::where('customer_id', $customer->id)->where('id', $id)->first();
         $orderItems = OrderItem::where('order_id', $id)->get();
         // $orderItemsCount = OrderItem::where('order_id', $id)->count();
         return view('front.account.order-detail', compact('order', 'orderItems'));
+    }
+
+    public function wishlist()
+    {
+        $wishlists = Wishlist::where('customer_id', Auth::guard('customer')->user()->id)->with('product')->get();
+
+        return view('front.account.wishlist', compact('wishlists'));
+    }
+
+    public function removeProductFromWishList(Request $request)
+    {
+        $wishlist = Wishlist::where('customer_id', Auth::guard('customer')->user()->id)->where('product_id', $request->id)->first();
+
+        if ($wishlist == null) {
+            Session::flash('error', 'Product already removed.');
+            return response()->json([
+                'status' => true,
+            ]);
+        } else {
+            Wishlist::where('customer_id', Auth::guard('customer')->user()->id)->where('product_id', $request->id)->delete();
+            Session::flash('success', 'Product removed successfully.');
+            return response()->json([
+                'status' => true,
+            ]);
+        }
     }
 }

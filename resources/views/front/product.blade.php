@@ -48,13 +48,32 @@
                                 <small class="far fa-star"></small>
                             </div>
                             <small class="pt-1">(99 Reviews)</small>
-                            @if ($product->compare_price > 0)
-                                <h2 class="price text-secondary"><del>฿{{ $product->compare_price }}</del></h2>
-                            @endif
+
                         </div>
+                        @if ($product->compare_price > 0)
+                            <h2 class="price text-secondary"><del>฿{{ $product->compare_price }}</del></h2>
+                        @endif
+
                         <h2 class="price ">฿{{ $product->price }}</h2>
                         {!! $product->short_description !!}
-                        <a href="javascript:void(0);" onclick="addToCart({{ $product->id }});" class="btn btn-dark"><i class="fas fa-shopping-cart"></i> &nbsp;ADD TO CART</a>
+                        {{-- <a href="javascript:void(0);" onclick="addToCart({{ $product->id }});" class="btn btn-dark"><i
+                                class="fas fa-shopping-cart"></i> &nbsp;ADD TO CART</a> --}}
+
+                        @if ($product->track_qty == 'Yes')
+                            @if ($product->qty > 0)
+                                <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }})">
+                                    <i class="fa fa-shopping-cart"></i> &nbsp;Add To Cart
+                                </a>
+                            @else
+                                <a class="btn btn-dark" href="javascript:void(0);">
+                                    Out Of Stock
+                                </a>
+                            @endif
+                        @else
+                            <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }})">
+                                <i class="fa fa-shopping-cart"></i> &nbsp;Add To Cart
+                            </a>
+                        @endif
                     </div>
                 </div>
 
@@ -96,13 +115,13 @@
     </section>
 
     @if (!empty($relatedProducts))
-    <section class="pt-5 section-8">
-        <div class="container">
-            <div class="section-title">
-                <h2>Related Products</h2>
-            </div>
-            <div class="col-md-12">
-                <div id="related-products" class="carousel">
+        <section class="pt-5 section-8">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Related Products</h2>
+                </div>
+                <div class="col-md-12">
+                    <div id="related-products" class="carousel">
                         @foreach ($relatedProducts as $relatedProduct)
                             @php
                                 $productImage = $relatedProduct->product_images->first();
@@ -118,16 +137,35 @@
                                                 src="{{ asset('admin-assets/img/default-150x150.png') }}">
                                         @endif
                                     </a>
-                                    <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
+                                    <a onclick="addToWishList({{ $product->id }})" class="whishlist" href="javascript:void(0);"><i class="far fa-heart"></i></a>
 
                                     <div class="product-action">
-                                        <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }})">
+                                        {{-- <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }})">
                                             <i class="fa fa-shopping-cart"></i> Add To Cart
-                                        </a>
+                                        </a> --}}
+
+                                        @if ($relatedProduct->track_qty == 'Yes')
+                                            @if ($relatedProduct->qty > 0)
+                                                <a class="btn btn-dark" href="javascript:void(0);"
+                                                    onclick="addToCart({{ $relatedProduct->id }})">
+                                                    <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                </a>
+                                            @else
+                                                <a class="btn btn-dark" href="javascript:void(0);">
+                                                    Out Of Stock
+                                                </a>
+                                            @endif
+                                        @else
+                                            <a class="btn btn-dark" href="javascript:void(0);"
+                                                onclick="addToCart({{ $relatedProduct->id }})">
+                                                <i class="fa fa-shopping-cart"></i> Add To Cart
+                                            </a>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="card-body text-center mt-3">
-                                    <a class="h6 link" href="{{ route('front.product', $relatedProduct->slug) }}">{{ $relatedProduct->title }}</a>
+                                    <a class="h6 link"
+                                        href="{{ route('front.product', $relatedProduct->slug) }}">{{ $relatedProduct->title }}</a>
                                     <div class="price mt-2">
                                         <span class="h5"><strong>฿{{ $relatedProduct->price }}</strong></span>
                                         @if ($relatedProduct->compare_price > 0)
@@ -142,5 +180,5 @@
                 </div>
             </div>
         </section>
-        @endif
+    @endif
 @endsection

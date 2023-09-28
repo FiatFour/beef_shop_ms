@@ -200,6 +200,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/order/send-email/{id}', 'sendInvoiceEmail')->name('orders.sendInvoiceEmail');
         });
 
+        // Customer Routes
+        Route::controller(App\Http\Controllers\Admin\CustomerController::class)->group(function () {
+            Route::get('/customers', 'index')->name('customers.index');
+            Route::get('/customers/create', 'create')->name('customers.create');
+            Route::post('/customers', 'store')->name('customers.store');
+
+        });
+
 
 
 

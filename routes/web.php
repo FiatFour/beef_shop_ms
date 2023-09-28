@@ -66,6 +66,8 @@ Route::controller(App\Http\Controllers\CartController::class)->group(function ()
 
         Route::middleware(['auth:customer', 'is_customer_verify_email'])->group(function () {
             Route::get('/profile', 'profile')->name('account.profile');
+            Route::post('/update-profile', 'updateProfile')->name('account.updateProfile');
+            Route::post('/update-address', 'updateAddress')->name('account.updateAddress');
             Route::get('/my-orders', 'orders')->name('account.orders');
             Route::get('/my-wishlists', 'wishlist')->name('account.wishlist');
             Route::post('/remove-product-from-wishlist', 'removeProductFromWishList')->name('account.removeProductFromWishList');

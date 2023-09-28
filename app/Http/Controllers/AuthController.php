@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\ShippingCharge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -36,7 +38,7 @@ class AuthController extends Controller
             'email' => 'required|email|unique:customers',
             'password' => 'required|min:5|max:30',
             'confirm_password' => 'required|min:5|max:30|same:password',
-            'phone' => 'required|min:10|max:10',
+            'phone' => 'required|min:10|numeric',
             'gender' => 'required'
         ], [
             'confirm_password.required' => 'The confirm password field is required.',
@@ -148,7 +150,86 @@ class AuthController extends Controller
 
     public function profile()
     {
-        return view('front.account.profile');
+        $customerId = Auth::guard('customer')->user()->id;
+        $customer = Customer::where('id', $customerId)->first();
+        $customerAddress = CustomerAddress::where('customer_id', $customerId)->first();
+        $shippingCharges = ShippingCharge::orderBy('district', 'ASC')->get();
+
+        return view('front.account.profile', compact('customer', 'shippingCharges', 'customerAddress'));
+    }
+
+    public function updateProfile(Request $request){
+        $customerId = Auth::guard('customer')->user()->id;
+        $validator = Validator::make($request->all(),[
+            'name' => 'required',
+            'email' => 'required|email|unique:customers,email,'.$customerId.',id',
+            'phone' => 'required|min:10|numeric'
+        ]);
+
+        if($validator->passes()){
+            $customer = Customer::find($customerId);
+            $customer->name = $request->name;
+            $customer->email = $request->email;
+            $customer->phone = $request->phone;
+            $customer->save();
+
+            Session::flash('success', 'Profile Updated successfully');
+            return response()->json([
+                'status' => true,
+                'message' => 'Profile Updated successfully'
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ]);
+        }
+    }
+
+    public function updateAddress(Request $request){
+        $customerId = Auth::guard('customer')->user()->id;
+
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|min:5',
+            'last_name' => 'required',
+            'email' => 'required|email',
+            'district' => 'required',
+            'address' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'zip' => 'required',
+            'mobile' => 'required|min:10|numeric',
+        ]);
+
+        if($validator->passes()){
+            CustomerAddress::updateOrCreate(
+                ['customer_id' => $customerId],
+                [
+                    'customer_id' => $customerId,
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'email' => $request->email,
+                    'mobile' => $request->mobile,
+                    'shipping_charge_id' => $request->district,
+                    'address' => $request->address,
+                    'apartment' => $request->apartment,
+                    'city' => $request->city,
+                    'state' => $request->state,
+                    'zip' => $request->zip,
+                ]
+            );
+
+            Session::flash('success', 'Address Updated successfully');
+            return response()->json([
+                'status' => true,
+                'message' => 'Address Updated successfully'
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ]);
+        }
     }
 
     public function logout()

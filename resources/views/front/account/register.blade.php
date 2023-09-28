@@ -41,11 +41,11 @@
                         <p></p>
                     </div>
                     <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Password" id="password" name="password">
+                        <input maxlength="10" type="password" class="form-control" placeholder="Password" id="password" name="password">
                         <p></p>
                     </div>
                     <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Confirm Password" id="confirm_password"
+                        <input maxlength="10" type="password" class="form-control" placeholder="Confirm Password" id="confirm_password"
                             name="confirm_password">
                         <p></p>
                     </div>

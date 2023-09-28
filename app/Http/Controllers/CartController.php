@@ -205,7 +205,7 @@ class CartController extends Controller
             'city' => 'required',
             'state' => 'required',
             'zip' => 'required',
-            'mobile' => 'required',
+            'mobile' => 'required|min:10|numeric',
         ]);
 
         if ($validator->fails()) {

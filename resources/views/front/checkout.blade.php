@@ -122,7 +122,7 @@
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <input type="text" name="mobile" id="mobile" class="form-control"
-                                                placeholder="Mobile No."
+                                                placeholder="Mobile No." maxlength="10"
                                                 value="{{ !empty($customerAddress) ? $customerAddress->mobile : '' }}">
                                             <p></p>
                                         </div>

@@ -210,6 +210,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/customers/{id}', 'destroy')->name('customers.delete');
         });
 
+        // Page Routes
+        Route::controller(App\Http\Controllers\Admin\PageController::class)->group(function () {
+            Route::get('/pages', 'index')->name('pages.index');
+            Route::get('/pages/create', 'create')->name('pages.create');
+            Route::post('/pages', 'store')->name('pages.store');
+            Route::get('/pages/edit/{id}', 'edit')->name('pages.edit');
+            Route::put('/pages/{id}', 'update')->name('pages.update');
+            Route::delete('/pages/{id}', 'destroy')->name('pages.delete');
+        });
+
 
 
 

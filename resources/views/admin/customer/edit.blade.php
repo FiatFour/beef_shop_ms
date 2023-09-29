@@ -6,7 +6,7 @@
         <div class="container-fluid my-2">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Create Customer</h1>
+                    <h1>Edit Customer</h1>
                 </div>
                 <div class="col-sm-6 text-right">
                     <a href="{{ route('admin.customers.index') }}" class="btn btn-primary">Back</a>
@@ -27,7 +27,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="name">Name</label>
-                                    <input type="text" name="name" id="name" class="form-control"
+                                    <input value="{{ $customer->name }}" type="text" name="name" id="name" class="form-control"
                                         placeholder="Name">
                                     <p></p>
                                 </div>
@@ -35,7 +35,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="phone">Phone</label>
-                                    <input type="text" name="phone" id="phone" class="form-control"
+                                    <input value="{{ $customer->phone }}" type="text" name="phone" id="phone" class="form-control"
                                         placeholder="Phone" maxlength="10">
                                     <p></p>
                                 </div>
@@ -43,7 +43,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="email">Email</label>
-                                    <input type="text" name="email" id="email" class="form-control"
+                                    <input value="{{ $customer->email }}" type="text" name="email" id="email" class="form-control"
                                         placeholder="Email">
                                     <p></p>
                                 </div>
@@ -52,7 +52,8 @@
                                 <div class="mb-3">
                                     <label for="password">Password</label>
                                     <input type="text" name="password" id="password" class="form-control"
-                                        placeholder="Password">
+                                        placeholder="Password" maxlength="30" minlength="5">
+                                    <span>To change password you have to enter a value, otherwise leave blank.</span>
                                     <p></p>
                                 </div>
                             </div>
@@ -60,8 +61,8 @@
                                 <div class="mb-3">
                                     <label>Status</label>
                                     <select name="status" id="status" class="form-control">
-                                        <option value="1">Active</option>
-                                        <option value="0">Block</option>
+                                        <option {{ ($customer->status == 1) ? 'selected' : '' }} value="1">Active</option>
+                                        <option {{ ($customer->status == 0) ? 'selected' : '' }} value="0">Block</option>
                                     </select>
                                 </div>
                             </div>
@@ -70,12 +71,12 @@
                                     <div class="form-group mt-5">
                                         <label class="form-check-inline">Gender: </label>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="gender" id="gender" value="1">
+                                            <input {{ ($customer->gender == 1) ? 'checked' : '' }} class="form-check-input" type="radio" name="gender" id="gender" value="1">
                                             <label class="form-check-label">Man</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="gender" id="gender" value="2">
-                                            <label class="form-check-label">Woman</label>
+                                            <label {{ ($customer->gender == 2) ? 'checked' : '' }} class="form-check-label">Woman</label>
                                         </div>
                                         <p></p>
                                     </div>
@@ -86,7 +87,7 @@
                 </div>
 
                 <div class="pb-5 pt-3">
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                     <a href="{{ route('admin.customers.index') }}" class="btn btn-outline-dark ml-3">Cancel</a>
                 </div>
             </form>
@@ -103,8 +104,8 @@
             var element = $(this);
             $("button[type=submit]").prop('disabled', true);
             $.ajax({
-                url: "{{ route('admin.customers.store') }}",
-                type: 'post',
+                url: "{{ route('admin.customers.update', $customer->id) }}",
+                type: 'put',
                 data: element.serializeArray(),
                 dataType: 'json',
                 success: function(response) {

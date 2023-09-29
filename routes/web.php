@@ -205,7 +205,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/customers', 'index')->name('customers.index');
             Route::get('/customers/create', 'create')->name('customers.create');
             Route::post('/customers', 'store')->name('customers.store');
-
+            Route::get('/customers/edit/{id}', 'edit')->name('customers.edit');
+            Route::put('/customers/{id}', 'update')->name('customers.update');
+            Route::delete('/customers/{id}', 'destroy')->name('customers.delete');
         });
 
 

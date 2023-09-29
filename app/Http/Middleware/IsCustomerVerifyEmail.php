@@ -16,9 +16,12 @@ class IsCustomerVerifyEmail
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!Auth::guard('customer')->user()->email_verified){
+        if (Auth::guard('customer')->user()->status == 0) {
             Auth::guard('customer')->logout();
-            return redirect()->route('account.login')->with('fail', "You need to confirm your account. We have sent you an activation link, please check you email")->withInput();
+            if (!empty(Auth::guard('customer')->user()->email_verified)) {
+                return redirect()->route('account.login')->with('fail', "You need to confirm your account. We have sent you an activation link, please check you email")->withInput();
+            }
+            return redirect()->route('account.login')->with('fail', "Your account has banned")->withInput();
         }
         return $next($request);
     }

@@ -3,6 +3,7 @@
 use App\Mail\OrderEmail;
 use App\Models\Category;
 use App\Models\Order;
+use App\Models\Page;
 use App\Models\ProductImage;
 use App\Models\ShippingCharge;
 use Illuminate\Support\Facades\Mail;
@@ -44,5 +45,10 @@ use PhpParser\Node\Expr\AssignOp\ShiftLeft;
 
     function getDistrictInfo($shipping_charge_id){
         return ShippingCharge::where('id', $shipping_charge_id)->first();
+    }
+
+    function staticPages(){
+        $pages = Page::orderBy('name', 'ASC')->get();
+        return $pages;
     }
 ?>

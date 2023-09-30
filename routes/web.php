@@ -51,6 +51,7 @@ Route::controller(App\Http\Controllers\CartController::class)->group(function ()
     Route::post('/apply-discount', 'applyDiscount')->name('front.applyDiscount');
     Route::post('/remove-discount', 'removeDiscount')->name('front.removeDiscount');
     Route::post('/add-to-wishlist', [FrontController::class, 'addToWishlist'])->name('front.addToWishlist');
+    Route::get('/page/{slug}', [FrontController::class, 'page'])->name('front.page');
 });
 
 // Route::group(['prefix' => 'account'], function () {

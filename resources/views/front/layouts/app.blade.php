@@ -69,8 +69,8 @@
                     @endif
                     <form action="{{ route('front.shop') }}" method="GET">
                         <div class="input-group">
-                            <input type="text" placeholder="Search For Products" class="form-control"
-                                name="search" id="search" value="{{ Request::get('search') }}">
+                            <input type="text" placeholder="Search For Products" class="form-control" name="search"
+                                id="search" value="{{ Request::get('search') }}">
                             <button type="submit" class="input-group-text">
                                 <i class="fa fa-search"></i>
                             </button>
@@ -152,16 +152,12 @@
                     <div class="footer-card">
                         <h3>Important Links</h3>
                         <ul>
-                            @if(staticPages()->isNotEmpty())
+                            @if (staticPages()->isNotEmpty())
                                 @foreach (staticPages() as $page)
-                                    <li><a href="{{ route('front.page', $page->slug) }}" title="{{ $page->name }}">{{ $page->name }}</a></li>
+                                    <li><a href="{{ route('front.page', $page->slug) }}"
+                                            title="{{ $page->name }}">{{ $page->name }}</a></li>
                                 @endforeach
                             @endif
-                            {{-- <li><a href="about-us.php" title="About">About</a></li>
-                            <li><a href="contact-us.php" title="Contact Us">Contact Us</a></li>
-                            <li><a href="#" title="Privacy">Privacy</a></li>
-                            <li><a href="#" title="Privacy">Terms & Conditions</a></li>
-                            <li><a href="#" title="Privacy">Refund Policy</a></li> --}}
                         </ul>
                     </div>
                 </div>

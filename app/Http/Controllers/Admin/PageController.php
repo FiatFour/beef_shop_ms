@@ -53,15 +53,72 @@ class PageController extends Controller
 
     }
 
-    public function edit(){
+    public function edit($id){
+
+        $page = Page::find($id);
+
+        if($page == null){
+            Session::flash('error', 'Page not found');
+            return redirect()->route('admin.pages.index');
+        }
+
+        return view('admin.pages.edit', compact('page'));
+    }
+
+    public function update(Request $request, $id){
+
+        $page = Page::find($id);
+
+        if($page == null){
+            Session::flash('error', 'Page not found');
+            return response()->json([
+                'status' => true,
+            ]);
+        }
+
+        $validator = Validator::make($request->all(),[
+            'name' => 'required',
+            'slug' => 'required'
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ]);
+        }
+
+        $page->name = $request->name;
+        $page->slug = $request->slug;
+        $page->content = $request->content;
+        $page->save();
+
+        $message = 'Page updated successfully.';
+        Session::flash('success', $message);
+        return response()->json([
+            'status' => true,
+            'message' => $message
+        ]);
 
     }
 
-    public function update(){
+    public function destroy($id){
+        $page = Page::find($id);
 
-    }
+        if($page == null){
+            Session::flash('error', 'Page not found');
+            return response()->json([
+                'status' => true,
+            ]);
+        }
 
-    public function destroy(){
+        $page->delete();
 
+        $message = 'Page deleted successfully.';
+        Session::flash('success', $message);
+        return response()->json([
+            'status' => true,
+            'message' => $message
+        ]);
     }
 }

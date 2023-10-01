@@ -63,7 +63,7 @@ class ResetPasswordController extends Controller
         ]);
 
         $actionLink = route('resetPasswordForm', ['token' => $token, 'email' => $request->email]);
-        $body = "รีเซ็ตรหัสผ่าน <b>Beef Shop </b> กับบัญชี ".$request->email.". คุณสามารถรีเซ็ตนหัสผ่านคุณได้คลิ้กลิ้งด้านล่าง";
+        $body = "Reset password <b>Beef Shop </b> with account ".$request->email.". click the link in below to reset your password ";
 
         Mail::send('sendLinkEmailForgot', ['actionLink' => $actionLink, 'body' => $body], function($message) use ($request){
             $message->from('noreply@example.com', 'Beef Shop');
@@ -71,7 +71,7 @@ class ResetPasswordController extends Controller
                     ->subject('Reset password');
         });
 
-        return back()->with('success', "เราได้ส่งลิ้งเพื่อรีเซ็ตรหัสผ่านของคุณทางอีเมล์แล้ว!");
+        return back()->with('success', "We send the link for reset your password already!");
     }
 
     public function showResetForm(Request $request, $token = null){
@@ -118,7 +118,7 @@ class ResetPasswordController extends Controller
                 'email' => $request->email
             ]);
 
-            return redirect()->route('login')->with('info', "คุณได้ทำการรีเซ็ตรหัสผ่านเรียบร้อยแล้ว! คุณสามารถลงชื่อเข้าใช้ด้วยรหัสผ่านใหม่ของคุณ")
+            return redirect()->route('login')->with('info', "You reset the password already! You can login now!")
                              ->with('verifiedEmail', $request->email);
         }
     }

@@ -108,6 +108,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['guest:employee', 'PreventBackHistory'])->group(function () {
         // Route::view('/login', 'dashboard.admin.login')->name('login');
         // Route::post('/check', [AdminController::class, 'check'])->name('check');
+        Route::view('/admin/login', 'admin.login')->name('login');
         Route::get('/verify', [AdminController::class, 'verify'])->name('verify');
     });
 

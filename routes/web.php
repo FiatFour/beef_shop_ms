@@ -224,13 +224,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/pages/{id}', 'destroy')->name('pages.delete');
         });
 
-        // Setting routes
+        // Setting Routes
         Route::controller(App\Http\Controllers\Admin\SettingController::class)->group(function () {
             Route::get('/change-password', 'showChangePasswordForm')->name('showChangePasswordForm');
             Route::post('/process-change-password', 'processChangePassword')->name('processChangePassword');
 
         });
 
+        // Employee Routes
+        Route::controller(App\Http\Controllers\Admin\EmployeeController::class)->group(function () {
+            Route::get('/employees', 'index')->name('employees.index');
+            Route::view('/employees/create', 'admin.employee.create')->name('employees.create');
+            Route::post('/employees', 'store')->name('employees.store');
+            Route::get('/employees/edit/{id}', 'edit')->name('employees.edit');
+            Route::put('/employees/{id}', 'update')->name('employees.update');
+            Route::delete('/employees/{id}', 'destroy')->name('employees.delete');
+        });
 
 
 
@@ -247,12 +256,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::controller(App\Http\Controllers\Admin\EmployeeCrudController::class)->group(function () {
             // Employee
-            Route::get('/employees', 'indexEmployee')->name('employee');
-            Route::get('/employees/create', 'createEmployee')->name('createEmployee');
-            Route::post('/employees/add', 'storeEmployee')->name('addEmployee');
-            Route::get('/employees/verify', 'verifyEmployee')->name('verifyEmployee');
-            Route::get('/employees/edit/{id}', 'editEmployee');
-            Route::put('/employees/update/{id}', 'updateEmployee');
+            // Route::get('/employees', 'indexEmployee')->name('employee');
+            // Route::get('/employees/create', 'createEmployee')->name('createEmployee');
+            // Route::post('/employees/add', 'storeEmployee')->name('addEmployee');
+            // Route::get('/employees/verify', 'verifyEmployee')->name('verifyEmployee');
+            // Route::get('/employees/edit/{id}', 'editEmployee');
+            // Route::put('/employees/update/{id}', 'updateEmployee');
         });
 
         //Supplier

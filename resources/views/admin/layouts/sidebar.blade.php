@@ -71,6 +71,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('admin.employees.index') }}" class="nav-link">
+                        <i class="nav-icon  fas fa-users"></i>
+                        <p>Employees</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('admin.pages.index') }}" class="nav-link">
                         <i class="nav-icon  far fa-file-alt"></i>
                         <p>Pages</p>

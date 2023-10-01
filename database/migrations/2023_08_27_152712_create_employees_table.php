@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string('emp_name');
-            $table->string('emp_lname');
-            $table->text('emp_address');
-            $table->tinyInteger('emp_gender');
-            $table->string('emp_tel');
-            $table->string('emp_img');
-            $table->string('emp_department');
+            $table->string('name');
+            // $table->string('last_name');
+            $table->text('address');
+            $table->tinyInteger('gender');
+            $table->string('phone');
+            $table->string('img');
+            $table->string('department');
 
-            $table->string('email',);
-            $table->string('password');
+            $table->string('email');
+            $table->string('password')->default(false);
             $table->boolean('is_admin')->default(false);
             $table->boolean('email_verified')->default(false);
             $table->timestamp('email_verified_at')->nullable();

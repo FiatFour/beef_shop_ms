@@ -223,6 +223,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/pages/{id}', 'destroy')->name('pages.delete');
         });
 
+        // Setting routes
+        Route::controller(App\Http\Controllers\Admin\SettingController::class)->group(function () {
+            Route::get('/change-password', 'showChangePasswordForm')->name('showChangePasswordForm');
+            Route::post('/process-change-password', 'processChangePassword')->name('processChangePassword');
+
+        });
+
 
 
 

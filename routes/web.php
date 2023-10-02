@@ -241,6 +241,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/employees/{id}', 'destroy')->name('employees.delete');
         });
 
+        // Salary Routes
+        Route::controller(App\Http\Controllers\Admin\SalaryController::class)->group(function () {
+            Route::get('/salaries', 'index')->name('salaries.index');
+            Route::get('/salaries/create', 'create')->name('salaries.create');
+            Route::post('/salaries', 'store')->name('salaries.store');
+            Route::get('/salaries/edit/{id}', 'edit')->name('salaries.edit');
+            Route::put('/salaries/{id}', 'update')->name('salaries.update');
+            Route::delete('/salaries/{id}', 'destroy')->name('salaries.delete');
+        });
 
 
 

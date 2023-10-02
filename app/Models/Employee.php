@@ -17,14 +17,6 @@ class Employee extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'emp_name',
-        'emp_lname',
-        'emp_address',
-        'emp_gender',
-        'emp_tel',
-        'emp_img',
-        'emp_department',
-
         'email',
         'password',
         'email_verified',
@@ -52,4 +44,8 @@ class Employee extends Authenticatable
         'is_admin' => 'boolean',
         'email_verified' => 'boolean',
     ];
+
+    public function salaries(){
+        return $this->hasMany(Salary::class);
+    }
 }

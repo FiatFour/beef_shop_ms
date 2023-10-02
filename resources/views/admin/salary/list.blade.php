@@ -69,9 +69,9 @@
                                     <td>{{ $salary->pay_date }}</td>
                                     <td>
                                         @if ($salary->status == 1)
-                                            Paid
+                                            <span class="badge bg-success">Paid</span>
                                         @else
-                                            Not pay yet
+                                            <span class="badge bg-danger">Not pay yet</span>
                                         @endif
                                     </td>
                                     {{-- <td>{{ !empty($salary->created_at) ? Carbon\Carbon::parse($salary->created_at)->diffForHumans()  : ''}}</td> --}}

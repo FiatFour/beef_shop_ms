@@ -6,10 +6,7 @@
         <div class="container-fluid my-2">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Edit Supplier</h1>
-                </div>
-                <div class="col-sm-6 text-right">
-                    <a href="{{ route('admin.suppliers.create') }}" class="btn btn-primary">Back</a>
+                    <h1>Suppliers</h1>
                 </div>
             </div>
         </div>
@@ -29,7 +26,7 @@
                                 <div class="mb-3">
                                     <label>Name</label>
                                     <input type="text" name="name" id="name" class="form-control"
-                                        placeholder="Name" value="{{ $supplier->name }}">
+                                        placeholder="Name">
                                     <p></p>
                                 </div>
                             </div>
@@ -37,7 +34,7 @@
                                 <div class="mb-3">
                                     <label for="phone">Phone</label>
                                     <input type="text" name="phone" id="phone" class="form-control"
-                                        placeholder="Phone" maxlength="10" value="{{ $supplier->phone }}">
+                                        placeholder="Phone" maxlength="10">
                                     <p></p>
                                 </div>
                             </div>
@@ -45,23 +42,54 @@
                                 <div class="mb-3">
                                     <label for="address">Address</label>
                                     <input type="text" name="address" id="address" class="form-control"
-                                        placeholder="Address" value="{{ $supplier->address }}">
+                                        placeholder="Address">
                                     <p></p>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="mb-3" style="margin-top: 32px">
-                                    <button type="submit" class="btn btn-primary ">Update</button>
+                                    <button type="submit" class="btn btn-primary ">Create</button>
                                     <a href="{{ route('admin.suppliers.create') }}"
                                         class="btn btn-outline-dark ml-3">Cancel</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
             </form>
 
-
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 card-body table-responsive p-0">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Address</th>
+                                    <th>Action</th>
+                                </tr>
+                                @if ($suppliers->isNotEmpty())
+                                    @foreach ($suppliers as $supplier)
+                                        <tr>
+                                            <td>{{ $supplier->id }}</td>
+                                            <td>{{ $supplier->name }}</td>
+                                            <td>{{ $supplier->phone }}</td>
+                                            <td>{{ $supplier->address }}</td>
+                                            <td>
+                                                <a href="{{ route('admin.suppliers.edit', $supplier->id) }}"
+                                                    class="btn btn-primary">Edit</a>
+                                                <a href="javascript:void(0);" onclick="deleteRecord({{ $supplier->id }})"
+                                                    class="btn btn-danger">Delete</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- /.card -->
     </section>
@@ -75,8 +103,8 @@
             var element = $(this);
             $("button[type=submit]").prop('disabled', true);
             $.ajax({
-                url: "{{ route('admin.suppliers.update',$supplier->id) }}",
-                type: 'put',
+                url: "{{ route('admin.suppliers.store') }}",
+                type: 'post',
                 data: element.serializeArray(),
                 dataType: 'json',
                 success: function(response) {
@@ -99,11 +127,32 @@
                     }
                 },
                 error: function(jqXHR, exception) {
-                    // Handle error here, e.g., display an error message
                     console.log("Something went wrong");
                     console.log(jqXHR);
                 }
             });
         });
+
+        function deleteRecord(id) {
+            var url = "{{ route('admin.suppliers.delete', 'ID') }}"
+            var newUrl = url.replace('ID', id)
+
+            if (confirm("Are you sure you want to delete?")) {
+                $.ajax({
+                    url: newUrl,
+                    type: 'delete',
+                    data: {},
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response['status']) {
+                            window.location.href = "{{ route('admin.suppliers.create') }}";
+                        }
+                    }
+                });
+            }
+        }
     </script>
 @endsection

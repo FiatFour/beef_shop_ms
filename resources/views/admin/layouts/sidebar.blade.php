@@ -88,6 +88,18 @@
                         <p>Salaries</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.suppliers.create') }}" class="nav-link">
+                        <i class="nav-icon  far fa-file-alt"></i>
+                        <p>Suppliers</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.cows.index') }}" class="nav-link">
+                        <i class="nav-icon  far fa-file-alt"></i>
+                        <p>Cows</p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

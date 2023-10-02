@@ -251,8 +251,24 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/salaries/{id}', 'destroy')->name('salaries.delete');
         });
 
+        // Supplier Routes
+        Route::controller(App\Http\Controllers\Admin\SupplierController::class)->group(function () {
+            Route::get('/suppliers/create', 'create')->name('suppliers.create');
+            Route::post('/suppliers', 'store')->name('suppliers.store');
+            Route::get('/suppliers/edit/{id}', 'edit')->name('suppliers.edit');
+            Route::put('/suppliers/{id}', 'update')->name('suppliers.update');
+            Route::delete('/suppliers/{id}', 'destroy')->name('suppliers.delete');
+        });
 
-
+        // Cow Routes
+        Route::controller(App\Http\Controllers\Admin\CowController::class)->group(function () {
+            Route::get('/cows', 'index')->name('cows.index');
+            Route::get('/cows/create', 'create')->name('cows.create');
+            Route::post('/cows', 'store')->name('cows.store');
+            Route::get('/cows/edit/{id}', 'edit')->name('cows.edit');
+            Route::put('/cows/{id}', 'update')->name('cows.update');
+            Route::delete('/cows/{id}', 'destroy')->name('cows.delete');
+        });
 
 
 
@@ -274,25 +290,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 
         //Supplier
-        Route::controller(App\Http\Controllers\Admin\SupplierController::class)->group(function () {
-            Route::get('/suppliers', 'indexSupplier')->name('supplier');
-            Route::post('/suppliers/add', 'storeSupplier')->name('addSupplier');
-            Route::get('/suppliers/edit/{id}', 'editSupplier');
-            Route::put('/suppliers/update/{id}', 'updateSupplier');
-            Route::get('/suppliers/delete/{id}', 'deleteSupplier');
-        });
+        // Route::controller(App\Http\Controllers\Admin\SupplierController::class)->group(function () {
+        //     Route::get('/suppliers', 'indexSupplier')->name('supplier');
+        //     Route::post('/suppliers/add', 'storeSupplier')->name('addSupplier');
+        //     Route::get('/suppliers/edit/{id}', 'editSupplier');
+        //     Route::put('/suppliers/update/{id}', 'updateSupplier');
+        //     Route::get('/suppliers/delete/{id}', 'deleteSupplier');
+        // });
 
         //Cow
-        Route::controller(App\Http\Controllers\Admin\CowController::class)->group(function () {
-            Route::get('/cows', 'indexCow')->name('cow');
-            // Route::post('/cow/add', 'create');
-            Route::get('/cows/create', 'createCow')->name('createCow');
-            Route::post('/cows/add', 'storeCow')->name('addCow');
+        // Route::controller(App\Http\Controllers\Admin\CowController::class)->group(function () {
+        //     Route::get('/cows', 'indexCow')->name('cow');
+        //     // Route::post('/cow/add', 'create');
+        //     Route::get('/cows/create', 'createCow')->name('createCow');
+        //     Route::post('/cows/add', 'storeCow')->name('addCow');
 
-            Route::get('/cows/edit/{cow_id}', 'editCow');
-            Route::post('/cows/update/{cow_id}', 'updateCow');
-            Route::get('/cows/delete/{id}', 'destroyCow');
-        });
+        //     Route::get('/cows/edit/{cow_id}', 'editCow');
+        //     Route::post('/cows/update/{cow_id}', 'updateCow');
+        //     Route::get('/cows/delete/{id}', 'destroyCow');
+        // });
     });
 });
 

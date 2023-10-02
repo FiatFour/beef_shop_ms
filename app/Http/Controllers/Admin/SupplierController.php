@@ -5,74 +5,101 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class SupplierController extends Controller
 {
-     //
-     public function indexSupplier(){
-        //? Join (Eloquent) with Supplier.php
-        $suppliers = Supplier::paginate(5);
-        return view('admin.supplier.index', compact('suppliers'));
+    public function create()
+    {
+        $suppliers = Supplier::get();
+        return view('admin.supplier.create', compact('suppliers'));
     }
 
-    public function storeSupplier(Request $request){
-        // dd($request->supplier_name); // Show Value (Debug)
-        $request->validate([ // Check Value null or not
-                'sup_name'=>'required|unique:suppliers,sup_name|max:255',
-                'sup_address' =>'required',
-                'sup_tel' =>'required',
-            ],
-            [
-                'sup_name.required'=>'กรุณาป้อนชื่อ Supplier',
-                'sup_name.max'=>'ห้ามป้อนเกิน 255 ตัวอักษร',
-                'sup_name.unique'=>'ห้ามตั้งชื่อซ้ำ'
-            ]
-        );
-
-        //? Record resource (Eloquent)
-        $supplier = new Supplier;
-        $supplier->sup_name = $request->sup_name;
-        $supplier->sup_address = $request->sup_address;
-        $supplier->sup_tel = $request->sup_tel;
-        $supplier->save();
-        return redirect()->back()->with('success', 'Recorded!');
-
-        //! Record resource (Query Builder)
-        /*
-        $data = array();
-        $data['supplier_name'] = $request->supplier_name;
-        // $data['user_id'] = Auth::user()->id;
-
-        DB::table('suppliers')->insert($data);
-        */
-        return redirect()->back()->with('success', 'Recorded!');
-    }
-
-    public function editSupplier($id){
-        $supplier = Supplier::find($id); // get id from edit button and then find
-        return view('admin.supplier.edit',compact('supplier'));
-    }
-
-    public function updateSupplier(Request $request, $id){
-        $request->validate([ // Check Value null or not
-            'sup_name'=>'required|unique:suppliers,sup_name|max:255'
-            ],
-            [
-                'sup_name.required'=>'กรุณาป้อนชื่อ Supplier',
-                'sup_name.max'=>'ห้ามป้อนเกิน 255 ตัวอักษร',
-                'sup_name.unique'=>'ห้ามตั้งชื่อซ้ำ'
-            ]
-        );
-
-        $update = Supplier::find($id)->update([
-            'sup_name' => $request->sup_name,
-            // 'user_id' => Auth::user()->id
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'phone' => 'required|numeric|min:10',
+            'address' => 'required',
         ]);
 
-        return redirect()->route('admin.supplier')->with('success', 'Updated!');
+        if ($validator->passes()) {
+            $supplier = new Supplier();
+            $supplier->name = $request->name;
+            $supplier->phone = $request->phone;
+            $supplier->address = $request->address;
+            $supplier->save();
+
+            Session::flash('success', 'Supplier added successfully ');
+            return response()->json([
+                'status' => true
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ]);
+        }
     }
-    public function deleteSupplier($id){ // Permanently Delete
-        Supplier::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'Deleted!');
+
+    public function edit($id)
+    {
+        $supplier = Supplier::find($id);
+        return view('admin.supplier.edit', compact('supplier'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $supplier = Supplier::find($id);
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'unique:suppliers,name,' . $supplier->id . ',id',
+            'phone' => 'required|numeric|min:10',
+            'address' => 'required',
+        ]);
+
+        if ($validator->passes()) {
+
+            if ($supplier == null) {
+                Session::flash('error', 'Supplier not found');
+                return response()->json([
+                    'status' => true
+                ]);
+            }
+
+            $supplier->name = $request->name;
+            $supplier->phone = $request->phone;
+            $supplier->address = $request->address;
+            $supplier->save();
+
+            Session::flash('success', 'Supplier updated successfully ');
+            return response()->json([
+                'status' => true
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ]);
+        }
+    }
+
+    public function destroy($id)
+    {
+        $supplier = Supplier::find($id);
+        if ($supplier == null) {
+            Session::flash('error', 'Supplier not found');
+            return response()->json([
+                'status' => true
+            ]);
+        }
+
+        $supplier->delete();
+
+        Session::flash('success', 'Supplier deleted successfully ');
+        return response()->json([
+            'status' => true
+        ]);
     }
 }

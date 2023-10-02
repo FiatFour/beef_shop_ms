@@ -82,6 +82,12 @@
                         <p>Pages</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.salaries.index') }}" class="nav-link">
+                        <i class="nav-icon  far fa-file-alt"></i>
+                        <p>Salaries</p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

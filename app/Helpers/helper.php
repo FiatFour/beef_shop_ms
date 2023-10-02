@@ -39,7 +39,6 @@ use PhpParser\Node\Expr\AssignOp\ShiftLeft;
             'userType' => $userType
         ];
 
-
         Mail::to($email)->send(new OrderEmail($mailData));
     }
 
@@ -51,4 +50,5 @@ use PhpParser\Node\Expr\AssignOp\ShiftLeft;
         $pages = Page::orderBy('name', 'ASC')->get();
         return $pages;
     }
+
 ?>

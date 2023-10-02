@@ -37,7 +37,7 @@ class CustomerController extends Controller
             'email' => 'required|email|unique:customers',
             'password' => 'required|min:5|max:30',
             'phone' => 'required|min:10|numeric',
-            'gender' => 'required'
+            // 'gender' => 'required'
         ]);
 
         if ($validator->passes()) {
@@ -45,7 +45,7 @@ class CustomerController extends Controller
             $customer->name = $request->name;
             $customer->email = $request->email;
             $customer->phone = $request->phone;
-            $customer->gender = $request->gender;
+            // $customer->gender = $request->gender;
             $customer->status = $request->status;
             $customer->password = Hash::make($request->password);
             $customer->email_verified = true;
@@ -99,14 +99,14 @@ class CustomerController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:customers,email,' . $id . ',id',
             'phone' => 'required|min:10|numeric',
-            'gender' => 'required'
+            // 'gender' => 'required'
         ]);
 
         if ($validator->passes()) {
             $customer->name = $request->name;
             $customer->email = $request->email;
             $customer->phone = $request->phone;
-            $customer->gender = $request->gender;
+            // $customer->gender = $request->gender;
             $customer->status = $request->status;
 
             if ($request->password != '') {

@@ -25,20 +25,19 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-
-                            <div class="mb-3">
-                                <label>Employee</label>
-                                <select name="employee_id" id="employee_id" class="form-control">
-                                    <option value="">Select a employee</option>
-                                    @if ($employees->isNotEmpty())
-                                        @foreach ($employees as $employee)
-                                            <option value="{{ $employee->id }}">{{ $employee->name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                <p></p>
+                                <div class="mb-3">
+                                    <label>Employee</label>
+                                    <select name="employee_id" id="employee_id" class="form-control">
+                                        <option value="">Select a employee</option>
+                                        @if ($employees->isNotEmpty())
+                                            @foreach ($employees as $employee)
+                                                <option value="{{ $employee->id }}">{{ $employee->name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <p></p>
+                                </div>
                             </div>
-                        </div>
 
 
                             <div class="col-md-6">
@@ -53,24 +52,25 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="start_work">Start work</label>
-                                    <input autocomplete="off" type="text" name="start_work" id="start_work" class="form-control"
-                                        placeholder="Start work">
+                                    <input autocomplete="off" type="text" name="start_work" id="start_work"
+                                        class="form-control" placeholder="Start work">
                                     <p></p>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="get_off">Get off work</label>
-                                    <input autocomplete="off" type="text" name="get_off" id="get_off" class="form-control"
-                                        placeholder="Get off work">
+                                    <input autocomplete="off" type="text" name="get_off" id="get_off"
+                                        class="form-control" placeholder="Get off work">
                                     <p></p>
                                 </div>
                             </div>
+
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="pay_date">Pay date</label>
-                                    <input autocomplete="off" type="text" name="pay_date" id="pay_date" class="form-control"
-                                        placeholder="Pay date">
+                                    <input autocomplete="off" type="text" name="pay_date" id="pay_date"
+                                        class="form-control" placeholder="Pay date">
                                     <p></p>
                                 </div>
                             </div>
@@ -163,6 +163,5 @@
                 format: 'Y-m-d H:i:s',
             });
         });
-
     </script>
 @endsection

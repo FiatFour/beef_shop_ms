@@ -11,15 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::create('cows', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->string('cow_gene');
-        //     $table->string('cow_img');
-        //     $table->date('cow_birth');
-        //     $table->unsignedBigInteger('sup_id');
-        //     $table->foreign('sup_id')->references('id')->on('suppliers')->onDelete('cascade');
-        //     $table->timestamps();
-        // });
+        Schema::create('cows', function (Blueprint $table) {
+            $table->id();
+            // $table->string('gene');
+            $table->double('weight',10,2);
+            $table->double('height',10,2);
+            $table->double('last_weight',10,2)->nullable();
+            $table->double('last_height',10,2)->nullable();
+            $table->double('dissect_total_kg',10,2)->nullable();
+            $table->string('image')->nullable();
+            $table->enum('gender',['Man', 'Woman']);
+            $table->date('birth');
+            $table->timestamp('dissect_date')->nullable();
+            // $table->unsignedBigInteger('sup_id');
+            // $table->foreign('sup_id')->references('id')->on('suppliers')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**

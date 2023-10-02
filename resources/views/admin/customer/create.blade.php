@@ -65,7 +65,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <div class="mb-3">
                                     <div class="form-group mt-5">
                                         <label class="form-check-inline">Gender: </label>
@@ -80,7 +80,7 @@
                                         <p></p>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>

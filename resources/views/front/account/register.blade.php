@@ -50,7 +50,7 @@
                         <p></p>
                     </div>
 
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label class="form-check-inline">Gender: </label>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="gender" id="gender" value="1">
@@ -61,7 +61,7 @@
                             <label class="form-check-label">Woman</label>
                         </div>
                         <p></p>
-                    </div>
+                    </div> --}}
                     <div class="form-group small">
                         <a href="#" class="forgot-link">Forgot Password?</a>
                     </div>

@@ -83,7 +83,7 @@ class SalaryController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $salary = Salary::find($id)->first();
+        $salary = Salary::find($id);
 
         if ($salary == null) {
             $message = 'salary not found.';

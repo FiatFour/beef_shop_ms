@@ -17,6 +17,7 @@
     </section>
     <!-- Main content -->
     <section class="content">
+        {{-- {{ dd($salary->id) }} --}}
         <!-- Default box -->
         <div class="container-fluid">
             <form action="" method="POST" id="salaryForm" name="salaryForm">
@@ -32,7 +33,7 @@
                                     <option value="">Select a employee</option>
                                     @if ($employees->isNotEmpty())
                                         @foreach ($employees as $employee)
-                                            <option {{ (!empty($salary->employee_id) == $employee->id) ? 'selected' : '' }} value="{{ $employee->id }}">{{ $employee->name }}</option>
+                                            <option {{ ($salary->employee_id == $employee->id) ? 'selected' : '' }} value="{{ $employee->id }}">{{ $employee->name }}</option>
                                         @endforeach
                                     @endif
                                 </select>

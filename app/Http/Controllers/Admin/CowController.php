@@ -88,7 +88,7 @@ class CowController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $cow = Cow::find($id)->first();
+        $cow = Cow::find($id);
 
         if ($cow == null) {
             $message = 'cow not found.';

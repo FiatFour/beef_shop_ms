@@ -2,7 +2,9 @@
 
 use App\Mail\OrderEmail;
 use App\Models\Category;
+use App\Models\Cow;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Page;
 use App\Models\ProductImage;
 use App\Models\ShippingCharge;
@@ -49,6 +51,34 @@ use PhpParser\Node\Expr\AssignOp\ShiftLeft;
     function staticPages(){
         $pages = Page::orderBy('name', 'ASC')->get();
         return $pages;
+    }
+
+    function getCows($cowId){
+        return Cow::orderBy('id', 'DESC')
+                ->with('orderDetails')
+                ->orderBy('created_at', 'DESC')
+                ->where('id',$cowId)
+                ->get();
+    }
+
+    function getOrderCows($orderCowId){
+        return Cow::orderBy('id', 'DESC')
+                ->with('orderDetails')
+                ->orderBy('created_at', 'DESC')
+                ->where('id',$orderCowId)
+                ->get();
+    }
+    function getOrderDetails($orderCowId){
+        return OrderDetail::orderBy('cow_id', 'DESC')
+                ->with('cows')
+                ->orderBy('id', 'DESC')
+                ->where('order_cow_id',$orderCowId)
+                ->where('id', 'order_details.cow_id')
+                ->get();
+    }
+
+    function getDetails($orderCowId){
+        return OrderDetail::find('order_detail_id', $orderCowId)->get();
     }
 
 ?>

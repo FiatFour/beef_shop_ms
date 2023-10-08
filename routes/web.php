@@ -126,6 +126,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ]);
         })->name('getSlug');
 
+        Route::get('/getRow', function (Request $request) {
+            $row = 0;
+            if (!empty($request->row)) {
+                $row = $request->row;
+            }
+            return response()->json([
+                'status' => true,
+                'row' => $row
+            ]);
+        })->name('getRow');
+
         // Category Route
         Route::controller(App\Http\Controllers\Admin\CategoryController::class)->group(function () {
             Route::get('/categories', 'index')->name('categories.index');
@@ -268,6 +279,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/cows/edit/{id}', 'edit')->name('cows.edit');
             Route::put('/cows/{id}', 'update')->name('cows.update');
             Route::delete('/cows/{id}', 'destroy')->name('cows.delete');
+        });
+
+        // Order cow Routes
+        Route::controller(App\Http\Controllers\Admin\OrderCowController::class)->group(function () {
+            Route::get('/order-cows', 'index')->name('order-cows.index');
+            Route::get('/order-cows/create', 'create')->name('order-cows.create');
+            Route::post('/order-cows', 'store')->name('order-cows.store');
+            Route::get('/order-cows/edit/{id}', 'edit')->name('order-cows.edit');
+            Route::put('/order-cows/{id}', 'update')->name('order-cows.update');
+            Route::delete('/order-cows/{id}', 'destroy')->name('order-cows.delete');
         });
 
 

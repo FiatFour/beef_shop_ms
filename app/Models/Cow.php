@@ -28,11 +28,16 @@ class Cow extends Model
     }
 
     public function costOfFood(){
-        $dissectDate =Carbon::parse($this->attributes['dissect_date']);
+        $dissectDate = Carbon::parse($this->attributes['dissect_date']);
         $createdAt = Carbon::parse($this->attributes['created_at']);
         $diffInDays = $createdAt->diffInDays($dissectDate);
 
         return $diffInDays * 100;
+    }
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'cow_id', 'id');
     }
 
 }

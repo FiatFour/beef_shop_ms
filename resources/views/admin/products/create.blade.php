@@ -329,7 +329,7 @@
         Dropzone.autoDiscover = false;
         const dropzone = $("#image").dropzone({
 
-            url: "{{ route('admin.temp-images.create') }}",
+            url: "{{ route('admin.temp-images.create') }}"
             maxFiles: 5,
             paramName: 'image',
             addRemoveLinks: true,

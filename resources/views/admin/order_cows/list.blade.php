@@ -69,10 +69,7 @@
                                         @foreach ($orderDetailsWithRelations as $orderDetails)
                                             <tr>
                                                 @if ($orderDetails->order_cow_id != $orderCowId)
-                                                    <th rowspan="{{ $orderDetails->amount }}">{{ $orderDetails->order_cow_id }}</th>
-                                                    @php
-                                                        $orderCowId = $orderDetails->order_cow_id;
-                                                    @endphp
+                                                    <th rowspan="{{ $orderDetails->amount }}" style="vertical-align : middle;text-align:center;">{{ $orderDetails->order_cow_id }}</th>
                                                 @endif
 
                                                 <td>
@@ -97,8 +94,9 @@
                                                 <td>{{ !empty($orderDetails->birth) ? $orderDetails->age() : '' }} years</td>
 
 
-                                                <td>
-                                                    <a href="{{ route('admin.order-cows.edit', $orderDetails->id) }}">
+                                                @if ($orderDetails->order_cow_id != $orderCowId)
+                                                <td rowspan="{{ $orderDetails->amount }}" style="vertical-align : middle;text-align:center;">
+                                                    <a href="{{ route('admin.order-cows.edit', $orderDetails->order_cow_id) }}">
                                                         <svg class="filament-link-icon w-4 h-4 mr-1"
                                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                                             fill="currentColor" aria-hidden="true">
@@ -120,6 +118,11 @@
                                                         </svg>
                                                     </a>
                                                 </td>
+                                                @php
+                                                    $orderCowId = $orderDetails->order_cow_id;
+                                                @endphp
+                                                @endif
+
                                             </tr>
                                         @endforeach
                                     @else

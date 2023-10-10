@@ -22,11 +22,11 @@ return new class extends Migration
             // $table->string('district');
             // $table->foreignId('shipping_charges_id')->constrained()->onDelete('cascade');
 
-            $table->string('address');
+            $table->string('address')->nullable();
             $table->string('apartment')->nullable();
-            $table->string('city');
-            $table->string('state');
-            $table->string('zip');
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('zip')->nullable();
             $table->timestamps();
         });
     }

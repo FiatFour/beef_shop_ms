@@ -78,14 +78,14 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12">
+                                    <div class="col-md-12 shipping">
                                         <div class="mb-3">
                                             <textarea name="address" id="address" cols="30" rows="3" placeholder="Address" class="form-control">{{ !empty($customerAddress) ? $customerAddress->address : '' }}</textarea>
                                             <p></p>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12">
+                                    <div class="col-md-12 shipping">
                                         <div class="mb-3">
                                             <input type="text" name="apartment" id="apartment" class="form-control"
                                                 placeholder="Apartment, suite, unit, etc. (optional)"
@@ -93,7 +93,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 shipping">
                                         <div class="mb-3">
                                             <input type="text" name="city" id="city" class="form-control"
                                                 placeholder="City"
@@ -102,7 +102,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 shipping">
                                         <div class="mb-3">
                                             <input readonly type="text" name="state" id="state"
                                                 class="form-control" placeholder="State" value="Nakhon Si Thammarat">
@@ -110,7 +110,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 shipping">
                                         <div class="mb-3">
                                             <input type="text" name="zip" id="zip" class="form-control"
                                                 placeholder="Zip"
@@ -186,13 +186,13 @@
 
                         <div class="card payment-form ">
                             <h3 class="card-title h5 mb-3">Payment Method</h3>
-                            <div class="">
+                            <div>
                                 <input checked type="radio" name="payment_method" value="cod" id="payment_method_one">
                                 <label for="payment_method_one" class="form-check-label">COD</label>
                             </div>
 
                             <div class="">
-                                <input type="radio" name="payment_method" value="cod" id="payment_method_two">
+                                <input type="radio" name="payment_method" value="stripe" id="payment_method_two">
                                 <label for="payment_method_two" class="form-check-label">Stripe</label>
                             </div>
 
@@ -255,6 +255,14 @@
         $('#shipping').click(function() {
             if ($(this).is(":checked") == true) {
                 $('#shipping-form').removeClass('d-none');
+            }
+        });
+
+        $('#district').change(function() {
+            if ($('#district').val() == 2) {
+                $('.shipping').addClass('d-none');
+            }else{
+                $('.shipping').removeClass('d-none');
             }
         });
 

@@ -195,52 +195,87 @@ class CartController extends Controller
 
     public function processCheckout(Request $request)
     {
-        //* Step -1 Apply Validation
-        $validator = Validator::make($request->all(), [
-            'first_name' => 'required|min:5',
-            'last_name' => 'required',
-            'email' => 'required|email',
-            'district' => 'required',
-            'address' => 'required',
-            'city' => 'required',
-            'state' => 'required',
-            'zip' => 'required',
-            'mobile' => 'required|min:10|numeric',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Please fix the errors',
-                'status' => false,
-                'errors' => $validator->errors()
-            ]);
-        }
-
-        //? Step -2 Save user address
-        //  $customerAddress = CustomerAddress::find();
         $customer = Auth::guard('customer')->user();
-        CustomerAddress::updateOrCreate(
-            ['customer_id' => $customer->id],
-            [
-                'customer_id' => $customer->id,
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => $request->email,
-                'mobile' => $request->mobile,
-                'shipping_charge_id' => $request->district,
-                'address' => $request->address,
-                'apartment' => $request->apartment,
-                'city' => $request->city,
-                'state' => $request->state,
-                'zip' => $request->zip,
-            ]
-        );
+
+        if ($request->district == 2) {
+            //* Step -1 Apply Validation
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required|min:5',
+                'last_name' => 'required',
+                'email' => 'required|email',
+                'district' => 'required',
+                'mobile' => 'required|min:10|numeric',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'message' => 'Please fix the errors',
+                    'status' => false,
+                    'errors' => $validator->errors()
+                ]);
+
+                //? Step -2 Save user address
+                //  $customerAddress = CustomerAddress::find();
+                CustomerAddress::updateOrCreate(
+                    ['customer_id' => $customer->id],
+                    [
+                        'customer_id' => $customer->id,
+                        'first_name' => $request->first_name,
+                        'last_name' => $request->last_name,
+                        'email' => $request->email,
+                        'mobile' => $request->mobile,
+                        'shipping_charge_id' => $request->district,
+                    ]
+                );
+            }
+        } else {
+
+            //* Step -1 Apply Validation
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required|min:5',
+                'last_name' => 'required',
+                'email' => 'required|email',
+                'district' => 'required',
+                'address' => 'required',
+                'city' => 'required',
+                'state' => 'required',
+                'zip' => 'required',
+                'mobile' => 'required|min:10|numeric',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'message' => 'Please fix the errors',
+                    'status' => false,
+                    'errors' => $validator->errors()
+                ]);
+            }
+
+            //? Step -2 Save user address
+            //  $customerAddress = CustomerAddress::find();
+            CustomerAddress::updateOrCreate(
+                ['customer_id' => $customer->id],
+                [
+                    'customer_id' => $customer->id,
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'email' => $request->email,
+                    'mobile' => $request->mobile,
+                    'shipping_charge_id' => $request->district,
+                    'address' => $request->address,
+                    'apartment' => $request->apartment,
+                    'city' => $request->city,
+                    'state' => $request->state,
+                    'zip' => $request->zip,
+                ]
+            );
+        }
 
         //! Step -3 store data in orders table
         if ($request->payment_method == 'cod') {
             // $shipping = 0;
             $discountCodeId = NULL;
-            $promoCode ='';
+            $promoCode = '';
             $discount = 0;
             $subTotal = Cart::subtotal(2, '.', '');
             // $grandTotal = $subTotal + $shipping;
@@ -286,17 +321,27 @@ class CartController extends Controller
             $order->status = 'Pending';
             $order->customer_id = $customer->id;
 
-            $order->first_name = $request->first_name;
-            $order->last_name = $request->last_name;
-            $order->email = $request->email;
-            $order->mobile = $request->mobile;
-            $order->address = $request->address;
-            $order->apartment = $request->apartment;
-            $order->state = $request->state;
-            $order->city = $request->city;
-            $order->zip = $request->zip;
-            $order->notes = $request->order_notes;
-            $order->shipping_charge_id = $request->district;
+
+            if ($request->district == 2) {
+                $order->first_name = $request->first_name;
+                $order->last_name = $request->last_name;
+                $order->email = $request->email;
+                $order->mobile = $request->mobile;
+                $order->notes = $request->order_notes;
+                $order->shipping_charge_id = $request->district;
+            } else {
+                $order->first_name = $request->first_name;
+                $order->last_name = $request->last_name;
+                $order->email = $request->email;
+                $order->mobile = $request->mobile;
+                $order->address = $request->address;
+                $order->apartment = $request->apartment;
+                $order->state = $request->state;
+                $order->city = $request->city;
+                $order->zip = $request->zip;
+                $order->notes = $request->order_notes;
+                $order->shipping_charge_id = $request->district;
+            }
             $order->save();
 
             //* Step -4 store order items in order items table
@@ -312,7 +357,7 @@ class CartController extends Controller
 
                 // Update Product Stock
                 $productData = Product::find($item->id);
-                if($productData->track_qty == "Yes"){
+                if ($productData->track_qty == "Yes") {
                     $currentQty = $productData->qty;
                     $updatedQty = $currentQty - $item->qty;
                     $productData->qty = $updatedQty;
@@ -365,11 +410,11 @@ class CartController extends Controller
         // dd(Session::get('district'));
         if ($request->shipping_charge_id > 0 || Session::has('districtId')) {
 
-            if(Session::has('districtId')){
+            if (Session::has('districtId')) {
                 $districtId = Session::get('districtId');
                 $shippingInfo = ShippingCharge::where('id', $districtId)->first();
                 Session::forget('districtId');
-            }else{
+            } else {
                 $shippingInfo = ShippingCharge::where('id', $request->shipping_charge_id)->first();
             }
 
@@ -457,10 +502,10 @@ class CartController extends Controller
         }
 
         // Max Uses Check
-        if($code->max_uses > 0){
+        if ($code->max_uses > 0) {
             $couponUsed = Order::where('discount_coupon_id', $code->id)->count();
 
-            if($couponUsed >= $code->max_uses){
+            if ($couponUsed >= $code->max_uses) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Invalid discount coupon',
@@ -469,10 +514,10 @@ class CartController extends Controller
         }
 
         // Max Uses User Check
-        if($code->max_uses_user > 0){
+        if ($code->max_uses_user > 0) {
             $couponUsedByUser = Order::where(['discount_coupon_id' => $code->id, 'customer_id' => Auth::guard('customer')->user()->id])->count();
 
-            if($couponUsedByUser >= $code->max_uses_user){
+            if ($couponUsedByUser >= $code->max_uses_user) {
                 return response()->json([
                     'status' => false,
                     'message' => 'You already used this coupon.',
@@ -482,11 +527,11 @@ class CartController extends Controller
 
         // Min amount condition Check
         $subTotal = Cart::subtotal(2, '.', '');
-        if($code->min_amount > 0){
-            if($subTotal < $code->min_amount){
+        if ($code->min_amount > 0) {
+            if ($subTotal < $code->min_amount) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'You min amount must be ฿'.$code->min_amount.'.',
+                    'message' => 'You min amount must be ฿' . $code->min_amount . '.',
                 ]);
             }
         }

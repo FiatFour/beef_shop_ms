@@ -14,6 +14,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use App\Models\TempImage;
+use Illuminate\Support\Facades\File;
+
 // use Cart;
 // use Gloudemans\Shoppingcart\Cart;
 // use Gloudemans\Shoppingcart\Facades\Cart;
@@ -197,15 +200,29 @@ class CartController extends Controller
     {
         $customer = Auth::guard('customer')->user();
 
+
         if ($request->district == 2) {
             //* Step -1 Apply Validation
-            $validator = Validator::make($request->all(), [
-                'first_name' => 'required|min:5',
-                'last_name' => 'required',
-                'email' => 'required|email',
-                'district' => 'required',
-                'mobile' => 'required|min:10|numeric',
-            ]);
+            if ($request->payment_method == 'promptpay') {
+                $validator = Validator::make($request->all(), [
+                    'image_id' => 'required',
+                    'first_name' => 'required|min:5',
+                    'last_name' => 'required',
+                    'email' => 'required|email',
+                    'district' => 'required',
+                    'mobile' => 'required|min:10|numeric',
+                ], [
+                    'image_id.required' => 'The transfer slip photo field is required.',
+                ]);
+            }else{
+                $validator = Validator::make($request->all(), [
+                    'first_name' => 'required|min:5',
+                    'last_name' => 'required',
+                    'email' => 'required|email',
+                    'district' => 'required',
+                    'mobile' => 'required|min:10|numeric',
+                ]);
+            }
 
             if ($validator->fails()) {
                 return response()->json([
@@ -213,35 +230,52 @@ class CartController extends Controller
                     'status' => false,
                     'errors' => $validator->errors()
                 ]);
-
-                //? Step -2 Save user address
-                //  $customerAddress = CustomerAddress::find();
-                CustomerAddress::updateOrCreate(
-                    ['customer_id' => $customer->id],
-                    [
-                        'customer_id' => $customer->id,
-                        'first_name' => $request->first_name,
-                        'last_name' => $request->last_name,
-                        'email' => $request->email,
-                        'mobile' => $request->mobile,
-                        'shipping_charge_id' => $request->district,
-                    ]
-                );
             }
+
+            //? Step -2 Save user address
+            //  $customerAddress = CustomerAddress::find();
+            CustomerAddress::updateOrCreate(
+                ['customer_id' => $customer->id],
+                [
+                    'customer_id' => $customer->id,
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'email' => $request->email,
+                    'mobile' => $request->mobile,
+                ]
+            );
         } else {
 
             //* Step -1 Apply Validation
-            $validator = Validator::make($request->all(), [
-                'first_name' => 'required|min:5',
-                'last_name' => 'required',
-                'email' => 'required|email',
-                'district' => 'required',
-                'address' => 'required',
-                'city' => 'required',
-                'state' => 'required',
-                'zip' => 'required',
-                'mobile' => 'required|min:10|numeric',
-            ]);
+            if ($request->payment_method == 'promptpay') {
+                $validator = Validator::make($request->all(), [
+                    'image_id' => 'required',
+                    'first_name' => 'required|min:5',
+                    'last_name' => 'required',
+                    'email' => 'required|email',
+                    'district' => 'required',
+                    'address' => 'required',
+                    'city' => 'required',
+                    'state' => 'required',
+                    'zip' => 'required',
+                    'mobile' => 'required|min:10|numeric',
+                ], [
+                    'image_id.required' => 'The transfer slip photo field is required.',
+                ]);
+            }else{
+                $validator = Validator::make($request->all(), [
+                    'first_name' => 'required|min:5',
+                    'last_name' => 'required',
+                    'email' => 'required|email',
+                    'district' => 'required',
+                    'address' => 'required',
+                    'city' => 'required',
+                    'state' => 'required',
+                    'zip' => 'required',
+                    'mobile' => 'required|min:10|numeric',
+                ]);
+            }
+
 
             if ($validator->fails()) {
                 return response()->json([
@@ -272,112 +306,126 @@ class CartController extends Controller
         }
 
         //! Step -3 store data in orders table
-        if ($request->payment_method == 'cod') {
-            // $shipping = 0;
-            $discountCodeId = NULL;
-            $promoCode = '';
-            $discount = 0;
-            $subTotal = Cart::subtotal(2, '.', '');
-            // $grandTotal = $subTotal + $shipping;
+        // if ($request->payment_method == 'cod') {
+        // $shipping = 0;
+        $discountCodeId = NULL;
+        $promoCode = '';
+        $discount = 0;
+        $subTotal = Cart::subtotal(2, '.', '');
+        // $grandTotal = $subTotal + $shipping;
 
-            // Apply Discount here
-            if (Session::has('code')) {
-                $code = Session::get('code');
-                if ($code->type = 'percent') {
-                    $discount = ($code->discount_amount / 100) * $subTotal;
-                } else {
-                    $discount = $code->discount_amount;
-                }
-                $discountCodeId = $code->id;
-                $promoCode = $code->code;
-            }
-            // Calculate Shipping
-            $shippingInfo = ShippingCharge::where('id', $request->district)->first();
-            // dd($shippingInfo->district);
-            $totalQty = 0;
-            foreach (Cart::content() as $item) {
-                $totalQty += $item->qty;
-            }
-            if ($shippingInfo != null) {
-                // $shippingCharge = $totalQty*$shippingInfo->amount;
-
-                $shippingCharge = $shippingInfo->amount;
-                $grandTotal = ($subTotal - $discount) + $shippingCharge;
+        // Apply Discount here
+        if (Session::has('code')) {
+            $code = Session::get('code');
+            if ($code->type = 'percent') {
+                $discount = ($code->discount_amount / 100) * $subTotal;
             } else {
-                // $shippingInfo = ShippingCharge::where('id', $request->shipping_charge_id)->first();
-
-                // $shippingCharge = $totalQty*$shippingInfo->amount;
-                // $grandTotal = ($subTotal - $discount) + $shippingCharge;
+                $discount = $code->discount_amount;
             }
-
-            $order = new Order;
-            $order->subtotal = $subTotal;
-            $order->shipping = $shippingCharge;
-            $order->grand_total = $grandTotal;
-            $order->discount = $discount;
-            $order->discount_coupon_id = $discountCodeId;
-            $order->coupon_code = $promoCode;
-            $order->payment_status = 'Not paid';
-            $order->status = 'Pending';
-            $order->customer_id = $customer->id;
-
-
-            if ($request->district == 2) {
-                $order->first_name = $request->first_name;
-                $order->last_name = $request->last_name;
-                $order->email = $request->email;
-                $order->mobile = $request->mobile;
-                $order->notes = $request->order_notes;
-                $order->shipping_charge_id = $request->district;
-            } else {
-                $order->first_name = $request->first_name;
-                $order->last_name = $request->last_name;
-                $order->email = $request->email;
-                $order->mobile = $request->mobile;
-                $order->address = $request->address;
-                $order->apartment = $request->apartment;
-                $order->state = $request->state;
-                $order->city = $request->city;
-                $order->zip = $request->zip;
-                $order->notes = $request->order_notes;
-                $order->shipping_charge_id = $request->district;
-            }
-            $order->save();
-
-            //* Step -4 store order items in order items table
-            foreach (Cart::content() as $item) {
-                $orderItem = new OrderItem;
-                $orderItem->product_id = $item->id;
-                $orderItem->order_id = $order->id;
-                $orderItem->name = $item->name;
-                $orderItem->qty = $item->qty;
-                $orderItem->price = $item->price;
-                $orderItem->total = $item->price * $item->qty;
-                $orderItem->save();
-
-                // Update Product Stock
-                $productData = Product::find($item->id);
-                if ($productData->track_qty == "Yes") {
-                    $currentQty = $productData->qty;
-                    $updatedQty = $currentQty - $item->qty;
-                    $productData->qty = $updatedQty;
-                    $productData->save();
-                }
-            }
-
-            // Send Order Email
-            orderEmail($order->id, 'customer');
-
-            Session::flash('success', "You have successfully placed your order.");
-            Session::forget('code');
-            Cart::destroy();
-            return response()->json([
-                'message' => 'Order saved successfully',
-                'orderId' => $order->id,
-                'status' => true
-            ]);
-        } else {
+            $discountCodeId = $code->id;
+            $promoCode = $code->code;
         }
+        // Calculate Shipping
+        $shippingInfo = ShippingCharge::where('id', $request->district)->first();
+        // dd($shippingInfo->district);
+        $totalQty = 0;
+        foreach (Cart::content() as $item) {
+            $totalQty += $item->qty;
+        }
+        if ($shippingInfo != null) {
+            // $shippingCharge = $totalQty*$shippingInfo->amount;
+
+            $shippingCharge = $shippingInfo->amount;
+            $grandTotal = ($subTotal - $discount) + $shippingCharge;
+        } else {
+            // $shippingInfo = ShippingCharge::where('id', $request->shipping_charge_id)->first();
+
+            // $shippingCharge = $totalQty*$shippingInfo->amount;
+            // $grandTotal = ($subTotal - $discount) + $shippingCharge;
+        }
+
+        $order = new Order;
+        $order->subtotal = $subTotal;
+        $order->shipping = $shippingCharge;
+        $order->grand_total = $grandTotal;
+        $order->discount = $discount;
+        $order->discount_coupon_id = $discountCodeId;
+        $order->coupon_code = $promoCode;
+        $order->payment_status = 'Not paid';
+        $order->status = 'Pending';
+        $order->customer_id = $customer->id;
+
+
+
+        if ($request->district == 2) {
+            $order->first_name = $request->first_name;
+            $order->last_name = $request->last_name;
+            $order->email = $request->email;
+            $order->mobile = $request->mobile;
+            $order->notes = $request->order_notes;
+            $order->shipping_charge_id = $request->district;
+        } else {
+            $order->first_name = $request->first_name;
+            $order->last_name = $request->last_name;
+            $order->email = $request->email;
+            $order->mobile = $request->mobile;
+            $order->address = $request->address;
+            $order->apartment = $request->apartment;
+            $order->state = $request->state;
+            $order->city = $request->city;
+            $order->zip = $request->zip;
+            $order->notes = $request->order_notes;
+            $order->shipping_charge_id = $request->district;
+        }
+        $order->save();
+
+        if (!empty($request->image_id)) {
+            $tempImage = TempImage::find($request->image_id);
+            $extArray = explode('.', $tempImage->name);
+            $ext = last($extArray);
+            $newImageName = $order->id . '.' . $ext;
+            $sourcePath = public_path() . '/temp/' . $tempImage->name;
+            $destPath = public_path() . '/uploads/order/' . $newImageName;
+            File::copy($sourcePath, $destPath);
+
+            $order->pay_image = $newImageName;
+            $order->save();
+        }
+
+        //* Step -4 store order items in order items table
+        foreach (Cart::content() as $item) {
+            $orderItem = new OrderItem;
+            $orderItem->product_id = $item->id;
+            $orderItem->order_id = $order->id;
+            $orderItem->name = $item->name;
+            $orderItem->qty = $item->qty;
+            $orderItem->price = $item->price;
+            $orderItem->total = $item->price * $item->qty;
+            $orderItem->save();
+
+            // Update Product Stock
+            $productData = Product::find($item->id);
+            if ($productData->track_qty == "Yes") {
+                $currentQty = $productData->qty;
+                $updatedQty = $currentQty - $item->qty;
+                $productData->qty = $updatedQty;
+                $productData->save();
+            }
+        }
+
+        // Send Order Email
+        orderEmail($order->id, 'customer');
+
+        Session::flash('success', "You have successfully placed your order.");
+        Session::forget('code');
+        Cart::destroy();
+        return response()->json([
+            'message' => 'Order saved successfully',
+            'orderId' => $order->id,
+            'status' => true
+        ]);
+        // } else {
+        // }
     }
 
     public function thankyou($id)

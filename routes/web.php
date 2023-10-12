@@ -83,7 +83,8 @@ Route::controller(App\Http\Controllers\CartController::class)->group(function ()
 Route::get('/xlogin', [LoginController::class, 'index'])->name('login')->middleware('PreventBackHistory');
 Route::post('/check', [LoginController::class, 'checkLogin'])->name('checkLogin');
 Route::get('/xlogout', [LoginController::class, 'logout'])->name('logoutAll');
-
+// temp-images.create
+Route::post('/upload-temp-image', [TempImagesController::class, 'create'])->name('temp-images.create');
 Route::controller(App\Http\Controllers\Auth\ResetPasswordController::class)->group(function () {
     Route::get('/password/forgot', 'showForgotForm')->name('forgotPasswordForm');
     Route::post('/password/forgot', 'sendResetLink')->name('resetPasswordLink');

@@ -23,7 +23,7 @@
                         </div>
                         <div class="card shadow-lg border-0 ">
                             <div class="card-body checkout-form">
-                                <div class="">
+                                {{-- <div class="">
                                     <input type="radio" name="shipping_method" value="cod" id="pick_up">
                                     <label for="pick_up" class="form-check-label">Pick up the item by myself</label>
                                 </div>
@@ -31,7 +31,7 @@
                                 <div class="">
                                     <input checked type="radio" name="shipping_method" value="cod" id="shipping">
                                     <label for="shipping" class="form-check-label">Shiping</label>
-                                </div>
+                                </div> --}}
                                 <div class="row" id="shipping-form">
 
                                     <div class="col-md-12">
@@ -162,41 +162,66 @@
                             </div>
                             <div class="d-flex justify-content-between mt-2">
                                 <div class="h6"><strong>Shipping</strong></div>
-                                <div class="h6"><strong id="shippingAmount">฿{{ number_format($totalShippingCharge, 2) }}</strong></div>
+                                <div class="h6"><strong
+                                        id="shippingAmount">฿{{ number_format($totalShippingCharge, 2) }}</strong></div>
                             </div>
                             <div class="d-flex justify-content-between mt-2 summery-end">
                                 <div class="h5"><strong>Total</strong></div>
-                                <div class="h5"><strong id="grandTotal">฿{{ number_format($grandTotal, 2) }}</strong></div>
+                                <div class="h5"><strong id="grandTotal">฿{{ number_format($grandTotal, 2) }}</strong>
+                                </div>
                             </div>
                         </div>
 
                         <div class="input-group apply-coupan mt-4">
-                            <input type="text" placeholder="Coupon Code" class="form-control" name="discount_code" id="discount_code">
+                            <input type="text" placeholder="Coupon Code" class="form-control" name="discount_code"
+                                id="discount_code">
                             <button class="btn btn-dark" type="button" id="apply-discount">Apply Coupon</button>
                         </div>
 
+
                         <div id="discount-response-wrapper">
                             @if (Session::has('code'))
-                            <div class="mt-4" id="discount-response">
-                                <b>{{ Session::get('code')->code }}</b>
-                                <a class="btn btn-sm btn-danger" id="remove-discount"><i class="fa fa-times"></i></a>
-                            </div>
+                                <div class="mt-4" id="discount-response">
+                                    <b>{{ Session::get('code')->code }}</b>
+                                    <a class="btn btn-sm btn-danger" id="remove-discount"><i class="fa fa-times"></i></a>
+                                </div>
                             @endif
                         </div>
 
                         <div class="card payment-form ">
                             <h3 class="card-title h5 mb-3">Payment Method</h3>
                             <div>
-                                <input checked type="radio" name="payment_method" value="cod" id="payment_method_one">
+                                <input checked type="radio" name="payment_method" value="cod"
+                                    id="payment_method_one">
                                 <label for="payment_method_one" class="form-check-label">COD</label>
                             </div>
 
                             <div class="">
-                                <input type="radio" name="payment_method" value="stripe" id="payment_method_two">
-                                <label for="payment_method_two" class="form-check-label">Stripe</label>
+                                <input type="radio" name="payment_method" value="promptpay" id="payment_method_two">
+                                <label for="payment_method_two" class="form-check-label">PromptPay</label>
                             </div>
 
                             <div class="card-body p-0 d-none" id="card-payment-form">
+                                <div class="mb-3">
+                                    <img src="{{ asset('image/promptpay/promptpay.jpg') }}" alt="">
+                                </div>
+                                <div class="row">
+                                    <div class="mb-3">
+                                        <input type="hidden" id="image_id" name="image_id" value="">
+                                        <label for="image" class="mb-2">Upload a transfer slip photo ⬇️</label>
+                                        <div id="image" class="dropzone dz-clickable">
+                                            <div class="dz-message needsclick">
+                                                <br>Drop files here or click to upload.<br><br>
+                                            </div>
+                                        </div>
+                                        <p></p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            {{-- <div class="card-body p-0 d-none" id="card-payment-form">
                                 <div class="mb-3">
                                     <label for="card_number" class="mb-2">Card Number</label>
                                     <input type="text" name="card_number" id="card_number"
@@ -214,7 +239,8 @@
                                             class="form-control">
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
+
                             <div class="pt-4">
                                 {{-- <a href="#" class="btn-dark btn btn-block w-100">Pay Now</a> --}}
                                 <button type="submit" class="btn-dark btn btn-block w-100">Pay Now</button>
@@ -261,10 +287,19 @@
         $('#district').change(function() {
             if ($('#district').val() == 2) {
                 $('.shipping').addClass('d-none');
-            }else{
+            } else {
                 $('.shipping').removeClass('d-none');
             }
         });
+
+        // $('#pay_img').change(function() {
+        //     if ($('#pay_img').val() != '') {
+        //         $('button[type="submit"]').prop('disabled', false);
+
+        //     } else {
+        //         $('button[type="submit"]').prop('disabled', true);
+        //     }
+        // });
 
         $('#orderForm').submit(function(event) {
             event.preventDefault();
@@ -303,14 +338,16 @@
             });
         })
 
-        $('#district').change(function(){
+        $('#district').change(function() {
             $.ajax({
                 url: '{{ route('front.getOrderSummery') }}',
                 type: 'post',
-                data: {shipping_charge_id: $(this).val()},
+                data: {
+                    shipping_charge_id: $(this).val()
+                },
                 dataType: 'json',
-                success: function(response){
-                    if(response.status == true){
+                success: function(response) {
+                    if (response.status == true) {
                         $('#shippingAmount').html('฿' + response.shippingCharge);
                         $('#grandTotal').html('฿' + response.grandTotal);
 
@@ -319,33 +356,39 @@
             });
         });
 
-        $('#apply-discount').click(function(){
+        $('#apply-discount').click(function() {
             $.ajax({
                 url: '{{ route('front.applyDiscount') }}',
                 type: 'post',
-                data: {code: $('#discount_code').val(), district: $('#district').val()},
+                data: {
+                    code: $('#discount_code').val(),
+                    district: $('#district').val()
+                },
                 dataType: 'json',
-                success: function(response){
-                    if(response.status == true){
+                success: function(response) {
+                    if (response.status == true) {
                         $('#shippingAmount').html('฿' + response.shippingCharge);
                         $('#grandTotal').html('฿' + response.grandTotal);
                         $('#discount_value').html('฿' + response.discount);
                         $('#discount-response-wrapper').html(response.discountString)
-                    }else{
-                        $('#discount-response-wrapper').html("<span class='text-danger'>"+response.message+"</span>")
+                    } else {
+                        $('#discount-response-wrapper').html("<span class='text-danger'>" + response
+                            .message + "</span>")
                     }
                 }
             });
         });
 
-        $('body').on('click', '#remove-discount', function(){
+        $('body').on('click', '#remove-discount', function() {
             $.ajax({
                 url: '{{ route('front.removeDiscount') }}',
                 type: 'post',
-                data: {district: $('#district').val()},
+                data: {
+                    district: $('#district').val()
+                },
                 dataType: 'json',
-                success: function(response){
-                    if(response.status == true){
+                success: function(response) {
+                    if (response.status == true) {
                         $('#shippingAmount').html('฿' + response.shippingCharge);
                         $('#grandTotal').html('฿' + response.grandTotal);
                         $('#discount_value').html('฿' + response.discount);
@@ -355,6 +398,29 @@
                     }
                 }
             });
+        });
+
+        Dropzone.autoDiscover = false;
+        const dropzone = $("#image").dropzone({
+            init: function() {
+                this.on('addedfile', function(file) {
+                    if (this.files.length > 1) {
+                        this.removeFile(this.files[0]);
+                    }
+                });
+            },
+            url: "{{ route('temp-images.create') }}",
+            maxFiles: 1,
+            paramName: 'image',
+            addRemoveLinks: true,
+            acceptedFiles: "image/jpeg,image/png,image/gif",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(file, response) {
+                $("#image_id").val(response.image_id);
+                //console.log(response)
+            }
         });
     </script>
 @endsection

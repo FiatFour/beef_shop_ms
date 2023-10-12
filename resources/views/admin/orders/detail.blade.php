@@ -26,9 +26,29 @@
                         <div class="card-header pt-3">
                             <div class="row invoice-info">
                                 <div class="col-sm-4 invoice-col">
-                                    <h1 class="h5 mb-3">Shipping Address</h1>
+                                    <b>Order ID:</b> {{ $order->id }}<br>
+                                    <b>Total:</b> ฿{{ number_format($order->grand_total, 2) }}<br>
+                                    <b>Order Status:</b>
+                                    @if ($order->status == 'Pending')
+                                        <span class="badge bg-warning">Pending</span>
+                                    @elseif($order->status == 'Shipped')
+                                        <span class="badge bg-info">Shipped</span>
+                                    @elseif($order->status == 'Delivered')
+                                        <span class="badge bg-success">Delivered</span>
+                                    @else
+                                        <span class="badge bg-danger">Cancelled</span>
+                                    @endif
+                                    <br>
+                                    <b>Payment Status:</b>
+                                    @if ($order->payment_status == 'Paid')
+                                        <span class="badge bg-success">Paid</span>
+                                    @else
+                                        <span class="badge bg-danger">Not Paid</span>
+                                    @endif
+                                    <hr>
+                                    <h5 class="mb-1 mt-3 text-center">Shipping Address</h5>
                                     <address>
-                                        <strong>{{ $order->first_name . ' ' . $order->last_name }}</strong><br>
+                                        <b>Name: </b> <span>{{ $order->first_name . ' ' . $order->last_name }}</span><br>
                                         {{ $order->address }}<br>
                                         {{ $order->city }}, {{ $order->districtName }}, {{ $order->state }}
                                         {{ $order->zip }} <br>
@@ -41,26 +61,22 @@
                                     @else
                                         N/A
                                     @endif
+                                    <br>
                                 </div>
 
 
 
                                 <div class="col-sm-4 invoice-col">
                                     {{-- <b>Invoice #007612</b><br> --}}
-                                    {{-- <br> --}}
-                                    <b>Order ID:</b> {{ $order->id }}<br>
-                                    <b>Total:</b> ฿{{ number_format($order->grand_total, 2) }}<br>
-                                    <b>Status:</b>
-                                    @if ($order->status == 'Pending')
-                                        <span class="badge bg-warning">Pending</span>
-                                    @elseif($order->status == 'Shipped')
-                                        <span class="badge bg-info">Shipped</span>
-                                    @elseif($order->status == 'Delivered')
-                                        <span class="badge bg-success">Delivered</span>
-                                    @else
-                                        <span class="badge bg-danger">Cancelled</span>
-                                    @endif
+                                    <b>Payment Method: </b>
+                                    PromptPay
                                     <br>
+                                    @if (!empty($order->pay_image))
+                                    <img src="{{ asset('uploads/order/' . $order->pay_image) }}" alt=""
+                                    width="400px" height="700px">
+                                    @else
+                                    COD
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -112,6 +128,17 @@
                     <div class="card">
                         <form action="" name="changeOrderStatusForm" id="changeOrderStatusForm">
                             <div class="card-body">
+                                <h2 class="h4 mb-3">Payment Status</h2>
+                                <div class="mb-3">
+                                    <select name="payment_status" id="payment_status" class="form-control">
+                                        <option value="Paid" {{ $order->payment_status == 'Paid' ? 'selected' : '' }}>
+                                            Paid
+                                        </option>
+                                        <option value="Not Paid" {{ $order->payment_status == 'Not paid' ? 'selected' : '' }}>
+                                            Not Paid
+                                        </option>
+                                    </select>
+                                </div>
                                 <h2 class="h4 mb-3">Order Status</h2>
                                 <div class="mb-3">
                                     <select name="status" id="status" class="form-control">
@@ -134,6 +161,18 @@
                                     <input value="{{ $order->shipped_date }}" type="text" name="shipped_date"
                                         id="shipped_date" class="form-control" placeholder="Shipped Date"
                                         autocomplete="off">
+                                </div>
+                                <div class="mb-3">
+                                    <label>Employee</label>
+                                    <select name="employee_id" id="employee_id" class="form-control">
+                                        <option value="">Select a employee</option>
+                                        @if ($employees->isNotEmpty())
+                                            @foreach ($employees as $employee)
+                                                <option {{ ($order->employee_id == $employee->id) ? 'selected' : '' }} value="{{ $employee->id }}">{{ $employee->name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <p></p>
                                 </div>
                                 <div class="mb-3">
                                     <button class="btn btn-primary">Update</button>

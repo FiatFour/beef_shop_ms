@@ -48,6 +48,11 @@
     <!-- Fav Icon -->
     <link rel="shortcut icon" type="image/x-icon" href="#" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+
+		<link rel="stylesheet" href="{{ asset('admin-assets/plugins/dropzone/min/dropzone.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('admin-assets/css/custom.css') }}">
+
 </head>
 
 <body data-instant-intensity="mousedown">
@@ -274,6 +279,11 @@
             });
         }
     </script>
+
+
+
+		<script src="{{ asset('admin-assets/plugins/dropzone/min/dropzone.min.js') }}"></script>
+
 
     @yield('customJs')
 </body>

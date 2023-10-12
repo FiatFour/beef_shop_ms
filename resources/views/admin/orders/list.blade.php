@@ -50,8 +50,10 @@
                                 <th>Customer</th>
                                 <th>Email</th>
                                 <th>Phone</th>
-                                <th>Status</th>
+                                <th>Order Status</th>
+                                <th>Payment Status</th>
                                 <th>Amount</th>
+                                <th>Employee</th>
                                 <th>Date Purchased</th>
                             </tr>
                         </thead>
@@ -77,8 +79,16 @@
                                             @endif
                                         </td>
                                         <td>
+                                            @if ($order->payment_status == 'Paid')
+                                            <span class="badge bg-success">Paid</span>
+                                        @else
+                                            <span class="badge bg-danger">Not Paid</span>
+                                        @endif
+                                        </td>
+                                        <td>
                                             ฿{{ number_format($order->grand_total, 2) }}
                                         </td>
+                                        <td>{{ !empty( $order->employeeName ) ?  $order->employeeName : ''}}</td>
                                         <td>
                                             {{ \Carbon\Carbon::parse($order->created_at)->format('d M, Y') }}
                                         </td>

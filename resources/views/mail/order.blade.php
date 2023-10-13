@@ -9,7 +9,6 @@
 
 </head>
 
-
 <body style="font-family: Arial, Helvetica, sans-serif; font-size:16px;">
 
     @if ($mailData['userType'] == 'customer')

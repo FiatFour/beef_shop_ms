@@ -20,6 +20,7 @@
                     {{ Session::get('success') }}
                 </div>
             @endif
+
             <h1>Thank You!</h1>
             <p>Your Order Id is: {{ $id }}</p>
         </div>

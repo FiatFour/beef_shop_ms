@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ResetPasswordEmail;
 use App\Models\Customer;
 use App\Models\CustomerAddress;
 use App\Models\Order;
@@ -158,15 +159,16 @@ class AuthController extends Controller
         return view('front.account.profile', compact('customer', 'shippingCharges', 'customerAddress'));
     }
 
-    public function updateProfile(Request $request){
+    public function updateProfile(Request $request)
+    {
         $customerId = Auth::guard('customer')->user()->id;
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|email|unique:customers,email,'.$customerId.',id',
+            'email' => 'required|email|unique:customers,email,' . $customerId . ',id',
             'phone' => 'required|min:10|numeric'
         ]);
 
-        if($validator->passes()){
+        if ($validator->passes()) {
             $customer = Customer::find($customerId);
             $customer->name = $request->name;
             $customer->email = $request->email;
@@ -178,7 +180,7 @@ class AuthController extends Controller
                 'status' => true,
                 'message' => 'Profile Updated successfully'
             ]);
-        }else{
+        } else {
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()
@@ -186,7 +188,8 @@ class AuthController extends Controller
         }
     }
 
-    public function updateAddress(Request $request){
+    public function updateAddress(Request $request)
+    {
         $customerId = Auth::guard('customer')->user()->id;
 
         $validator = Validator::make($request->all(), [
@@ -201,7 +204,7 @@ class AuthController extends Controller
             'mobile' => 'required|min:10|numeric',
         ]);
 
-        if($validator->passes()){
+        if ($validator->passes()) {
             CustomerAddress::updateOrCreate(
                 ['customer_id' => $customerId],
                 [
@@ -224,7 +227,7 @@ class AuthController extends Controller
                 'status' => true,
                 'message' => 'Address Updated successfully'
             ]);
-        }else{
+        } else {
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()
@@ -280,21 +283,23 @@ class AuthController extends Controller
         }
     }
 
-    public function showChangePasswordForm(){
+    public function showChangePasswordForm()
+    {
         return view('front.account.change-password');
     }
 
-    public function changePassword(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function changePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'old_password' => 'required',
             'new_password' => 'required|min:5|max:30',
             'confirm_password' => 'required|min:5|max:30|same:new_password'
         ]);
 
-        if($validator->passes()){
+        if ($validator->passes()) {
             $customer = Customer::select('id', 'password')->where('id', Auth::guard('customer')->user()->id)->first();
 
-            if(!Hash::check($request->old_password, $customer->password)){
+            if (!Hash::check($request->old_password, $customer->password)) {
                 Session::flash('error', 'Your old password is incorrect, please try again.');
                 return response()->json([
                     'status' => true,
@@ -307,14 +312,92 @@ class AuthController extends Controller
             ]);
 
             Session::flash('success', 'You have successfully changed your password.');
-                return response()->json([
-                    'status' => true,
-                ]);
-        }else{
+            return response()->json([
+                'status' => true,
+            ]);
+        } else {
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()
             ]);
         }
+    }
+
+    public function forgotPassword()
+    {
+        return view('front.account.forgot-password');
+    }
+
+    public function processForgetPassword(Request $request)
+    {
+        $validator  = Validator::make($request->all(), [
+            'email' => 'required|email|exists:customers,email'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('front.forgotPassword')->withInput()->withErrors($validator);
+        }
+
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+
+        $token = Str::random(60);
+        DB::table('password_reset_tokens')->insert([
+            'email' => $request->email,
+            'token' => $token,
+            'created_at' => now()
+        ]);
+
+        // Send Email Here
+
+        $customer = Customer::where('email', $request->email)->first();
+        $formData = [
+            'token' => $token,
+            'customer' => $customer,
+            'mailSubject' => 'You have requested to reset your password'
+
+        ];
+        Mail::to($request->email)->send(new ResetPasswordEmail($formData));
+        return redirect()->route('front.forgotPassword')->with('success', 'Please check your inbox to reset your password.');
+    }
+
+    public function resetPassword($token)
+    {
+        $tokenExists = DB::table('password_reset_tokens')->where('token', $token)->first();
+
+        if ($tokenExists == null) {
+            return redirect()->route('front.forgotPassword')->with('error', 'Invalid request');
+        }
+
+        return view('front.account.reset-password', [
+            'token' => $token
+        ]);
+    }
+
+    public function processResetPassword(Request $request)
+    {
+        $token = $request->token;
+        $tokenObj = DB::table('password_reset_tokens')->where('token', $token)->first();
+
+        if ($tokenObj == null) {
+            return redirect()->route('front.forgotPassword')->with('error', 'Invalid request');
+        }
+
+        $customer = Customer::where('email', $tokenObj->email)->first();
+
+        $validator  = Validator::make($request->all(), [
+            'new_password' => 'required|min:5',
+            'confirm_password' => 'required|min:5|same:new_password'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('front.resetPassword', $token)->withInput()->withErrors($validator);
+        }
+
+        Customer::where('id', $customer->id)->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        DB::table('password_reset_tokens')->where('email', $customer->email)->delete();
+        return redirect()->route('account.login')->with('success', 'You have successfully updated your password.');
     }
 }

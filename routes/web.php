@@ -64,6 +64,10 @@ Route::controller(App\Http\Controllers\CartController::class)->group(function ()
             Route::get('/register', 'register')->name('account.register');
             Route::post('/process-register', 'processRegister')->name('account.processRegister');
             Route::get('/verify', 'verifyCustomer')->name('account.verifyCustomer');
+            Route::get('/forgot-password', 'forgotPassword')->name('front.forgotPassword');
+            Route::post('/process-forgot-password', 'processForgetPassword')->name('front.processForgetPassword');
+            Route::get('/reset-password/{token}', 'resetPassword')->name('front.resetPassword');
+            Route::post('/process-reset-password', 'processResetPassword')->name('front.processResetPassword');
         });
 
         Route::middleware(['auth:customer', 'is_customer_verify_email'])->group(function () {

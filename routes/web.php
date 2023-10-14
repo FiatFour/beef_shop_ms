@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\ProductImageController;
 use App\Http\Controllers\Admin\ProductSubCategoryController;
 use App\Http\Controllers\Admin\TempImagesController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\FrontController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\SupplierController;
 use App\Models\Supplier;
@@ -119,7 +121,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 
     Route::middleware(['auth:employee', 'is_employee_verify_email', 'PreventBackHistory', 'is_admin'])->group(function () {
-        Route::view('/dashboard', 'admin.dashboard')->name('home');
+        Route::get('/dashboard', [AdminController::class, 'index'])->name('home');
 
         Route::get('/getSlug', function (Request $request) {
             $slug = '';

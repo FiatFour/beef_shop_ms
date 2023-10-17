@@ -23,6 +23,7 @@ class ProductController extends Controller
 
         if ($request->get('keyword') != "") {
             $products = $products->where('title', 'like', '%' . $request->keyword . '%');
+            $products = $products->orWhere('price', 'like', '%' . $request->keyword . '%');
         }
 
         $products = $products->paginate();

@@ -22,10 +22,12 @@ class FrontController extends Controller
             ->orderBy('id', 'DESC')
             ->take(8)
             ->where('status', 1)
+            ->orWhere('status', 2)
             ->get();
 
         $latestProducts = Product::orderBy('id', 'DESC')
             ->where('status', 1)
+            ->orWhere('status', 2)
             ->take(8)
             ->get();
 

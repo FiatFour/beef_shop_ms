@@ -84,6 +84,21 @@
                     </div>
 
                     <div class="sub-title mt-5">
+                        <h2>Pre orders</h3>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                                    <div class="form-check mb-2">
+                                        <input {{ (!empty($preOrder) && $preOrder == 'Yes') ? 'checked' : '' }}
+                                            class="form-check-input preOrder-label" type="checkbox" name="pre_order" id="pre_order">
+                                        <label class="form-check-label" for="preOrder-label">
+                                            Pre orders
+                                        </label>
+                                    </div>
+                        </div>
+                    </div>
+
+                    <div class="sub-title mt-5">
                         <h2>Price</h3>
                     </div>
 
@@ -122,7 +137,7 @@
                                             <a href="{{ route('front.product', $product->slug) }}" class="product-img">
                                                 @if (!empty($productImage->image))
                                                     <img class="card-img-top"
-                                                        src="{{ asset('uploads/product/' . $productImage->image) }}">
+                                                        src="{{ asset('uploads/product/' . $productImage->image) }}" style="width: 306px; height: 306px;">
                                                 @else
                                                     <img src="{{ asset('admin-assets/img/default-150x150.png') }}">
                                                 @endif
@@ -153,9 +168,10 @@
 
                                         </div>
                                         <div class="card-body text-center mt-3">
-                                            <a class="h6 link"
-                                                href="{{ route('front.product', $product->slug) }}">{{ $product->title }}</a>
-                                            <div class="price mt-2">
+                                            <a class="h6 link" href="{{ route('front.product', $product->slug) }}"> ({{ getCowGeneName($product->cow_gene_id)->name }}) {!! ($product->status == 2) ? '<span style="color:red">!Pre order!</span>'  : '' !!}<br>{{ $product->title }}</a>
+                                    <h6>{{ number_format( $product->kg, 2) }} KG.</h6>
+                                    {{-- <h6>{{ $product->qty }}</h6> --}}
+                                    <div class="price mt-2">
                                                 <span class="h5"><strong>฿{{ $product->price }}</strong></span>
 
                                                 @if ($product->compare_price > 0)
@@ -204,6 +220,10 @@
             apply_filters();
         });
 
+        $('.preOrder-label').change(function() {
+            apply_filters();
+        });
+
         $('#sort').change(function() {
             apply_filters();
         });
@@ -216,9 +236,26 @@
                     cowGenes.push($(this).val());
                 }
             });
+            // $('.preOrder-label').each(function() {
+            //     if ($(this).is(':checked') == false) {
+            //     url += '&pre-order=' + $(this).val();
+            //     }
+            // });
+
 
             var url = '{{ url()->current() }}?';
 
+            //  CowGene Fileter
+            if ($('.preOrder-label').is(':checked') == true) {
+                url += '&pre-order=' +  'Yes';
+            }else{
+                url += '&pre-order=' +  'No';
+
+            }
+            //  CowGene Fileter
+            if ($('.cowGene-label').is(':checked') == true) {
+                url += '&cow-gene=' + cowGenes.toString();
+            }
             //  CowGene Fileter
             if (cowGenes.length > 0) {
                 url += '&cow-gene=' + cowGenes.toString();
@@ -236,5 +273,34 @@
             url += '&sort=' + $('#sort').val();
             window.location.href = url;
         }
+
+        // function apply_filters() {
+        //     var cowGenes = [];
+
+        //     $('.cowGene-label').each(function() {
+        //         if ($(this).is(':checked') == true) {
+        //             cowGenes.push($(this).val());
+        //         }
+        //     });
+
+        //     var url = '{{ url()->current() }}?';
+
+        //     //  CowGene Fileter
+        //     if (cowGenes.length > 0) {
+        //         url += '&cow-gene=' + cowGenes.toString();
+        //     }
+
+        //     // Price Range filter
+        //     url += '&price_min=' + slider.result.from + '&price_max=' + slider.result.to;
+
+        //     // Sorting filter
+        //     var keyword = $('#search').val();
+        //     if (keyword.length > 0) {
+        //         url += '&search=' + keyword;
+        //     }
+
+        //     url += '&sort=' + $('#sort').val();
+        //     window.location.href = url;
+        // }
     </script>
 @endsection

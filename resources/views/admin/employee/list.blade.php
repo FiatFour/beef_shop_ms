@@ -49,6 +49,7 @@
                                 <th width="150">IMG</th>
                                 <th>Name</th>
                                 <th>Phone</th>
+                                <th>Email</th>
                                 <th>Department</th>
                                 <th>Gender</th>
                                 <th>Created at</th>
@@ -68,6 +69,7 @@
                                     </td>
                                     <td>{{ $employee->name }}</td>
                                     <td>{{ $employee->phone }}</td>
+                                    <td>{{ $employee->email }}</td>
                                     <td>{{ $employee->department }}</td>
                                     <td>
                                         @if ($employee->gender == 1)
@@ -76,7 +78,8 @@
                                             Woman
                                         @endif
                                     </td>
-                                    <td>{{ !empty($employee->created_at) ? Carbon\Carbon::parse($employee->created_at)->diffForHumans()  : ''}}</td>
+                                    <td>
+                                        {{ !empty($employee->created_at) ? Carbon\Carbon::parse($employee->created_at)->format('d M, Y')  : ''}}</td>
                                     <td>
                                         <a href="{{ route('admin.employees.edit', $employee->id) }}">
                                             <svg class="filament-link-icon w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

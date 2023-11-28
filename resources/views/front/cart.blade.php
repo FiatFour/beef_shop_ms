@@ -43,6 +43,7 @@
                                     <th>Item</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
+                                    {{-- <th>KG</th> --}}
                                     <th>Total</th>
                                     <th>Remove</th>
                                 </tr>
@@ -59,8 +60,7 @@
                                                     @else
                                                         <img src="{{ asset('admin-assets/img/default-150x150.png') }}">
                                                     @endif
-
-                                                    <h2>{{ $productItem->name }}</h2>
+                                                    <h2>{{ (getProduct($productItem->id)->status == 2) ? '!Pre order! ' : '' }} {{ $productItem->name }}</h2>
                                                 </div>
                                             </td>
                                             <td>฿{{ $productItem->price }}</td>
@@ -81,6 +81,9 @@
                                                     </div>
                                                 </div>
                                             </td>
+                                            {{-- <td>
+                                                {{ number_format( $productItem->kg, 2) }}
+                                            </td> --}}
                                             <td>
                                                 ฿{{ $productItem->price * $productItem->qty }}
                                             </td>

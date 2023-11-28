@@ -41,15 +41,18 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    function checkLogin(Request $request){
+    function checkLogin(Request $request)
+    {
         $request->validate([
             'email' => [
                 'required',
                 'email',
                 function ($attribute, $value, $fail) {
-                    if (DB::table('customers')->where('email', $value)->exists() ||
+                    if (
+                        DB::table('customers')->where('email', $value)->exists() ||
                         DB::table('employees')->where('email', $value)->exists()
-                    ){}else{
+                    ) {
+                    } else {
                         $fail("The selected $attribute is invalid");
                     }
                 },
@@ -58,41 +61,49 @@ class LoginController extends Controller
         ]);
 
         $creds = $request->only('email', 'password');
-        if(Auth::guard('customer')->attempt($creds)){
+        if (Auth::guard('customer')->attempt($creds)) {
             return redirect()->route('customer.home');
-        }else if(Auth::guard('employee')->attempt($creds) && Auth::guard('employee')->user()->is_admin == 1){
+        } else if (Auth::guard('employee')->attempt($creds) && Auth::guard('employee')->user()->is_admin == 1) {
             return redirect()->route('admin.home');
-        }else if(Auth::guard('employee')->attempt($creds)){
+        } else if (Auth::guard('employee')->attempt($creds)) {
             return redirect()->route('employee.home');
-        }
-        else{
+        } else {
             return redirect()->route('login')->with('fail', "Incorrect credentials");
         }
-
     }
 
-    public function index(){
-        if(Auth::guard('employee')->user()){
-            if(Auth::guard('employee')->user()->is_admin==0){
+    public function index()
+    {
+        if (Auth::guard('employee')->user()) {
+            if (Auth::guard('employee')->user()->is_admin == 0) {
                 return redirect()->route('employee.home');
-            }else{
+            } else {
                 return redirect()->route('admin.home');
             }
         }
-        if(Auth::guard('customer')->user()){
+        if (Auth::guard('customer')->user()) {
             return redirect()->route('customer.home');
         }
 
         return view('login');
     }
 
-    public function logout(){
-        if(Auth::guard('customer')){
+    public function logout()
+    {
+        if (Auth::guard('customer')) {
             Auth::guard('customer')->logout();
         }
-        if(Auth::guard('employee')){
+        if (Auth::guard('employee')) {
             Auth::guard('employee')->logout();
         }
         return redirect()->route('login');
     }
 }
+
+
+
+
+
+
+
+

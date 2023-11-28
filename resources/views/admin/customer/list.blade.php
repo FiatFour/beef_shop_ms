@@ -63,7 +63,9 @@
                                     <td>{{ $customer->name }}</td>
                                     <td>{{ $customer->phone }}</td>
                                     <td>{{ $customer->email }}</td>
-                                    <td>{{ !empty($customer->email_verified_at) ? Carbon\Carbon::parse($customer->email_verified_at)->diffForHumans()  : ''}}</td>
+                                    <td>
+                                        {{ !empty($customer->email_verified_at) ? Carbon\Carbon::parse($customer->email_verified_a)->format('d M, Y')  : ''}}
+                                    </td>
                                     <td>
                                         @if ($customer->email_verified == 1)
                                             <svg class="text-success-500 h-6 w-6 text-success" xmlns="http://www.w3.org/2000/svg"

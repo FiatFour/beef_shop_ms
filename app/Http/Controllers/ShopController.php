@@ -18,7 +18,13 @@ class ShopController extends Controller
 
         $categories = Category::orderBy('name', 'ASC')->with('sub_categories')->where('status', 1)->get();
         $cowGenes = CowGene::orderBy('name', 'ASC')->where('status', 1)->get();
-        $products = Product::where('status', 1);
+
+        if ($request->get('pre-order') == 'Yes'){
+                $products = Product::where('status', 2);
+            // $products = $products->where('pre_order', $request->get('pre-order'));
+        }else{
+            $products = Product::where('status', 1);
+        }
 
         // Apply Filters here
         if (!empty($categorySlug)) {
@@ -50,6 +56,10 @@ class ShopController extends Controller
             $products = $products->where('title', 'like', '%'.$request->get('search').'%');
         }
 
+
+
+        $preOrder = $request->get('pre-order');
+
         if ($request->get('sort') != '') {
             if ($request->get('sort') == 'latest') {
                 $products = $products->orderBy('id', 'DESC'); // or can change to 'id' -> 'created_at
@@ -76,7 +86,8 @@ class ShopController extends Controller
             'cowGenesArray',
             'priceMin',
             'priceMax',
-            'sort'
+            'sort',
+            'preOrder'
         ));
     }
 
@@ -90,7 +101,7 @@ class ShopController extends Controller
         // Fetch Related Products
         if ($product->related_products != '') {
             $productArray = explode(',', $product->related_products);
-            $relatedProducts = Product::whereIn('id', $productArray)->where('status', 1)->get();
+            $relatedProducts = Product::whereIn('id', $productArray)->where('status', 1)->orWhere('status', 2)->get();
         }
 
         return view('front.product', compact('product', 'relatedProducts'));

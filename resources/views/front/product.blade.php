@@ -22,8 +22,8 @@
                             @if ($product->product_images)
                                 @foreach ($product->product_images as $key => $productImage)
                                     <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                                        <img class="w-100 h-100"
-                                            src="{{ asset('uploads/product/' . $productImage->image) }}" alt="Image">
+                                        <img class="w-70 h-70"
+                                            src="{{ asset('uploads/product/' . $productImage->image) }}" alt="Image" style="height: 300px;">
                                     </div>
                                 @endforeach
                             @endif
@@ -38,8 +38,12 @@
                 </div>
                 <div class="col-md-7">
                     <div class="bg-light right">
-                        <h1>{{ $product->title }}</h1>
-                        <div class="d-flex mb-3">
+                        <h1>{!! ($product->status == 2) ? '<span style="color:red">!Pre order!</span>' : '' !!}</h1>
+                        <h3>{{ $product->title }}</h3>
+                        <h1>{!! ($product->status == 2) ? 'Shipping date: '.$product->shipping_date : '' !!}</h1>
+                        <h6>{{ number_format( $product->kg, 2) }} KG.</h6>
+                        <h6>Expire date: {{ $product->expire_date }}</h6>
+                        {{-- <div class="d-flex mb-3">
                             <div class="text-primary mr-2">
                                 <small class="fas fa-star"></small>
                                 <small class="fas fa-star"></small>
@@ -49,7 +53,7 @@
                             </div>
                             <small class="pt-1">(99 Reviews)</small>
 
-                        </div>
+                        </div> --}}
                         @if ($product->compare_price > 0)
                             <h2 class="price text-secondary"><del>฿{{ $product->compare_price }}</del></h2>
                         @endif
@@ -58,7 +62,7 @@
                         {!! $product->short_description !!}
                         {{-- <a href="javascript:void(0);" onclick="addToCart({{ $product->id }});" class="btn btn-dark"><i
                                 class="fas fa-shopping-cart"></i> &nbsp;ADD TO CART</a> --}}
-
+                        <br>
                         @if ($product->track_qty == 'Yes')
                             @if ($product->qty > 0)
                                 <a class="btn btn-dark" href="javascript:void(0);" onclick="addToCart({{ $product->id }})">
@@ -85,28 +89,28 @@
                                     data-bs-target="#description" type="button" role="tab" aria-controls="description"
                                     aria-selected="true">Description</button>
                             </li>
-                            <li class="nav-item" role="presentation">
+                            {{-- <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping"
                                     type="button" role="tab" aria-controls="shipping" aria-selected="false">Shipping &
                                     Returns</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
+                            </li> --}}
+                            {{-- <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews"
                                     type="button" role="tab" aria-controls="reviews"
                                     aria-selected="false">Reviews</button>
-                            </li>
+                            </li> --}}
                         </ul>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="description" role="tabpanel"
                                 aria-labelledby="description-tab">
                                 {!! $product->description !!}
                             </div>
-                            <div class="tab-pane fade" id="shipping" role="tabpanel" aria-labelledby="shipping-tab">
+                            {{-- <div class="tab-pane fade" id="shipping" role="tabpanel" aria-labelledby="shipping-tab">
                                 <p>{!! $product->shipping_returns !!}</p>
-                            </div>
-                            <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                            </div> --}}
+                            {{-- <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
 
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -131,7 +135,7 @@
                                     <a href="{{ route('front.product', $relatedProduct->slug) }}" class="product-img">
                                         @if (!empty($productImage->image))
                                             <img class="card-img-top"
-                                                src="{{ asset('uploads/product/' . $productImage->image) }}">
+                                                src="{{ asset('uploads/product/' . $productImage->image) }}" style="width: 306px; height: 306px;">
                                         @else
                                             <img class="card-img-top"
                                                 src="{{ asset('admin-assets/img/default-150x150.png') }}">
@@ -165,7 +169,7 @@
                                 </div>
                                 <div class="card-body text-center mt-3">
                                     <a class="h6 link"
-                                        href="{{ route('front.product', $relatedProduct->slug) }}">{{ $relatedProduct->title }}</a>
+                                        href="{{ route('front.product', $relatedProduct->slug) }}">{!! (getProduct($relatedProduct->id)->status == 2) ? '<span style="color: red">!!Pre order!!</span> <br>' : '' !!} {{ $relatedProduct->title }}</a>
                                     <div class="price mt-2">
                                         <span class="h5"><strong>฿{{ $relatedProduct->price }}</strong></span>
                                         @if ($relatedProduct->compare_price > 0)

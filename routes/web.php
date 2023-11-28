@@ -68,7 +68,7 @@ Route::controller(App\Http\Controllers\CartController::class)->group(function ()
             Route::get('/verify', 'verifyCustomer')->name('account.verifyCustomer');
             Route::get('/forgot-password', 'forgotPassword')->name('front.forgotPassword');
             Route::post('/process-forgot-password', 'processForgetPassword')->name('front.processForgetPassword');
-            Route::get('/reset-password/{token}', 'resetPassword')->name('front.resetPassword');
+            Route::get('/reset-password/{token}', 'resetPassword')->name('front.resetPasswords');
             Route::post('/process-reset-password', 'processResetPassword')->name('front.processResetPassword');
         });
 
@@ -87,7 +87,7 @@ Route::controller(App\Http\Controllers\CartController::class)->group(function ()
     });
 // });
 
-Route::get('/xlogin', [LoginController::class, 'index'])->name('login')->middleware('PreventBackHistory');
+Route::get('/admin/login', [LoginController::class, 'index'])->name('login')->middleware('PreventBackHistory');
 Route::post('/check', [LoginController::class, 'checkLogin'])->name('checkLogin');
 Route::get('/xlogout', [LoginController::class, 'logout'])->name('logoutAll');
 // temp-images.create
@@ -194,6 +194,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/products/{id}', 'destroy')->name('products.delete');
             Route::delete('/products-images', [ProductImageController::class, 'destroy'])->name('product-images.destroy');
             Route::get('/get-products', 'getProducts')->name('products.getProducts');
+
+            Route::get('/product-expires', 'expireIndex')->name('product-expires.index');
+            Route::get('/product-expires/edit/{id}', 'expireEdit')->name('product-expires.edit');
         });
 
         // Shipping Routes

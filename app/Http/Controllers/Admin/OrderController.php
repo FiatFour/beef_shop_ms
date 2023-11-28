@@ -22,6 +22,7 @@ class OrderController extends Controller
             $orders = $orders->orWhere('orders.id', 'like', '%'.$request->keyword.'%');
         }
 
+        // $orders = $orders->where('orders.status', 'Shipped');
         $orders = $orders->paginate(10);
 
 

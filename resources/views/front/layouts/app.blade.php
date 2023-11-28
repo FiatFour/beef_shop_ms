@@ -50,8 +50,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
-		<link rel="stylesheet" href="{{ asset('admin-assets/plugins/dropzone/min/dropzone.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('admin-assets/css/custom.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin-assets/plugins/dropzone/min/dropzone.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin-assets/css/custom.css') }}">
 
 </head>
 
@@ -146,10 +146,18 @@
                 <div class="col-md-4">
                     <div class="footer-card">
                         <h3>Get In Touch</h3>
-                        <p>No dolore ipsum accusam no lorem. <br>
-                            123 Street, New York, USA <br>
-                            exampl@example.com <br>
-                            000 000 0000</p>
+
+
+
+
+                        <p>Building Number: 295/1 M.1<br>
+                            Subdistrict: Saothong<br>
+                            District: Ron Phibun<br>
+                            City: Nakhon Si Thammarat<br>
+                            State: Thailand<br>
+                            Post Code: 80350<br>
+                            fiatbackup4@gmail.com<br>
+                            (061) 252-7284</p>
                     </div>
                 </div>
 
@@ -171,9 +179,9 @@
                     <div class="footer-card">
                         <h3>My Account</h3>
                         <ul>
-                            <li><a href="#" title="Sell">Login</a></li>
-                            <li><a href="#" title="Advertise">Register</a></li>
-                            <li><a href="#" title="Contact Us">My Orders</a></li>
+                            <li><a href="{{ route('account.login') }}" title="Sell">Login</a></li>
+                            <li><a href="{{ route('account.register') }}" title="Advertise">Register</a></li>
+                            <li><a href="{{ route('account.orders') }}" title="Contact Us">My Orders</a></li>
                         </ul>
                     </div>
                 </div>
@@ -282,7 +290,7 @@
 
 
 
-		<script src="{{ asset('admin-assets/plugins/dropzone/min/dropzone.min.js') }}"></script>
+    <script src="{{ asset('admin-assets/plugins/dropzone/min/dropzone.min.js') }}"></script>
 
 
     @yield('customJs')

@@ -9,50 +9,50 @@
                     <!-- <img src="images/carousel-1.jpg" class="d-block w-100" alt=""> -->
 
                     <picture>
-                        <source media="(max-width: 799px)" srcset="{{ asset('front-assets/images/carousel-1-m.jpg') }}" />
-                        <source media="(min-width: 800px)" srcset="{{ asset('front-assets/images/carousel-1.jpg') }}" />
-                        <img src="{{ asset('front-assets/images/carousel-1.jpg') }}" alt="" />
+                        <source media="(max-width: 799px)" srcset="{{ asset('front-assets/images/1.jpg') }}" />
+                        <source media="(min-width: 800px)" srcset="{{ asset('front-assets/images/1.jpg') }}" />
+                        <img src="{{ asset('front-assets/images/1.jpg') }}" alt="" />
                     </picture>
 
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3">
-                            <h1 class="display-4 text-white mb-3">Kids Fashion</h1>
-                            <p class="mx-md-5 px-5">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo
-                                stet amet amet ndiam elitr ipsum diam</p>
-                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="#">Shop Now</a>
+                            <h1 class="display-4 text-white mb-3">Beef Shop</h1>
+                            {{-- <p class="mx-md-5 px-5">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo
+                                stet amet amet ndiam elitr ipsum diam</p> --}}
+                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="{{ route('front.shop') }}">Shop Now</a>
                         </div>
                     </div>
                 </div>
                 <div class="carousel-item">
                     <picture>
-                        <source media="(max-width: 799px)" srcset="{{ asset('front-assets/images/carousel-2-m.jpg') }}" />
-                        <source media="(min-width: 800px)" srcset="{{ asset('front-assets/images/carousel-2.jpg') }}" />
-                        <img src="{{ asset('front-assets/images/carousel-2.jpg') }}" alt="" />
+                        <source media="(max-width: 799px)" srcset="{{ asset('front-assets/images/2.jpg') }}" />
+                        <source media="(min-width: 800px)" srcset="{{ asset('front-assets/images/2.jpg') }}" />
+                        <img src="{{ asset('front-assets/images/2.jpg') }}" alt="" />
                     </picture>
 
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3">
-                            <h1 class="display-4 text-white mb-3">Womens Fashion</h1>
-                            <p class="mx-md-5 px-5">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo
-                                stet amet amet ndiam elitr ipsum diam</p>
-                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="#">Shop Now</a>
+                            <h1 class="display-4 text-white mb-3">Beef Shop</h1>
+                            {{-- <p class="mx-md-5 px-5">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo
+                                stet amet amet ndiam elitr ipsum diam</p> --}}
+                                <a class="btn btn-outline-light py-2 px-4 mt-3" href="{{ route('front.shop') }}">Shop Now</a>
                         </div>
                     </div>
                 </div>
                 <div class="carousel-item">
                     <picture>
-                        <source media="(max-width: 799px)" srcset="{{ asset('front-assets/images/carousel-3-m.jpg') }}" />
-                        <source media="(min-width: 800px)" srcset="{{ asset('front-assets/images/carousel-3.jpg') }}" />
-                        <img src="{{ asset('front-assets/images/carousel-3.jpg') }}" alt="" />
+                        <source media="(max-width: 799px)" srcset="{{ asset('front-assets/images/3.jpg') }}" />
+                        <source media="(min-width: 800px)" srcset="{{ asset('front-assets/images/3.jpg') }}" />
+                        <img src="{{ asset('front-assets/images/3.jpg') }}" alt="" />
                     </picture>
 
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3">
-                            <h1 class="display-4 text-white mb-3">Shop Online at Flat 70% off on Branded Clothes
+                            <h1 class="display-4 text-white mb-3">Beef Shop
                             </h1>
-                            <p class="mx-md-5 px-5">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo
-                                stet amet amet ndiam elitr ipsum diam</p>
-                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="#">Shop Now</a>
+                            {{-- <p class="mx-md-5 px-5">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo
+                                stet amet amet ndiam elitr ipsum diam</p> --}}
+                                <a class="btn btn-outline-light py-2 px-4 mt-3" href="{{ route('front.shop') }}">Shop Now</a>
                         </div>
                     </div>
                 </div>
@@ -81,13 +81,13 @@
                 <div class="col-lg-3 ">
                     <div class="box shadow-lg">
                         <div class="fa icon fa-shipping-fast text-primary m-0 mr-3"></div>
-                        <h2 class="font-weight-semi-bold m-0">Free Shipping</h2>
+                        <h2 class="font-weight-semi-bold m-0">Fast Shipping</h2>
                     </div>
                 </div>
                 <div class="col-lg-3">
                     <div class="box shadow-lg">
-                        <div class="fa icon fa-exchange-alt text-primary m-0 mr-3"></div>
-                        <h2 class="font-weight-semi-bold m-0">14-Day Return</h2>
+                        <div class="fa icon fa-cart-arrow-down text-primary m-0 mr-3"></div>
+                        <h2 class="font-weight-semi-bold m-0">Easy to buy</h2>
                     </div>
                 </div>
                 <div class="col-lg-3 ">
@@ -150,7 +150,7 @@
 
                                         @if (!empty($productImage->image))
                                             <img class="card-img-top"
-                                                src="{{ asset('uploads/product/' . $productImage->image) }}">
+                                                src="{{ asset('uploads/product/' . $productImage->image) }}" style="width: 306px; height: 306px;">
                                         @else
                                             <img class="card-img-top" src="{{ asset('admin-assets/img/default-150x150.png') }}">
                                         @endif
@@ -178,7 +178,8 @@
                                     </div>
                                 </div>
                                 <div class="card-body text-center mt-3">
-                                    <a class="h6 link" href="{{ route('front.product', $product->slug) }}">{{ $product->title }}</a>
+                                    <a class="h6 link" href="{{ route('front.product', $product->slug) }}"> ({{ getCowGeneName($product->cow_gene_id)->name }}) {!! ($product->status == 2) ? '!Pre order!'  : '' !!}<br>{{ $product->title }}</a>
+                                    <h6>{{ number_format( $product->kg, 2) }} KG.</h6>
                                     <div class="price mt-2">
 
                                         <span class="h5"><strong>฿{{ $product->price }}</strong></span>
@@ -216,7 +217,7 @@
 
                                         @if (!empty($productImage->image))
                                             <img class="card-img-top"
-                                                src="{{ asset('uploads/product/' . $productImage->image) }}">
+                                                src="{{ asset('uploads/product/' . $productImage->image) }}" style="width: 306px; height: 306px;">
                                         @else
                                             <img src="{{ asset('admin-assets/img/default-150x150.png') }}">
                                         @endif
@@ -244,7 +245,8 @@
 
                                 </div>
                                 <div class="card-body text-center mt-3">
-                                    <a class="h6 link" href="{{ route('front.product', $product->slug) }}">{{ $product->title }}</a>
+                                    <a class="h6 link" href="{{ route('front.product', $product->slug) }}"> ({{ getCowGeneName($product->cow_gene_id)->name }}) {!! ($product->status == 2) ? '<span style="color:red">!Pre order!</span>'  : '' !!}<br>{{ $product->title }}</a>
+                                    <h6>{{ number_format( $product->kg, 2) }} KG.</h6>
                                     <div class="price mt-2">
 
                                         <span class="h5"><strong>฿{{ $product->price }}</strong></span>

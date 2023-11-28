@@ -46,7 +46,7 @@
                                             </a>
                                             <div class="pt-2">
                                                 <h3 class="product-title fs-base mb-2"><a
-                                                        href="{{ route('front.product', $wishlist->product->slug) }}">{{ $wishlist->product->title }}</a>
+                                                        href="{{ route('front.product', $wishlist->product->slug) }}">{{ (getProduct($wishlist->product_id)->status == 2) ? '(Pre order) ' : '' }} {{ $wishlist->product->title }}</a>
                                                 </h3>
                                                 <div class="fs-lg text-accent pt-2">
                                                     <span

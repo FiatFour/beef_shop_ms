@@ -69,9 +69,9 @@
                                 <div class="col-sm-4 invoice-col">
                                     {{-- <b>Invoice #007612</b><br> --}}
                                     <b>Payment Method: </b>
-                                    PromptPay
                                     <br>
                                     @if (!empty($order->pay_image))
+                                    PromptPay
                                     <img src="{{ asset('uploads/order/' . $order->pay_image) }}" alt=""
                                     width="400px" height="700px">
                                     @else

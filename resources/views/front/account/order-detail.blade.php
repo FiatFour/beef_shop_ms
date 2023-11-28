@@ -113,8 +113,8 @@
                                             <div class="col">
                                                 <!-- Title -->
                                                 <p class="mb-4 fs-sm fw-bold">
-                                                    <a class="text-body" href="product.html">
-                                                        {{ $item->name }} x {{ $item->qty }}</a>
+                                                    <a class="text-body" href="{{ route('front.product', getProduct($item->product_id)->slug) }}">
+                                                        {{ (getProduct($item->product_id)->status == 2) ? '(Pre order) ' : ''  }} x {{ $item->qty }}</a>
                                                     <br>
                                                     <span class="text-muted">฿{{ $item->total }}</span>
                                                 </p>

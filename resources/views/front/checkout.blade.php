@@ -148,7 +148,7 @@
                             <div class="card-body"></div>
                             @foreach (Cart::content() as $item)
                                 <div class="d-flex justify-content-between pb-2">
-                                    <div class="h6">{{ $item->name }} X {{ $item->qty }}</div>
+                                    <div class="h6">{{ (getProduct($item->id)->status == 2) ? '(Pre order) ' : ''  }} {{ $item->name }} X {{ $item->qty }}</div>
                                     <div class="h6">฿{{ $item->price * $item->qty }}</div>
                                 </div>
                             @endforeach

@@ -51,7 +51,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="password">Password</label>
-                                    <input type="text" name="password" id="password" class="form-control"
+                                    <input type="password" name="password" id="password" class="form-control"
                                         placeholder="Password">
                                     <p></p>
                                 </div>
@@ -65,22 +65,6 @@
                                     </select>
                                 </div>
                             </div>
-                            {{-- <div class="col-md-6">
-                                <div class="mb-3">
-                                    <div class="form-group mt-5">
-                                        <label class="form-check-inline">Gender: </label>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="gender" id="gender" value="1">
-                                            <label class="form-check-label">Man</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="gender" id="gender" value="2">
-                                            <label class="form-check-label">Woman</label>
-                                        </div>
-                                        <p></p>
-                                    </div>
-                                </div>
-                            </div> --}}
                         </div>
                     </div>
                 </div>

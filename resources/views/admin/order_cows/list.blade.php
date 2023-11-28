@@ -91,7 +91,8 @@
                                                         Woman
                                                     @endif
                                                 </td>
-                                                <td>{{ !empty($orderDetails->birth) ? $orderDetails->age() : '' }} years</td>
+                                                {{-- <td>{{ !empty($orderDetails->birth) ? $orderDetails->age() : '' }} years</td> --}}
+                                                <td>{{ !empty($orderDetails->birth) ? \Carbon\Carbon::parse($orderDetails->birth)->diff(\Carbon\Carbon::now())->format('%y years, %m months and %d days') : '' }}</td>
 
 
                                                 @if ($orderDetails->order_cow_id != $orderCowId)
@@ -105,7 +106,7 @@
                                                             </path>
                                                         </svg>
                                                     </a>
-                                                    {{ $orderDetails->order_cow_id }}
+                                                    {{-- {{ $orderDetails->order_cow_id }} --}}
                                                     <a href="#" onclick="deleteRecord({{ $orderDetails->order_cow_id }})"
                                                         class="text-danger w-4 h-4 mr-1">
                                                         <svg wire:loading.remove.delay="" wire:target=""

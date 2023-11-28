@@ -131,7 +131,7 @@
                                             <p></p>
                                         </div>
                                     </div>
-                                    {{ $cow->gender }}
+                                    {{-- {{ $cow->gender }} --}}
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <div class="form-group">

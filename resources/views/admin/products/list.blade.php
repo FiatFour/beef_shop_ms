@@ -48,11 +48,14 @@
                         <thead>
                             <tr>
                                 <th width="60">ID</th>
-                                <th width="80"></th>
-                                <th>Product</th>
+                                <th width="80">IMG</th>
+                                <th>Product name</th>
                                 <th>Price</th>
                                 <th>Qty</th>
-                                <th>SKU</th>
+                                <th>KG</th>
+                                <th>Featured product</th>
+                                <th>Expire date</th>
+                                <th>Shipping date</th>
                                 <th width="100">Status</th>
                                 <th width="100">Action</th>
                             </tr>
@@ -68,17 +71,24 @@
                                         <td>
                                             @if (!empty($productImage->image))
                                                 <img src="{{ asset('uploads/product/' . $productImage->image) }}"
-                                                    class="img-thumbnail" width="50">
+                                                    class="img-thumbnail" width="100">
                                                 {{-- <h4>{{ $productImage->image }}</h4> --}}
                                             @else
                                                 <img src="{{ asset('admin-assets/img/default-150x150.png') }}"
-                                                    class="img-thumbnail" width="50">
+                                                    class="img-thumbnail" width="100">
                                             @endif
                                         </td>
-                                        <td><a href="#">{{ $product->title }}</a></td>
+                                        <td><a href="{{ route('admin.products.edit', $product->id) }}">{{ $product->title }}</a></td>
                                         <td>{{ $product->price }}</td>
                                         <td>{{ $product->qty }} left in Stock</td>
-                                        <td>{{ $product->sku }}</td>
+                                        <td>{{ number_format($product->kg, 2) }} KG.</td>
+                                        <td>{{ $product->is_featured }}</td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($product->expire_date)->format('d M, Y') }}
+                                        </td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($product->shipping_date)->format('d M, Y') }}
+                                        </td>
                                         <td>
                                             @if ($product->status == 1)
                                                 <svg class="text-success-500 h-6 w-6 text-success"
@@ -87,6 +97,8 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                         d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                                 </svg>
+                                            @elseif ($product->status == 2)
+                                                Pre order
                                             @else
                                                 <svg class="text-danger h-6 w-6" xmlns="http://www.w3.org/2000/svg"
                                                     fill="none" viewBox="0 0 24 24" stroke-width="2"

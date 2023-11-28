@@ -54,12 +54,12 @@
                                                 placeholder="Description"></textarea>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    {{-- <div class="col-md-12">
                                         <div class="mb-3">
                                             <label for="description">Shipping and Returns</label>
                                             <textarea name="shipping_returns" id="shipping_returns" cols="30" rows="10" class="summernote" placeholder=""></textarea>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>
@@ -80,7 +80,7 @@
                             <div class="card-body">
                                 <h2 class="h4 mb-3">Pricing</h2>
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="price">Price</label>
                                             <input type="text" name="price" id="price" class="form-control"
@@ -88,17 +88,17 @@
                                             <p class="error"></p>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="compare_price">Compare at Price</label>
                                             <input type="text" name="compare_price" id="compare_price"
                                                 class="form-control" placeholder="Compare Price">
-                                            <p class="text-muted mt-3">
-                                                To show a reduced price, move the product’s original price into Compare at
-                                                price. Enter a lower value into Price.
-                                            </p>
+                                            </div>
                                         </div>
-                                    </div>
+                                        <p class="text-muted mt-3">
+                                            To show a reduced price, move the product’s original price into Compare at
+                                            price. Enter a lower value into Price.
+                                        </p>
                                 </div>
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                             <div class="card-body">
                                 <h2 class="h4 mb-3">Inventory</h2>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    {{-- <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="sku">SKU (Stock Keeping Unit)</label>
                                             <input type="text" name="sku" id="sku" class="form-control"
@@ -121,8 +121,8 @@
                                                 placeholder="Barcode">
                                             <p class="error"></p>
                                         </div>
-                                    </div>
-                                    <div class="col-md-12">
+                                    </div> --}}
+                                    <div class="col-md-4">
                                         <div class="mb-3">
                                             <div class="custom-control custom-checkbox">
                                                 <input type="hidden" name="track_qty" value="No">
@@ -136,6 +136,22 @@
                                             <input type="number" min="0" name="qty" id="qty"
                                                 class="form-control" placeholder="Qty">
                                             <p class="error"></p>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3 mt-2">
+                                            <label for="kg">KG</label>
+                                            <input type="number" name="kg" id="kg" class="form-control"
+                                                placeholder="KG">
+                                            <p></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3 mt-2">
+                                            <label>Expire Date</label>
+                                            <input type="date" name="expire_date" id="expire_date" class="form-control">
+                                            <p></p>
                                         </div>
                                     </div>
                                 </div>
@@ -159,11 +175,30 @@
                                 <div class="mb-3">
                                     <select name="status" id="status" class="form-control">
                                         <option value="1">Active</option>
+                                        <option value="2">Pre order</option>
                                         <option value="0">Block</option>
                                     </select>
                                 </div>
+
+                                <div class="mb-3">
+                                    <label>Shipping date</label>
+                                    <input type="date" name="shipping_date" id="shipping_date" class="form-control">
+                                    <p></p>
+                                </div>
                             </div>
                         </div>
+                        {{-- <div class="card mb-3">
+                            <div class="card-body">
+                                <h2 class="h4 mb-3">Pre order</h2>
+                                <div class="mb-3">
+                                    <select name="pre_order" id="pre_order" class="form-control">
+                                        <option value="No">No</option>
+                                        <option value="Yes">Yes</option>
+                                    </select>
+                                    <p class="error"></p>
+                                </div>
+                            </div>
+                        </div> --}}
                         <div class="card">
                             <div class="card-body">
                                 <h2 class="h4  mb-3">Product category</h2>
@@ -216,6 +251,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -329,7 +365,7 @@
         Dropzone.autoDiscover = false;
         const dropzone = $("#image").dropzone({
 
-            url: "{{ route('admin.temp-images.create') }}"
+            url: "{{ route('admin.temp-images.create') }}",
             maxFiles: 5,
             paramName: 'image',
             addRemoveLinks: true,

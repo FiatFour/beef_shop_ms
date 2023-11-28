@@ -30,6 +30,8 @@
                                         <tr>
                                             <th>Orders #</th>
                                             <th>Date Purchased</th>
+                                            <th>Payment Method</th>
+                                            <th>Payment Status</th>
                                             <th>Status</th>
                                             <th>Total</th>
                                         </tr>
@@ -44,6 +46,20 @@
                                                     </td>
                                                     <td>
                                                         {{ \Carbon\Carbon::parse($order->created_at)->format('d M, Y') }}
+                                                    </td>
+                                                    <td>
+                                                        @if (!empty($order->pay_image))
+                                                            PromptPay
+                                                        @else
+                                                            COD
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($order->payment_status == 'Paid')
+                                                            <span class="badge bg-success">Paid</span>
+                                                        @else
+                                                            <span class="badge bg-danger">Not Paid</span>
+                                                        @endif
                                                     </td>
                                                     <td>
                                                         @if ($order->status == 'Pending')

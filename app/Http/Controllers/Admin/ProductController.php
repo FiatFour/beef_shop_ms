@@ -17,6 +17,18 @@ use Illuminate\Support\Facades\File;
 // use Image;
 class ProductController extends Controller
 {
+    public function expireIndex(Request $request){
+        $products = Product::orderBy('expire_date', 'DESC');
+
+        if ($request->get('keyword') != "") {
+            $products = $products->where('title', 'like', '%' . $request->keyword . '%');
+            $products = $products->orWhere('price', 'like', '%' . $request->keyword . '%');
+        }
+        $products = $products->where('status', '=', 1);
+        $products = $products->paginate();
+        return view('admin.product_expires.list', compact('products'));
+    }
+
     public function index(Request $request)
     {
         $products = Product::latest('id')->with('product_images');
@@ -44,10 +56,13 @@ class ProductController extends Controller
             'title' => 'required',
             'slug' => 'required|unique:products',
             'price' => 'required|numeric',
-            'sku' => 'required|unique:products',
+            'kg' => 'required|numeric',
+            // 'sku' => 'required|unique:products',
             'track_qty' => 'required|in:Yes,No',
             'category' => 'required|numeric',
             'is_featured' => 'required|in:Yes,No',
+            // 'pre_order' => 'required|in:Yes,No',
+            'expire_date' => 'required',
         ];
 
         if (!empty($request->track_qty) && $request->track_qty == 'Yes') {
@@ -64,8 +79,8 @@ class ProductController extends Controller
             $product->description = $request->description;
             $product->price = $request->price;
             $product->compare_price = $request->compare_price;
-            $product->sku = $request->sku;
-            $product->barcode = $request->barcode;
+            // $product->sku = $request->sku;
+            // $product->barcode = $request->barcode;
             $product->track_qty = $request->track_qty;
             $product->qty = $request->qty;
             $product->status = $request->status;
@@ -73,9 +88,13 @@ class ProductController extends Controller
             $product->sub_category_id = $request->sub_category;
             $product->cow_gene_id = $request->cow_gene;
             $product->is_featured = $request->is_featured;
-            $product->shipping_returns = $request->shipping_returns;
+            // $product->shipping_returns = $request->shipping_returns;
             $product->short_description = $request->short_description;
             $product->related_products = (!empty($request->related_products)) ? implode(',', $request->related_products) : '';
+            $product->shipping_date = $request->shipping_date;
+            $product->expire_date = $request->expire_date;
+            $product->kg = $request->kg;
+            // $product->pre_order = $request->pre_order;
             $product->save();
 
             // Save Gallery Pics
@@ -114,9 +133,6 @@ class ProductController extends Controller
                     // $image = Image::make($sourcePath);
                     // $image->fit(300, 300);
                     // $image->save($destPath);
-
-
-
                 }
             }
             Session()->flash('success', "Product added successfully");
@@ -164,6 +180,38 @@ class ProductController extends Controller
         ));
     }
 
+    public function expireEdit(Request $request, $id)
+    {
+        $product = Product::find($id);
+
+        if (empty($product)) {
+            return redirect()->route('admin.products.index')->with('error', "Product not found");
+        }
+        // Fetch Product Images
+        $productImages = ProductImage::where('product_id', $product->id)->get();
+
+        $subCategories = SubCategory::where('category_id', $product->category_id)->get();
+
+        $relatedProducts = [];
+        // Fetch Related Products
+        if ($product->related_products != '') {
+            $productArray = explode(',', $product->related_products);
+            $relatedProducts = Product::whereIn('id', $productArray)->with('product_images')->get();
+        }
+
+        $categories = Category::orderBy('name', 'ASC')->get();
+        $cow_genes = CowGene::orderBy('name', 'ASC')->get();
+
+        return view('admin.product_expires.edit', compact(
+            'product',
+            'productImages',
+            'categories',
+            'subCategories',
+            'cow_genes',
+            'relatedProducts'
+        ));
+    }
+
     public function update(Request $request, $id)
     {
         $product = Product::find($id);
@@ -172,10 +220,13 @@ class ProductController extends Controller
             'title' => 'required',
             'slug' => 'required|unique:products,slug,' . $product->id . ',id',
             'price' => 'required|numeric',
-            'sku' => 'required|unique:products,sku,' . $product->id . ',id',
+            'kg' => 'required|numeric',
+            // 'sku' => 'required|unique:products,sku,' . $product->id . ',id',
             'track_qty' => 'required|in:Yes,No',
+            // 'pre_order' => 'required|in:Yes,No',
             'category' => 'required|numeric',
             'is_featured' => 'required|in:Yes,No',
+            'expire_date' => 'required',
         ];
 
         if (!empty($request->track_qty) && $request->track_qty == 'Yes') {
@@ -191,8 +242,8 @@ class ProductController extends Controller
             $product->description = $request->description;
             $product->price = $request->price;
             $product->compare_price = $request->compare_price;
-            $product->sku = $request->sku;
-            $product->barcode = $request->barcode;
+            // $product->sku = $request->sku;
+            // $product->barcode = $request->barcode;
             $product->track_qty = $request->track_qty;
             $product->qty = $request->qty;
             $product->status = $request->status;
@@ -200,9 +251,13 @@ class ProductController extends Controller
             $product->sub_category_id = $request->sub_category;
             $product->cow_gene_id = $request->cow_gene;
             $product->is_featured = $request->is_featured;
-            $product->shipping_returns = $request->shipping_returns;
+            // $product->shipping_returns = $request->shipping_returns;
             $product->short_description = $request->short_description;
             $product->related_products = (!empty($request->related_products)) ? implode(',', $request->related_products) : '';
+            $product->shipping_date = $request->shipping_date;
+            $product->expire_date = $request->expire_date;
+            $product->kg = $request->kg;
+            // $product->pre_order = $request->pre_order;
             $product->save();
             // Save Gallery Pics
             // if(!empty($request->image_array)){

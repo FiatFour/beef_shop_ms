@@ -83,9 +83,10 @@
                                                 Woman
                                             @endif
                                         </td>
-                                        <td>{{ !empty($cow->birth) ? $cow->age() : '' }} years</td>
+                                        {{-- <td>{{ !empty($cow->birth) ? $cow->age() : '' }} years</td> --}}
+                                        <td>{{ !empty($cow->birth) ? \Carbon\Carbon::parse($cow->birth)->diff(\Carbon\Carbon::now())->format('%y years, %m months and %d days') : '' }}</td>
                                         <td>
-                                            {{ !empty($cow->dissect_date) ? Carbon\Carbon::parse($cow->dissect_date)->diffForHumans() : '' }}
+                                            {{ !empty($cow->dissect_date) ? Carbon\Carbon::parse($cow->dissect_date)->format('d M, Y') : '' }}
                                         </td>
                                         <td>{{ number_format($cow->last_weight, 2) }} kg.</td>
                                         <td>{{ number_format($cow->last_height, 2) }} cm.</td>

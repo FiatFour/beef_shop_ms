@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('products', function(Blueprint $table){
             $table->text('short_description')->nullable()->after('description');
-            // $table->text('shipping_returns')->nullable()->after('short_description');
+            $table->text('shipping_returns')->nullable()->after('short_description');
             $table->text('related_products')->nullable()->after('shipping_returns');
         });
     }
